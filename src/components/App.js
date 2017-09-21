@@ -1,31 +1,10 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import '../App.css'
+import RefList from "./RefList"
+import AddRef from "./AddRef"
 
 
-class FilterInputBox extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      text: ""
-    }
-  }
-
-  onChange(event) {
-    this.setState({text: event.target.value});
-    this.props.textChanged(this.state);
-  }
-
-  render() {
-    return <div>
-      <input type="text" onChange={this.onChange.bind(this)} value={this.state.text} />
-    </div>
-  }
-}
-
-
-class App extends Component {
+/*class App extends Component {
   constructor(props) {
     super(props);
 
@@ -69,9 +48,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h2>bib-git</h2>
-          <p><FilterInputBox textChanged={this.filterDisplay()} /></p>
         </div>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
@@ -90,6 +67,22 @@ class App extends Component {
       </div>
     );
   }
-}
+}*/
+
+const App = () => (
+  <div className="App">
+    <div className="App-header">
+      <h2>bib-git</h2>
+      <div className="Search">
+        Search: <input type="text" title = "Search" size="40" />
+      </div>
+      <div className="Header-buttons">
+        <button type="button">Load References</button>
+        <AddRef/>
+      </div>
+    </div>
+    <RefList/>
+  </div>
+);
 
 export default App;

@@ -13,13 +13,18 @@
     color: white;
 }
 
-.App-intro {
-    font-size: large;
+.Search {
+    display: block;
+    text-align: left;
+    float: left;
+    width: 50%;
+    min-width: 150px;
 }
 
-@keyframes App-logo-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.Header-buttons {
+    display: block;
+    float: right;
+    min-width: 150px;
 }
 
 .Ref-list-item {
@@ -50,4 +55,12 @@
 
 .Ref-list-item-text-author {
     width: 25%;
+    float: left;
+    min-width: 150px;
+}
+
+.Ref-list-item-text-title {
+    width: 25%;
+    float: left;
+    min-width: 300px;
 }

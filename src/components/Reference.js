@@ -1,21 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Todo = ({ onClick, completed, text }) => (
+const Reference = ({ onClick, completed, title }) => (
   <li
     onClick={onClick}
     style={{
       textDecoration: completed ? 'line-through' : 'none'
     }}
   >
-    {text}
+    {title}
   </li>
 );
 
-Todo.propTypes = {
+Reference.propTypes = {
   onClick: PropTypes.func.isRequired,
   completed: PropTypes.bool.isRequired,
-  text: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired
 };
 
-export default Todo
+export default Reference

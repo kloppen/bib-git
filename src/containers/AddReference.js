@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { addTodo } from '../actions'
+import { addReference } from '../actions'
 
-let AddTodo = ({ dispatch }) => {
+let AddReference = ({ dispatch }) => {
   let input;
 
   return (
@@ -13,7 +13,7 @@ let AddTodo = ({ dispatch }) => {
           if (!input.value.trim()) {
             return
           }
-          dispatch(addTodo(input.value));
+          dispatch(addReference(input.value));
           input.value = ''
         }}
       >
@@ -23,12 +23,12 @@ let AddTodo = ({ dispatch }) => {
           }}
         />
         <button type="submit">
-          Add Todo
+          Add Reference
         </button>
       </form>
     </div>
   )
 };
-AddTodo = connect()(AddTodo);
+AddReference = connect()(AddReference);
 
-export default AddTodo
+export default AddReference

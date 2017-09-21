@@ -1,10 +1,10 @@
 let nextTodoId = 0;
 
-export const addTodo = text => {
+export const addReference = title => {
   return {
-    type: 'ADD_TODO',
+    type: 'ADD_REFERENCE',
     id: nextTodoId++,
-    text
+    title: title
   }
 };
 
@@ -15,9 +15,9 @@ export const setVisibilityFilter = filter => {
   }
 };
 
-export const toggleTodo = id => {
+export const toggleReference = id => {
   return {
-    type: 'TOGGLE_TODO',
+    type: 'TOGGLE_REFERENCE',
     id
   }
 };

@@ -1,35 +1,37 @@
 import { connect } from 'react-redux'
-import { toggleTodo } from '../actions'
-import TodoList from '../components/TodoList'
+import { toggleReference } from '../actions'
+import ReferenceList from '../components/ReferenceList'
 
-const getVisibleTodos = (todos, filter) => {
+const getVisibleReferences = (references, filter) => {
   switch (filter) {
     case 'SHOW_ALL':
-      return todos;
+      return references;
     case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed);
+      return references.filter(t => t.completed);
     case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed);
+      return references.filter(t => !t.completed);
+    default:
+      return null;
   }
 };
 
 const mapStateToProps = state => {
   return {
-    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+    references: getVisibleReferences(state.references, state.visibilityFilter)
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onTodoClick: id => {
-      dispatch(toggleTodo(id))
+      dispatch(toggleReference(id))
     }
   }
 };
 
-const VisibleTodoList = connect(
+const VisibleReferenceList = connect(
   mapStateToProps,
   mapDispatchToProps
-)(TodoList);
+)(ReferenceList);
 
-export default VisibleTodoList
+export default VisibleReferenceList

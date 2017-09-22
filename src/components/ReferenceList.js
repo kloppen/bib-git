@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import Reference from './Reference'
 
 const ReferenceList = ({ references, onTodoClick }) => (
-  <ul>
+  <div>
     {references.map(reference => (
       <Reference key={reference.id} {...reference} onClick={() => onTodoClick(reference.id)} />
     ))}
-  </ul>
+  </div>
 );
 
 ReferenceList.propTypes = {

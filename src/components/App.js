@@ -4,7 +4,9 @@ import AddReference from '../containers/AddReference'
 import VisibleTodoList from '../containers/VisibleTodoList'
 
 const App = () => (
-  <div>
+  <div className="App">
+    <div className="App-header">
+    </div>
     <AddReference />
     <VisibleTodoList />
     <Footer />

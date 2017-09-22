@@ -1,10 +1,10 @@
 let nextTodoId = 0;
 
-export const addReference = title => {
+export const addReference = () => {
   return {
     type: 'ADD_REFERENCE',
     id: nextTodoId++,
-    title: title
+    title: "This is the title"
   }
 };
 

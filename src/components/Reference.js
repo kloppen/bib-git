@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Editable from './Editable'
 
-const Reference = ({ onClick, onEdit, completed, isEditing, title }) => {
-  return (
+const Reference = ({ onClick, onEdit, completed, isEditing, title }) => (
     <div className="Ref-list-item">
       <div className="Ref-list-item-text">
         <div className="Ref-list-item-text-author">
@@ -11,7 +11,10 @@ const Reference = ({ onClick, onEdit, completed, isEditing, title }) => {
         <div className="Ref-list-item-text-title"
              onClick={onClick}
              style={{textDecoration: completed ? 'line-through' : 'none'}}>{title}</div>
-        <div hidden={!isEditing}>EDITING!!!</div>
+        <Editable
+          value={title}
+          onEdit={onEdit}
+        />
       </div>
       <div className="Ref-list-item-control">
         <button type="button" onClick={onEdit}>Edit</button>
@@ -20,8 +23,7 @@ const Reference = ({ onClick, onEdit, completed, isEditing, title }) => {
         <button type="button">Expand</button>
       </div>
     </div>
-  );
-}
+);
 
 Reference.propTypes = {
   onClick: PropTypes.func.isRequired,

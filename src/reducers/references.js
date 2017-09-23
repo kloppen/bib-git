@@ -10,17 +10,17 @@ const references = (state = [], action) => {
           isEditing: false
         }
       ];
-    case 'EDIT_REFERENCE':
-      return state.map(reference =>
-        (reference.id === action.id)
-        ? {...reference, isEditing: true}
-        : reference
-      );
     case 'TOGGLE_REFERENCE':
       return state.map(reference =>
         (reference.id === action.id)
           ? {...reference, completed: !reference.completed}
           : reference
+      );
+    case 'EDIT_REFERENCE':
+      return state.map(reference =>
+        (reference.id === action.id)
+        ? {...reference, title: action.value }
+        : reference
       );
     default:
       return state

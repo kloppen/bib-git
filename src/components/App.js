@@ -1,7 +1,7 @@
 import React from 'react'
 import Footer from './Footer'
 import AddReference from '../containers/AddReference'
-import VisibleTodoList from '../containers/VisibleReferenceList'
+import VisibleReferenceList from '../containers/VisibleReferenceList'
 
 const App = () => (
   <div className="App">
@@ -15,7 +15,7 @@ const App = () => (
         <AddReference />
       </div>
     </div>
-    <VisibleTodoList />
+    <VisibleReferenceList />
     <Footer />
   </div>
 );

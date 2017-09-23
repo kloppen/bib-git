@@ -7,7 +7,7 @@ const ReferenceList = ({ references, onTodoClick, onReferenceEdit }) => (
     {references.map(reference => (
       <Reference key={reference.id} {...reference}
                  onClick={() => onTodoClick(reference.id)}
-                 onEdit={() => onReferenceEdit(reference.id)} />
+                 onEdit={(value) => onReferenceEdit(reference.id, value)} />
     ))}
   </div>
 );

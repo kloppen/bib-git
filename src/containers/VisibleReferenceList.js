@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { toggleReference } from '../actions'
 import ReferenceList from '../components/ReferenceList'
+import {editReference} from "../actions/index";
 
 const getVisibleReferences = (references, filter) => {
   switch (filter) {
@@ -25,6 +26,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onTodoClick: id => {
       dispatch(toggleReference(id))
+    },
+    onReferenceEdit: id => {
+      dispatch(editReference(id))
     }
   }
 };

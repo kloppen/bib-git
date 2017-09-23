@@ -21,3 +21,10 @@ export const toggleReference = id => {
     id
   }
 };
+
+export const editReference = id => {
+  return {
+    type: 'EDIT_REFERENCE',
+    id
+  }
+};

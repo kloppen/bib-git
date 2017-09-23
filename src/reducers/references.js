@@ -6,9 +6,16 @@ const references = (state = [], action) => {
         {
           id: action.id,
           title: action.title,
-          completed: false
+          completed: false,
+          isEditing: false
         }
       ];
+    case 'EDIT_REFERENCE':
+      return state.map(reference =>
+        (reference.id === action.id)
+        ? {...reference, isEditing: true}
+        : reference
+      );
     case 'TOGGLE_REFERENCE':
       return state.map(reference =>
         (reference.id === action.id)

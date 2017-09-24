@@ -7,7 +7,7 @@ const ReferenceList = ({ references, onTodoClick, onReferenceEdit }) => (
     {references.map(reference => (
       <Reference key={reference.id} {...reference}
                  onClick={() => onTodoClick(reference.id)}
-                 onEdit={(value) => onReferenceEdit(reference.id, value)} />
+                 onEdit={(key, value) => onReferenceEdit(reference.id, key, value)} />
     ))}
   </div>
 );
@@ -17,6 +17,7 @@ ReferenceList.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       completed: PropTypes.bool.isRequired,
+      author: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired
     }).isRequired
   ).isRequired,

@@ -5,9 +5,9 @@ const references = (state = [], action) => {
         ...state,
         {
           id: action.id,
+          author: action.author,
           title: action.title,
-          completed: false,
-          isEditing: false
+          completed: false
         }
       ];
     case 'TOGGLE_REFERENCE':
@@ -19,7 +19,7 @@ const references = (state = [], action) => {
     case 'EDIT_REFERENCE':
       return state.map(reference =>
         (reference.id === action.id)
-        ? {...reference, title: action.value }
+        ? {...reference, [action.key]: action.value }
         : reference
       );
     default:

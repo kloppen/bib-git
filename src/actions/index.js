@@ -4,6 +4,7 @@ export const addReference = () => {
   return {
     type: 'ADD_REFERENCE',
     id: nextTodoId++,
+    author: "Author",
     title: "This is the title"
   }
 };
@@ -22,10 +23,11 @@ export const toggleReference = id => {
   }
 };
 
-export const editReference = (id, value) => {
+export const editReference = (id, key, value) => {
   return {
     type: 'EDIT_REFERENCE',
     id: id,
+    key: key,
     value: value
   }
 };

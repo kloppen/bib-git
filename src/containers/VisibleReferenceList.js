@@ -27,8 +27,8 @@ const mapDispatchToProps = dispatch => {
     onTodoClick: id => {
       dispatch(toggleReference(id))
     },
-    onReferenceEdit: (id, value) => {
-      dispatch(editReference(id, value))
+    onReferenceEdit: (id, key, value) => {
+      dispatch(editReference(id, key, value))
     }
   }
 };

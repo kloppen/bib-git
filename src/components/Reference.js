@@ -2,11 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Editable from './Editable'
 
-const Reference = ({ onClick, onEdit, completed, isEditing, title }) => (
+const Reference = ({ onClick, onEdit, completed, isEditing, author, title }) => (
     <div className="Ref-list-item">
       <div className="Ref-list-item-text">
         <div className="Ref-list-item-text-author">
-          Author
+          <Editable
+            value={author}
+            onEdit={(value) => onEdit("author", value)}
+          />
         </div>
         <div className="Ref-list-item-text-title"
              onClick={onClick}
@@ -14,7 +17,7 @@ const Reference = ({ onClick, onEdit, completed, isEditing, title }) => (
         <div className="Ref-list-item-text-title">
           <Editable
             value={title}
-            onEdit={onEdit}
+            onEdit={(value) => onEdit("title", value)}
           />
         </div>
       </div>
@@ -30,7 +33,7 @@ Reference.propTypes = {
   onClick: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   completed: PropTypes.bool.isRequired,
-  isEditing: PropTypes.bool.isRequired,
+  author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
 };
 

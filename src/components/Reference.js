@@ -11,13 +11,14 @@ const Reference = ({ onClick, onEdit, completed, isEditing, title }) => (
         <div className="Ref-list-item-text-title"
              onClick={onClick}
              style={{textDecoration: completed ? 'line-through' : 'none'}}>{title}</div>
-        <Editable
-          value={title}
-          onEdit={onEdit}
-        />
+        <div className="Ref-list-item-text-title">
+          <Editable
+            value={title}
+            onEdit={onEdit}
+          />
+        </div>
       </div>
       <div className="Ref-list-item-control">
-        <button type="button" onClick={onEdit}>Edit</button>
         <button type="button">Open</button>
         <button type="button">Citation</button>
         <button type="button">Expand</button>

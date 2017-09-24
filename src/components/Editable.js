@@ -36,7 +36,7 @@ class Editable extends React.Component {
       // ** Update "text" property with new value (this fires render() again)
       //value: val,
       editing: false
-    })
+    });
     if(this.props.onEdit) {
       this.props.onEdit(val);
     }

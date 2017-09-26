@@ -11,7 +11,6 @@ const App = () => (
         Search: <input type="text" title = "Search" size="40" />
       </div>
       <div className="Header-buttons">
-        <button type="button">Load References</button>
         <AddReference />
       </div>
     </div>

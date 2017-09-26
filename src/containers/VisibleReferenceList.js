@@ -18,7 +18,8 @@ const getVisibleReferences = (references, filter) => {
 
 const mapStateToProps = state => {
   return {
-    references: getVisibleReferences(state.references, state.visibilityFilter)
+    references: getVisibleReferences(state.references, state.visibilityFilter),
+    library: state.library
   }
 };
 

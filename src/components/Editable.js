@@ -11,8 +11,7 @@ class Editable extends React.Component {
     this.renderNormal = this.renderNormal.bind(this);
     this.checkEnter = this.checkEnter.bind(this);
     this.state = {
-      isEditing: false//,
-      //value: props.value
+      isEditing: false
     }
   }
 
@@ -33,8 +32,6 @@ class Editable extends React.Component {
   save() {
     let val = this.refs.newText.value;
     this.setState({
-      // ** Update "text" property with new value (this fires render() again)
-      //value: val,
       editing: false
     });
     if(this.props.onEdit) {
@@ -49,7 +46,6 @@ class Editable extends React.Component {
   }
 
   renderNormal() {
-    // ** Render "state.text" inside your <p> whether its empty or not...
     return (
       <span onClick={this.edit}>
         {this.props.value}

@@ -22,7 +22,8 @@ git lfs install
 # References
 http://redux.js.org/docs/basics/ExampleTodoList.html
 https://survivejs.com/react/getting-started/editing-notes/
-
+https://github.com/Juris-M/citeproc-js
+http://citationstyles.org/
 
 
 

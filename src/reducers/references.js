@@ -22,6 +22,8 @@ const references = (state = [], action) => {
         ? {...reference, [action.key]: action.value }
         : reference
       );
+    case "RECEIVE_LIBRARY":
+      return action.json;
     default:
       return state
   }

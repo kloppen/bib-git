@@ -2,25 +2,40 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Reference from './Reference'
 
-const ReferenceList = ({ references, onTodoClick, onReferenceEdit }) => (
-  <div>
-    {references.map(reference => (
-      <Reference key={reference.id} {...reference}
-                 onClick={() => onTodoClick(reference.id)}
-                 onEdit={(key, value) => onReferenceEdit(reference.id, key, value)} />
-    ))}
-  </div>
-);
+const ReferenceList = ({ references, library, onTodoClick, onReferenceEdit }) => {
+  if(library.isFetching) {
+    return (
+      <div>Retrieving Library...</div>
+    )
+  } else {
+    return (
+      <div>
+        {references.map(reference => (
+          <Reference key={reference.id} {...reference}
+                     onClick={() => onTodoClick(reference.id)}
+                     onEdit={(key, value) => onReferenceEdit(reference.id, key, value)} />
+        ))}
+      </div>
+  );
+  }
+};
 
 ReferenceList.propTypes = {
   references: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      completed: PropTypes.bool.isRequired,
-      author: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      author: PropTypes.arrayOf(
+        PropTypes.shape({
+          family: PropTypes.string,
+          given: PropTypes.string
+        })
+      ),
       title: PropTypes.string.isRequired
     }).isRequired
   ).isRequired,
+  library: PropTypes.shape({
+    isFetching: PropTypes.bool.isRequired
+  }).isRequired,
   onTodoClick: PropTypes.func.isRequired,
   onReferenceEdit: PropTypes.func.isRequired
 };

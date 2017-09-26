@@ -7,7 +7,7 @@ const Reference = ({ onClick, onEdit, completed, isEditing, author, title }) => 
       <div className="Ref-list-item-text">
         <div className="Ref-list-item-text-author">
           <Editable
-            value={author}
+            value="author"
             onEdit={(value) => onEdit("author", value)}
           />
         </div>
@@ -32,8 +32,6 @@ const Reference = ({ onClick, onEdit, completed, isEditing, author, title }) => 
 Reference.propTypes = {
   onClick: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
-  completed: PropTypes.bool.isRequired,
-  author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
 };
 

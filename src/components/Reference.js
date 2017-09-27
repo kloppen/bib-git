@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Editable from './Editable'
+import {editReference} from "../actions/index";
+import { connect } from 'react-redux'
 
 class Reference extends React.Component {
   constructor(props) {
@@ -14,6 +16,12 @@ class Reference extends React.Component {
     this.setState({
       isExpanded: !this.state.isExpanded
     })
+  }
+
+  onEdit(key, value) {
+    let { dispatch } = this.props;
+    let action = editReference(this.props.id, key, value);
+    dispatch(action)
   }
 
   render()
@@ -34,7 +42,7 @@ class Reference extends React.Component {
           <div className="Ref-list-item-text-title">
             <Editable
               value={this.props.title}
-              onEdit={(value) => this.props.onEdit("title", value)}
+              onEdit={(value) => this.onEdit("title", value)}
             />
           </div>
         </div>
@@ -49,8 +57,8 @@ class Reference extends React.Component {
 }
 
 Reference.propTypes = {
-  onEdit: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
 };
 
-export default Reference
+export default connect()(Reference)

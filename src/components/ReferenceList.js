@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Reference from './Reference'
 
-const ReferenceList = ({ references, library, onReferenceEdit }) => {
+const ReferenceList = ({ references, library }) => {
   if(library.isFetching) {
     return (
       <div>Retrieving Library...</div>
@@ -11,8 +11,7 @@ const ReferenceList = ({ references, library, onReferenceEdit }) => {
     return (
       <div>
         {references.map(reference => (
-          <Reference key={reference.id} {...reference}
-                     onEdit={(key, value) => onReferenceEdit(reference.id, key, value)} />
+          <Reference key={reference.id} {...reference} />
         ))}
       </div>
   );
@@ -34,8 +33,7 @@ ReferenceList.propTypes = {
   ).isRequired,
   library: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired
-  }).isRequired,
-  onReferenceEdit: PropTypes.func.isRequired
+  }).isRequired
 };
 
 export default ReferenceList

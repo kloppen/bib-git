@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { toggleReference } from '../actions'
 import ReferenceList from '../components/ReferenceList'
 import {editReference} from "../actions/index";
 
@@ -25,9 +24,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTodoClick: id => {
-      dispatch(toggleReference(id))
-    },
     onReferenceEdit: (id, key, value) => {
       dispatch(editReference(id, key, value))
     }

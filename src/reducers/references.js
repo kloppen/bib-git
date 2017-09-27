@@ -10,12 +10,6 @@ const references = (state = [], action) => {
           completed: false
         }
       ];
-    case 'TOGGLE_REFERENCE':
-      return state.map(reference =>
-        (reference.id === action.id)
-          ? {...reference, completed: !reference.completed}
-          : reference
-      );
     case 'EDIT_REFERENCE':
       return state.map(reference =>
         (reference.id === action.id)

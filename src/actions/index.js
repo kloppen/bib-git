@@ -18,13 +18,6 @@ export const setVisibilityFilter = filter => {
   }
 };
 
-export const toggleReference = id => {
-  return {
-    type: 'TOGGLE_REFERENCE',
-    id
-  }
-};
-
 export const editReference = (id, key, value) => {
   return {
     type: 'EDIT_REFERENCE',

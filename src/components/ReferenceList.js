@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Reference from './Reference'
 
-const ReferenceList = ({ references, library, onTodoClick, onReferenceEdit }) => {
+const ReferenceList = ({ references, library, onReferenceEdit }) => {
   if(library.isFetching) {
     return (
       <div>Retrieving Library...</div>
@@ -12,7 +12,6 @@ const ReferenceList = ({ references, library, onTodoClick, onReferenceEdit }) =>
       <div>
         {references.map(reference => (
           <Reference key={reference.id} {...reference}
-                     onClick={() => onTodoClick(reference.id)}
                      onEdit={(key, value) => onReferenceEdit(reference.id, key, value)} />
         ))}
       </div>
@@ -36,7 +35,6 @@ ReferenceList.propTypes = {
   library: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  onTodoClick: PropTypes.func.isRequired,
   onReferenceEdit: PropTypes.func.isRequired
 };
 

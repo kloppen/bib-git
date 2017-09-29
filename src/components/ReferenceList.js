@@ -22,13 +22,15 @@ ReferenceList.propTypes = {
   references: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
       author: PropTypes.arrayOf(
         PropTypes.shape({
           family: PropTypes.string,
           given: PropTypes.string
-        })
+        }),
       ),
-      title: PropTypes.string.isRequired
+      abstract: PropTypes.string,
+      title: PropTypes.string,
     }).isRequired
   ).isRequired,
   library: PropTypes.shape({

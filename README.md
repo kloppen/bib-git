@@ -25,6 +25,8 @@ https://survivejs.com/react/getting-started/editing-notes/
 https://github.com/Juris-M/citeproc-js
 http://citationstyles.org/
 
+https://www.w3schools.com/html/html_responsive.asp
+
 
 
 

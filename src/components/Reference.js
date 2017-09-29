@@ -24,29 +24,58 @@ class Reference extends React.Component {
     dispatch(action)
   }
 
-  render()
-  {
+  render_expanded() {
     return (
       <div className="Ref-list-item">
-        <div className="Ref-list-item-text">
-          <span>Expanded: {this.state.isExpanded ? "TRUE" : "FALSE"}</span>
-          <div className="Ref-list-item-text-author">
-            <Editable
-              value="author"
-              onEdit={(value) => this.props.onEdit("author", value)}
-            />
-          </div>
-          <div className="Ref-list-item-text-title"
-               onClick={this.props.onClick}
-               style={{textDecoration: this.props.completed ? 'line-through' : 'none'}}>{this.props.title}</div>
-          <div className="Ref-list-item-text-title">
-            <Editable
-              value={this.props.title}
-              onEdit={(value) => this.onEdit("title", value)}
-            />
-          </div>
+        <div className="Ref-list-item-expand-left">Author</div>
+        <div className="Ref-list-item-expand-right">
+          <Editable
+            value="author"
+            onEdit={(value) => this.props.onEdit("author", value)}
+          />
         </div>
-        <div className="Ref-list-item-control">
+
+        <div className="Ref-list-item-expand-left">Title</div>
+        <div className="Ref-list-item-expand-right">
+          <Editable
+            value={this.props.title}
+            onEdit={(value) => this.onEdit("title", value)}
+          />
+        </div>
+
+        <div className="Ref-list-item-expand-left">Abstract</div>
+        <div className="Ref-list-item-expand-right">
+          <Editable
+            value={this.props.abstract}
+            onEdit={(value) => this.onEdit("abstract", value)}
+          />
+        </div>
+
+        <div className="Ref-list-item-expand-all">
+          <button type="button">Open</button>
+          <button type="button">Citation</button>
+          <button type="button" onClick={() => { this.doExpand() }}>Collapse</button>
+        </div>
+      </div>
+    )
+  }
+
+  render_not_expanded() {
+    return (
+      <div className="Ref-list-item">
+        <div className="Ref-list-item-left">
+          <Editable
+            value="author"
+            onEdit={(value) => this.props.onEdit("author", value)}
+          />
+        </div>
+        <div className="Ref-list-item-middle">
+          <Editable
+            value={this.props.title}
+            onEdit={(value) => this.onEdit("title", value)}
+          />
+        </div>
+        <div className="Ref-list-item-right">
           <button type="button">Open</button>
           <button type="button">Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Expand</button>
@@ -54,11 +83,21 @@ class Reference extends React.Component {
       </div>
     )
   }
+
+  render()
+  {
+    if(this.state.isExpanded) {
+      return(this.render_expanded())
+    } else {
+      return(this.render_not_expanded())
+    }
+  }
 }
 
 Reference.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  abstract: PropTypes.string
 };
 
 export default connect()(Reference)

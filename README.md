@@ -15,7 +15,8 @@ termus-fix-shebang script/bootstrap
 termus-fix-shebang script/fmt
 termus-fix-shebang script/lint
 ./script/bootstrap
-cd bin
+cp bin/git-lfs /data/data/com.termux/files/usr/bin/
+cd
 git lfs install
 ```
 
@@ -31,8 +32,9 @@ https://www.w3schools.com/html/html_responsive.asp
 
 # To-do's
 
-- Search (filter)
-- Highlight search results
+- Display author (multiple)
+- Search (filter) on all fields
+- Highlight search results (optional)
 - Disable edit in non-expanded mode
 - Save library (JSON)
 - Mark library as edited (or not)
@@ -41,6 +43,8 @@ https://www.w3schools.com/html/html_responsive.asp
 - Add citation functionality
 - When adding new references, set a correct and reliable id
 - When editable field is blank, just show the name in grey text
+- Show all fields when expanded
+- value checking for CSL Type field
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

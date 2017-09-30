@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Editable from './Editable'
+import AuthorList from './AuthorsList'
 import {editReference} from "../actions/index";
 import { connect } from 'react-redux'
 
@@ -64,10 +65,7 @@ class Reference extends React.Component {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-left">
-          <Editable
-            value="author"
-            onEdit={(value) => this.props.onEdit("author", value)}
-          />
+          <AuthorList authorList={this.props.author} />
         </div>
         <div className="Ref-list-item-middle">
           <Editable
@@ -97,7 +95,16 @@ class Reference extends React.Component {
 Reference.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  abstract: PropTypes.string
+  abstract: PropTypes.string,
+  author: PropTypes.arrayOf(
+    PropTypes.shape({
+      family: PropTypes.string,
+      given: PropTypes.string,
+      'non-dropping-particle': PropTypes.string,
+      'dropping-particle': PropTypes.string,
+      suffix: PropTypes.string,
+      literal: PropTypes.string
+  }))
 };
 
 export default connect()(Reference)

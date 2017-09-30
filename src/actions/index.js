@@ -11,9 +11,9 @@ export const addReference = () => {
   }
 };
 
-export const setVisibilityFilter = filter => {
+export const setFilterText = filter => {
   return {
-    type: 'SET_VISIBILITY_FILTER',
+    type: "SET_FILTER_TEXT",
     filter
   }
 };
@@ -40,7 +40,7 @@ export const receiveLibrary = (json) => {
   }
 };
 
-export const failReceiveLibrary = () => {
+export const failReceiveLibrary = () => {  // TODO: Implement
   return {
     type: "FAIL_RECEIVE_LIBRARY"
   }

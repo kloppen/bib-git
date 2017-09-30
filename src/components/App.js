@@ -1,22 +1,36 @@
 import React from 'react'
-import Footer from './Footer'
+import { connect } from 'react-redux'
 import AddReference from '../containers/AddReference'
 import VisibleReferenceList from '../containers/VisibleReferenceList'
+import { setFilterText } from "../actions"
 
-const App = () => (
-  <div className="App">
-    <div className="App-header">
-      <h2>bib-git</h2>
-      <div className="Search">
-        Search: <input type="text" title = "Search" size="40" />
+let App = ({dispatch}) => {
+  return (
+    <div className="App">
+      <div className="App-header">
+        <h2>bib-git</h2>
+        <div className="Search">
+          Search:
+          <input
+            type="text"
+            title = "Search"
+            size="40"
+            onChange={
+              (event) => {
+                dispatch(setFilterText(event.target.value));
+              }
+            }
+          />
+        </div>
+        <div className="Header-buttons">
+          <AddReference />
+        </div>
       </div>
-      <div className="Header-buttons">
-        <AddReference />
-      </div>
+      <VisibleReferenceList />
     </div>
-    <VisibleReferenceList />
-    <Footer />
-  </div>
-);
+  );
+};
+
+App= connect()(App);
 
 export default App

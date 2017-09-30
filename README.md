@@ -29,6 +29,19 @@ https://www.w3schools.com/html/html_responsive.asp
 
 
 
+# To-do's
+
+- Search (filter)
+- Highlight search results
+- Disable edit in non-expanded mode
+- Save library (JSON)
+- Mark library as edited (or not)
+- Fix add reference behavior (add all fields)
+- Add open functionality
+- Add citation functionality
+- When adding new references, set a correct and reliable id
+- When editable field is blank, just show the name in grey text
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 

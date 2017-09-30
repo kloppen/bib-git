@@ -3,16 +3,19 @@ import ReferenceList from '../components/ReferenceList'
 import {editReference} from "../actions/index";
 
 const getVisibleReferences = (references, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return references;
-    case 'SHOW_COMPLETED':
-      return references.filter(t => t.completed);
-    case 'SHOW_ACTIVE':
-      return references.filter(t => !t.completed);
-    default:
-      return null;
+  if(filter === "") {
+    return references;
   }
+
+  // TODO: search on other fields
+
+  let uprFilter = filter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
+
+  return references.filter(
+    (r) =>
+      uprFilter.map(flt => r.title.toUpperCase().includes(flt))
+        .reduce((prevVal, elm) => prevVal && elm, true)
+  );
 };
 
 const mapStateToProps = state => {

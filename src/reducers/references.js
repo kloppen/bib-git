@@ -6,8 +6,7 @@ const references = (state = [], action) => {
         {
           id: action.id,
           author: action.author,
-          title: action.title,
-          completed: false
+          title: action.title
         }
       ];
     case 'EDIT_REFERENCE':

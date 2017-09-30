@@ -3,13 +3,9 @@ import ReferenceList from '../components/ReferenceList'
 import {editReference} from "../actions/index";
 
 const getVisibleReferences = (references, filter) => {
-  if(filter === "") {
-    return references;
-  }
-
   // TODO: search on other fields
 
-  let uprFilter = filter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
+  const uprFilter = filter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
 
   return references.filter(
     (r) =>

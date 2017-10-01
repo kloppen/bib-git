@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import AddReference from '../containers/AddReference'
+import CitationModal from "./CitationModal"
 import VisibleReferenceList from '../containers/VisibleReferenceList'
 import { setFilterText } from "../actions"
 
@@ -26,11 +27,12 @@ let App = ({dispatch}) => {
           <AddReference />
         </div>
       </div>
+      <CitationModal/>
       <VisibleReferenceList />
     </div>
   );
 };
 
-App= connect()(App);
+App = connect()(App);
 
 export default App

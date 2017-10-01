@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Editable from './Editable'
 import AuthorList from './AuthorsList'
-import {editReference} from "../actions/index";
+import { editReference, showCitation } from "../actions/index";
 import { connect } from 'react-redux'
 
 class Reference extends React.Component {
@@ -22,6 +22,12 @@ class Reference extends React.Component {
   onEdit(key, value) {
     let { dispatch } = this.props;
     let action = editReference(this.props.id, key, value);
+    dispatch(action)
+  }
+
+  onCitation() {
+    let { dispatch } = this.props;
+    let action = showCitation(this.props.id);
     dispatch(action)
   }
 
@@ -54,7 +60,7 @@ class Reference extends React.Component {
 
         <div className="Ref-list-item-expand-all">
           <button type="button">Open</button>
-          <button type="button">Citation</button>
+          <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Collapse</button>
         </div>
       </div>
@@ -75,7 +81,7 @@ class Reference extends React.Component {
         </div>
         <div className="Ref-list-item-right">
           <button type="button">Open</button>
-          <button type="button">Citation</button>
+          <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Expand</button>
         </div>
       </div>

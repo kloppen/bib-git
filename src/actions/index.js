@@ -59,3 +59,16 @@ export function fetchLibrary() {
       )
   }
 }
+
+export function showCitation(id) {
+  return {
+    type: "SHOW_CITATION",
+    id
+  }
+}
+
+export function dismissCitation() {
+  return {
+    type: "DISMISS_CITATION"
+  }
+}

@@ -4,12 +4,6 @@ import PropTypes from 'prop-types'
 class Editable extends React.Component {
   constructor(props) {
     super(props);
-    this.edit = this.edit.bind(this);
-    this.save = this.save.bind(this);
-    this.cancel = this.cancel.bind(this);
-    this.renderForm = this.renderForm.bind(this);
-    this.renderNormal = this.renderNormal.bind(this);
-    this.checkEnter = this.checkEnter.bind(this);
     this.state = {
       isEditing: false
     }
@@ -47,7 +41,7 @@ class Editable extends React.Component {
 
   renderNormal() {
     return (
-      <span onClick={this.edit}>
+      <span onClick={() => { this.edit() }}>
         {this.props.value}
       </span>
     )
@@ -58,9 +52,10 @@ class Editable extends React.Component {
         <input
           ref="newText"
           defaultValue={this.props.value}
-          onBlur={this.save}
-          onKeyDown={this.checkEnter}
+          onBlur={() => { this.save() }}
+          onKeyDown={(e) => { this.checkEnter(e) }}
           autoFocus={true}
+          className="Editable"
         />
     );
   }

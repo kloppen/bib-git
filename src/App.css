@@ -31,6 +31,10 @@
     width: 100%
 }
 
+.Editable-empty {
+    color: #717171;
+}
+
 textarea.Editable {
     height: 150px;
 }
@@ -107,4 +111,9 @@ textarea.Editable {
     padding: 5px;
     text-align: right;
     box-sizing: border-box;
+}
+
+.Author-field {
+    float: left;
+    width: 150px;
 }

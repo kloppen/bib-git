@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {editReference} from "../actions/index";
 import { connect } from 'react-redux'
-import Author from './Author'
+import Editable from "./Editable";
 
 class AuthorsList extends React.Component {
   constructor(props) {
@@ -24,24 +24,55 @@ class AuthorsList extends React.Component {
     dispatch(action)
   }
 
+  // TODO: Need to add add and subtract buttons for authors...including when authorList is null or undefined
   render()
   {
-    if(this.props.authorList === null || this.props.authorList === undefined) {
-      return (<div></div>)
+    if(!this.props.authorList || this.props.authorList.length <= 0) {
+      return (<div>&nbsp;</div>)  // TODO: This should show a single author anyways, or the add button, or something
     }
     return (
       <div>
         {this.props.authorList.map((a, index) => (
           <span key={index}>
-            <span>Family: {a.family}</span><br/>
-            <span>Given: {a.given}</span><br/>
-            <span>'non-dropping-particle' {a['non-dropping-particle']}</span><br/>
-            <span>'dropping-particle' {a['dropping-particle']}</span><br/>
-            <span>suffix: {a.suffix}</span><br/>
-            <span>literal: {a.literal}</span><br/>
+            <div className="Author-field">
+              <Editable
+                field="given"
+                value={a.given}
+              />
+            </div>
+            <div className="Author-field">
+              <Editable
+                field="dropping-particle"
+                value={a['dropping-particle']}
+              />
+            </div>
+            <div className="Author-field">
+              <Editable
+                field="non-dropping-particle"
+                value={a['non-dropping-particle']}
+              />
+            </div>
+            <div className="Author-field">
+              <Editable
+                field="family"
+                value={a.family}
+              />
+            </div>
+            <div className="Author-field">
+              <Editable
+                field="suffix"
+                value={a.suffix}
+              />
+            </div>
+            <div className="Author-field">
+              <Editable
+                field="literal"
+                value={a.literal}
+              />
+            </div>
+            <br/>
           </span>
         ))}
-
       </div>
     );
   }

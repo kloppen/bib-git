@@ -36,9 +36,8 @@ class Reference extends React.Component {
       <div className="Ref-list-item">
         <div className="Ref-list-item-expand-left">Author</div>
         <div className="Ref-list-item-expand-right">
-          <Editable
-            value="author"
-            onEdit={(value) => this.props.onEdit("author", value)}
+          <AuthorList
+            authorList={this.props.author}
           />
         </div>
 
@@ -46,7 +45,8 @@ class Reference extends React.Component {
         <div className="Ref-list-item-expand-right">
           <Editable
             value={this.props.title}
-            onEdit={(value) => this.onEdit("title", value)}
+            field="title"
+            onEdit={(field, value) => this.onEdit(field, value)}
           />
         </div>
 
@@ -54,7 +54,8 @@ class Reference extends React.Component {
         <div className="Ref-list-item-expand-right">
           <Editable
             value={this.props.abstract}
-            onEdit={(value) => this.onEdit("abstract", value)}
+            field="abstract"
+            onEdit={(field, value) => this.onEdit(field, value)}
             isTextArea={true}
           />
         </div>

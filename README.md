@@ -41,9 +41,10 @@ https://www.w3schools.com/html/html_responsive.asp
 - Add open functionality
 - Allow changing of citation style
 - When adding new references, set a correct and reliable id
-- When editable field is blank, just show the name in grey text
 - Show all fields when expanded
 - value checking for CSL Type field
+- Sort reference list
+- Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

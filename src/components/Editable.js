@@ -29,7 +29,7 @@ class Editable extends React.Component {
       editing: false
     });
     if(this.props.onEdit) {
-      this.props.onEdit(val);
+      this.props.onEdit(this.props.field, val);
     }
   }
 
@@ -42,7 +42,10 @@ class Editable extends React.Component {
   renderNormal() {
     return (
       <span onClick={() => { this.edit() }}>
-        {this.props.value}
+        {!this.props.value || this.props.value === "" ?
+          (<span className="Editable-empty">{ this.props.field }</span>)
+          : this.props.value
+        }
       </span>
     )
   }
@@ -85,9 +88,10 @@ class Editable extends React.Component {
 }
 
 Editable.PropTypes = {
+  field: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
   isTextArea: PropTypes.bool
 };
 
-export default Editable
+export default Editable;

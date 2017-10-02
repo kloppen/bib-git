@@ -55,6 +55,7 @@ class Reference extends React.Component {
           <Editable
             value={this.props.abstract}
             onEdit={(value) => this.onEdit("abstract", value)}
+            isTextArea={true}
           />
         </div>
 

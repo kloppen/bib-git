@@ -49,19 +49,34 @@ class Editable extends React.Component {
 
   renderForm() {
     return (
-        <input
-          ref="newText"
-          defaultValue={this.props.value}
-          onBlur={() => { this.save() }}
-          onKeyDown={(e) => { this.checkEnter(e) }}
-          autoFocus={true}
-          className="Editable"
-        />
+      <input
+        ref="newText"
+        defaultValue={this.props.value}
+        onBlur={() => { this.save() }}
+        onKeyDown={(e) => { this.checkEnter(e) }}
+        autoFocus={true}
+        className="Editable"
+      />
+    );
+  }
+
+  renderTextArea() {
+    return (
+      <textarea
+        ref="newText"
+        defaultValue={this.props.value}
+        onBlur={() => { this.save() }}
+        onKeyDown={(e) => { this.checkEnter(e) }}
+        autoFocus={true}
+        className="Editable"
+      />
     );
   }
 
   render() {
-    if (this.state.editing) {
+    if (this.state.editing && this.props.isTextArea) {
+      return this.renderTextArea()
+    } else if(this.state.editing) {
       return this.renderForm()
     } else {
       return this.renderNormal()
@@ -71,7 +86,8 @@ class Editable extends React.Component {
 
 Editable.PropTypes = {
   value: PropTypes.string.isRequired,
-  onEdit: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired,
+  isTextArea: PropTypes.bool
 };
 
 export default Editable

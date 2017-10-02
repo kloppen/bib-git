@@ -45,7 +45,6 @@ https://www.w3schools.com/html/html_responsive.asp
 - When editable field is blank, just show the name in grey text
 - Show all fields when expanded
 - value checking for CSL Type field
-- Change editable component for abstract to textarea
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

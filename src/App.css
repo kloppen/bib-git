@@ -31,6 +31,10 @@
     width: 100%
 }
 
+textarea.Editable {
+    height: 150px;
+}
+
 .Ref-list-item {
     display: block;
     text-align: left;

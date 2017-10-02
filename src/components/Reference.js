@@ -67,11 +67,29 @@ class Reference extends React.Component {
     )
   }
 
-  render_not_expanded() {
+  render_author_list_collapsed() {
+    if(!this.props.author) {
+      return ""
+    }
+    return this.props.author.map((author) => {
+      if(author.literal) {
+        return author.literal
+      }
+      if(author.family) {
+        if(author['non-dropping-particle']) {
+          return author['non-dropping-particle'] + " " + author.family
+        }
+        return author.family
+      }
+      return ""
+    }).join(", ")
+  }
+
+  render_collapsed() {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-left">
-          <AuthorList authorList={this.props.author} />
+          { this.render_author_list_collapsed() }
         </div>
         <div className="Ref-list-item-middle">
           <Editable
@@ -93,7 +111,7 @@ class Reference extends React.Component {
     if(this.state.isExpanded) {
       return(this.render_expanded())
     } else {
-      return(this.render_not_expanded())
+      return(this.render_collapsed())
     }
   }
 }

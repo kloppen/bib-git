@@ -40,7 +40,7 @@ https://www.w3schools.com/html/html_responsive.asp
 - Mark library as edited (or not)
 - Fix add reference behavior (add all fields)
 - Add open functionality
-- Add citation functionality
+- Allow changing of citation style
 - When adding new references, set a correct and reliable id
 - When editable field is blank, just show the name in grey text
 - Show all fields when expanded

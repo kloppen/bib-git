@@ -93,10 +93,7 @@ class Reference extends React.Component {
           { this.render_author_list_collapsed() }
         </div>
         <div className="Ref-list-item-middle">
-          <Editable
-            value={this.props.title}
-            onEdit={(value) => this.onEdit("title", value)}
-          />
+          {this.props.title}
         </div>
         <div className="Ref-list-item-right">
           <button type="button">Open</button>

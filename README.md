@@ -35,7 +35,6 @@ https://www.w3schools.com/html/html_responsive.asp
 - Display author (multiple)
 - Search (filter) on all fields
 - Highlight search results (optional)
-- Disable edit in non-expanded mode
 - Save library (JSON)
 - Mark library as edited (or not)
 - Fix add reference behavior (add all fields)

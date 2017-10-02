@@ -113,6 +113,11 @@ textarea.Editable {
     box-sizing: border-box;
 }
 
+.Ref-list-item-expand-row {
+    overflow: auto;
+    clear: left;
+}
+
 .Author-field {
     float: left;
     width: 150px;

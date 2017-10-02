@@ -5,6 +5,77 @@ import AuthorList from './AuthorsList'
 import { editReference, showCitation } from "../actions/index";
 import { connect } from 'react-redux'
 
+const referenceFields = [
+  {field: "abstract", isTextArea: true, hint: "abstract of the item (e.g. the abstract of a journal article)"},
+  {field: "annote", hint: "reader’s notes about the item content"},
+  {field: "archive", hint: "archive storing the item"},
+  {field: "archive_location", hint: "storage location within an archive (e.g. a box and folder number)"},
+  {field: "archive-place", hint: "geographic location of the archive"},
+  {field: "authority",
+    hint: "issuing or judicial authority (e.g. “USPTO” for a patent, “Fairfax Circuit Court” for a legal case)"},
+  {field: "call-number", hint: "call number (to locate the item in a library)"},
+  {field: "collection-title", hint: "title of the collection holding the item (e.g. the series title for a book)"},
+  {field: "container-title",
+    hint: "title of the container holding the item " +
+    "(e.g. the book title for a book chapter, the journal title for a journal article)"},
+  {field: "container-title-short",
+    hint: "short/abbreviated form of “container-title” " +
+    "(also accessible through the “short” form of the “container-title” variable)"},
+  {field: "dimensions", hint: "physical (e.g. size) or temporal (e.g. running time) dimensions of the item"},
+  {field: "DOI", hint: "Digital Object Identifier (e.g. “10.1128/AEM.02591-07”)"},
+  {field: "event", hint: "name of the related event (e.g. the conference name when citing a conference paper)"},
+  {field: "event-place", hint: "geographic location of the related event (e.g. “Amsterdam, the Netherlands”)"},
+  {field: "genre",
+    hint: "class, type or genre of the item (e.g. “adventure” for an adventure movie, " +
+    "“PhD dissertation” for a PhD thesis)"},
+  {field: "ISBN", hint: "International Standard Book Number"},
+  {field: "ISSN", hint: "International Standard Serial Number"},
+  {field: "jurisdiction", hint: "geographic scope of relevance (e.g. “US” for a US patent)"},
+  {field: "keyword", hint: "keyword(s) or tag(s) attached to the item"},
+  {field: "locator",
+    hint: "a cite-specific pinpointer within the item (e.g. a page number within a book, or a volume in a " +
+    "multi-volume work). Must be accompanied in the input data by a label indicating the locator type (see the " +
+    "Locators term list), which determines which term is rendered by cs:label when the “locator” variable is " +
+    "selected."},
+  {field: "medium", hint: "medium description (e.g. “CD”, “DVD”, etc.)"},
+  {field: "note", hint: "(short) inline note giving additional item details (e.g. a concise summary or commentary)"},
+  {field: "original-publisher",
+    hint: "original publisher, for items that have been republished by a different publisher"},
+  {field: "original-publisher-place", hint: "geographic location of the original publisher (e.g. “London, UK”)"},
+  {field: "original-title",
+    hint: "title of the original version (e.g. “Война и мир”, the untranslated Russian title of “War and Peace”)"},
+  {field: "page", hint: "range of pages the item (e.g. a journal article) covers in a container (e.g. a journal issue)"},
+  {field: "page-first",
+    hint: "first page of the range of pages the item (e.g. a journal article) covers in a container " +
+    "(e.g. a journal issue)"},
+  {field: "PMCID", hint: "PubMed Central reference number"},
+  {field: "PMID", hint: "PubMed reference number"},
+  {field: "publisher", hint: "publisher"},
+  {field: "publisher-place", hint: "geographic location of the publisher"},
+  {field: "references", hint: "resources related to the procedural history of a legal case"},
+  {field: "reviewed-title", hint: "title of the item reviewed by the current item"},
+  {field: "scale", hint: "scale of e.g. a map"},
+  {field: "section", hint: "container section holding the item (e.g. “politics” for a newspaper article)"},
+  {field: "source", hint: "from whence the item originates (e.g. a library catalog or database)"},
+  {field: "status", hint: "publication) status of the item (e.g. “forthcoming”)"},
+  {field: "title", hint: "primary title of the item"},
+  {field: "title-short",
+    hint: "short/abbreviated form of “title” (also accessible through the “short” form of the “title” variable)"},
+  {field: "URL", hint: "Uniform Resource Locator (e.g. “http://aem.asm.org/cgi/content/full/74/9/2766”)"},
+  {field: "version", hint: "version of the item (e.g. “2.0.9” for a software program)"},
+  {field: "chapter-number", hint: "chapter number"},
+  {field: "collection-number",
+    hint: "number identifying the collection holding the item (e.g. the series number for a book)"},
+  {field: "edition",
+    hint: "(container) edition holding the item (e.g. “3” when citing a chapter in the third edition of a book)"},
+  {field: "issue",
+    hint: "(container) issue holding the item (e.g. “5” when citing a journal article from journal volume 2, issue 5)"},
+  {field: "number", hint: "number identifying the item (e.g. a report number)"},
+  {field: "number-of-pages", hint: "total number of pages of the cited item"},
+  {field: "number-of-volumes", hint: "total number of volumes, usable for citing multi-volume books and such\n"},
+  {field: "volume", hint: "(container) volume holding the item (e.g. “2” when citing a chapter from book volume 2)"},
+];
+
 class Reference extends React.Component {
   constructor(props) {
     super(props);
@@ -33,29 +104,11 @@ class Reference extends React.Component {
 
   // TODO: Idea: only show populated fields in expanded view, but show all fields in edit view
 
-  // TODO: Iterate over an array to add all the fields, rather than having a lot of individual function calls in code
-
-  // TODO: Validation in Editable class (eg. numbers)
+  // TODO: Edit modal
 
   // TODO: Add date variables
 
   // TODO: Add name variables
-
-  render_expanded_field(field, isTextArea=false) {
-    return (
-      <div>
-      <div className="Ref-list-item-expand-left">{field}</div>
-      <div className="Ref-list-item-expand-right">
-        <Editable
-          value={this.props[field]}
-          field={field}
-          isTextArea={isTextArea}
-          onEdit={(field, value) => this.onEdit(field, value)}
-        />
-      </div>
-      </div>
-    )
-  }
 
   render_expanded() {
     return (
@@ -67,57 +120,23 @@ class Reference extends React.Component {
           />
         </div>
 
-        {this.render_expanded_field("abstract", true)}
-        {this.render_expanded_field("annote")}
-        {this.render_expanded_field("archive")}
-        {this.render_expanded_field("archive_location")}
-        {this.render_expanded_field("archive-place")}
-        {this.render_expanded_field("authority")}
-        {this.render_expanded_field("call-number")}
-        {this.render_expanded_field("collection-title")}
-        {this.render_expanded_field("container-title")}
-        {this.render_expanded_field("container-title-short")}
-        {this.render_expanded_field("dimensions")}
-        {this.render_expanded_field("DOI")}
-        {this.render_expanded_field("event")}
-        {this.render_expanded_field("event-place")}
-        {this.render_expanded_field("genre")}
-        {this.render_expanded_field("ISBN")}
-        {this.render_expanded_field("ISSN")}
-        {this.render_expanded_field("jurisdiction")}
-        {this.render_expanded_field("keyword")}
-        {this.render_expanded_field("locator")}
-        {this.render_expanded_field("medium")}
-        {this.render_expanded_field("note")}
-        {this.render_expanded_field("original-publisher")}
-        {this.render_expanded_field("original-publisher-place")}
-        {this.render_expanded_field("original-title")}
-        {this.render_expanded_field("page")}
-        {this.render_expanded_field("page-first")}
-        {this.render_expanded_field("PMCID")}
-        {this.render_expanded_field("PMID")}
-        {this.render_expanded_field("publisher")}
-        {this.render_expanded_field("publisher-place")}
-        {this.render_expanded_field("references")}
-        {this.render_expanded_field("reviewed-title")}
-        {this.render_expanded_field("scale")}
-        {this.render_expanded_field("section")}
-        {this.render_expanded_field("source")}
-        {this.render_expanded_field("status")}
-        {this.render_expanded_field("title")}
-        {this.render_expanded_field("title-short")}
-        {this.render_expanded_field("URL")}
-        {this.render_expanded_field("version")}
-        {this.render_expanded_field("chapter-number")}
-        {this.render_expanded_field("collection-number")}
-        {this.render_expanded_field("edition")}
-        {this.render_expanded_field("issue")}
-        {this.render_expanded_field("number")}
-        {this.render_expanded_field("number-of-pages")}
-        {this.render_expanded_field("number-of-volumes")}
-        {this.render_expanded_field("volume")}
-        {this.render_expanded_field("")}
-        {this.render_expanded_field("")}
+        {referenceFields.map(
+          (rf) =>
+            (
+              <div key={rf.field} className="Ref-list-item-expand-row">
+                <div className="Ref-list-item-expand-left">{rf.field}</div>
+                <div className="Ref-list-item-expand-right">
+                  <Editable
+                    value={this.props[rf.field]}
+                    field={rf.field}
+                    isTextArea={!!rf.isTextArea}
+                    onEdit={(field, value) => this.onEdit(field, value)}
+                  />
+                </div>
+              </div>
+            )
+        )
+        }
 
         <div className="Ref-list-item-expand-all">
           <button type="button">Open</button>

@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from 'redux'
 import referenceApp from './reducers'
 import App from './components/App'
 import './App.css'
-import { fetchLibrary } from "./actions/index";
+import {fetchCitationLocale, fetchLibrary, fetchCitationStyle } from "./actions/index";
 
 
 let store = createStore(
@@ -17,6 +17,8 @@ let store = createStore(
 );
 
 store.dispatch(fetchLibrary());
+store.dispatch(fetchCitationLocale());
+store.dispatch(fetchCitationStyle());
 
 render(
   <Provider store={store}>

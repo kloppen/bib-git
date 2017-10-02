@@ -25,7 +25,7 @@ http://redux.js.org/docs/basics/ExampleTodoList.html
 https://survivejs.com/react/getting-started/editing-notes/
 https://github.com/Juris-M/citeproc-js
 http://citationstyles.org/
-
+https://www.npmjs.com/package/react-citeproc
 https://www.w3schools.com/html/html_responsive.asp
 
 

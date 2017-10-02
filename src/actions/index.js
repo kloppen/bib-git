@@ -72,3 +72,55 @@ export function dismissCitation() {
     type: "DISMISS_CITATION"
   }
 }
+
+export function fetchCitationLocale() {
+  return function(dispatch) {
+    dispatch(requestCitationLocale());
+    return fetch("./locales-en-US.xml")
+      .then(
+        response => response.text()
+      )
+      .then(
+        xml => dispatch(receiveCitationLocale(xml))
+      )
+  }
+}
+
+export const requestCitationLocale = () => {
+  return {
+    type: "REQUEST_CITATION_LOCALE"
+  }
+};
+
+export const receiveCitationLocale = (xml) => {
+  return {
+    type: "RECEIVE_CITATION_LOCALE",
+    xml
+  }
+};
+
+export function fetchCitationStyle() {
+  return function(dispatch) {
+    dispatch(requestCitationStyle());
+    return fetch("./ieee.csl")
+      .then(
+        response => response.text()
+      )
+      .then(
+        xml => dispatch(receiveCitationStyle(xml))
+      )
+  }
+}
+
+export const requestCitationStyle = () => {
+  return {
+    type: "REQUEST_CITATION_STYLE"
+  }
+};
+
+export const receiveCitationStyle = (xml) => {
+  return {
+    type: "RECEIVE_CITATION_STYLE",
+    xml
+  }
+};

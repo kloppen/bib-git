@@ -31,6 +31,32 @@ class Reference extends React.Component {
     dispatch(action)
   }
 
+  // TODO: Idea: only show populated fields in expanded view, but show all fields in edit view
+
+  // TODO: Iterate over an array to add all the fields, rather than having a lot of individual function calls in code
+
+  // TODO: Validation in Editable class (eg. numbers)
+
+  // TODO: Add date variables
+
+  // TODO: Add name variables
+
+  render_expanded_field(field, isTextArea=false) {
+    return (
+      <div>
+      <div className="Ref-list-item-expand-left">{field}</div>
+      <div className="Ref-list-item-expand-right">
+        <Editable
+          value={this.props[field]}
+          field={field}
+          isTextArea={isTextArea}
+          onEdit={(field, value) => this.onEdit(field, value)}
+        />
+      </div>
+      </div>
+    )
+  }
+
   render_expanded() {
     return (
       <div className="Ref-list-item">
@@ -41,24 +67,57 @@ class Reference extends React.Component {
           />
         </div>
 
-        <div className="Ref-list-item-expand-left">Title</div>
-        <div className="Ref-list-item-expand-right">
-          <Editable
-            value={this.props.title}
-            field="title"
-            onEdit={(field, value) => this.onEdit(field, value)}
-          />
-        </div>
-
-        <div className="Ref-list-item-expand-left">Abstract</div>
-        <div className="Ref-list-item-expand-right">
-          <Editable
-            value={this.props.abstract}
-            field="abstract"
-            onEdit={(field, value) => this.onEdit(field, value)}
-            isTextArea={true}
-          />
-        </div>
+        {this.render_expanded_field("abstract", true)}
+        {this.render_expanded_field("annote")}
+        {this.render_expanded_field("archive")}
+        {this.render_expanded_field("archive_location")}
+        {this.render_expanded_field("archive-place")}
+        {this.render_expanded_field("authority")}
+        {this.render_expanded_field("call-number")}
+        {this.render_expanded_field("collection-title")}
+        {this.render_expanded_field("container-title")}
+        {this.render_expanded_field("container-title-short")}
+        {this.render_expanded_field("dimensions")}
+        {this.render_expanded_field("DOI")}
+        {this.render_expanded_field("event")}
+        {this.render_expanded_field("event-place")}
+        {this.render_expanded_field("genre")}
+        {this.render_expanded_field("ISBN")}
+        {this.render_expanded_field("ISSN")}
+        {this.render_expanded_field("jurisdiction")}
+        {this.render_expanded_field("keyword")}
+        {this.render_expanded_field("locator")}
+        {this.render_expanded_field("medium")}
+        {this.render_expanded_field("note")}
+        {this.render_expanded_field("original-publisher")}
+        {this.render_expanded_field("original-publisher-place")}
+        {this.render_expanded_field("original-title")}
+        {this.render_expanded_field("page")}
+        {this.render_expanded_field("page-first")}
+        {this.render_expanded_field("PMCID")}
+        {this.render_expanded_field("PMID")}
+        {this.render_expanded_field("publisher")}
+        {this.render_expanded_field("publisher-place")}
+        {this.render_expanded_field("references")}
+        {this.render_expanded_field("reviewed-title")}
+        {this.render_expanded_field("scale")}
+        {this.render_expanded_field("section")}
+        {this.render_expanded_field("source")}
+        {this.render_expanded_field("status")}
+        {this.render_expanded_field("title")}
+        {this.render_expanded_field("title-short")}
+        {this.render_expanded_field("URL")}
+        {this.render_expanded_field("version")}
+        {this.render_expanded_field("chapter-number")}
+        {this.render_expanded_field("collection-number")}
+        {this.render_expanded_field("edition")}
+        {this.render_expanded_field("issue")}
+        {this.render_expanded_field("number")}
+        {this.render_expanded_field("number-of-pages")}
+        {this.render_expanded_field("number-of-volumes")}
+        {this.render_expanded_field("volume")}
+        {this.render_expanded_field("")}
+        {this.render_expanded_field("")}
 
         <div className="Ref-list-item-expand-all">
           <button type="button">Open</button>

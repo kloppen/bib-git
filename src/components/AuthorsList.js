@@ -25,6 +25,7 @@ class AuthorsList extends React.Component {
   }
 
   // TODO: Need to add add and subtract buttons for authors...including when authorList is null or undefined
+  // TODO: Might want to move the editing to an edit modal to allow the user to cancel more easily
   render()
   {
     if(!this.props.authorList || this.props.authorList.length <= 0) {

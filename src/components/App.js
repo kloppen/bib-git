@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import AddReference from '../containers/AddReference'
 import CitationModal from "./CitationModal"
+import EditReferenceModal from "./EditReferenceModal"
 import VisibleReferenceList from '../containers/VisibleReferenceList'
 import { setFilterText } from "../actions"
 
@@ -28,6 +29,7 @@ let App = ({dispatch}) => {
         </div>
       </div>
       <CitationModal/>
+      <EditReferenceModal/>
       <VisibleReferenceList />
     </div>
   );

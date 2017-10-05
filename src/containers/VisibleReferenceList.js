@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ReferenceList from '../components/ReferenceList'
-import {editReference} from "../actions/index";
+import { showEditModal } from "../actions/index";
 
 const getVisibleReferences = (references, filter) => {
   // TODO: search on other fields
@@ -21,11 +21,14 @@ const mapStateToProps = state => {
   }
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, state) => {
   return {
-    onReferenceEdit: (id, key, value) => {
-      dispatch(editReference(id, key, value))
+    onReferenceEditModal: (id) => {
+      dispatch(showEditModal(id, state.references[0]))
     }
+    /*onReferenceEdit: (id, key, value) => {
+      dispatch(editReference(id, key, value))
+    }*/
   }
 };
 

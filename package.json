@@ -6,6 +6,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-citeproc": "^0.1.7",
+    "react-confirm-alert": "^1.0.7",
     "react-dom": "^15.6.1",
     "react-modal": "^2.3.2",
     "react-redux": "^5.0.6",

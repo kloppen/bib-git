@@ -5,7 +5,7 @@ let nextTodoId = 0;
 export const addReference = () => {
   return {
     type: 'ADD_REFERENCE',
-    id: nextTodoId++,
+    id: nextTodoId++,  // TODO: This needs to change to something else
     author: "Author",
     title: "This is the title"
   }
@@ -18,6 +18,7 @@ export const setFilterText = filter => {
   }
 };
 
+// TODO: This needs to be removed
 export const editReference = (id, key, value) => {
   return {
     type: 'EDIT_REFERENCE',
@@ -26,6 +27,28 @@ export const editReference = (id, key, value) => {
     value: value
   }
 };
+
+export function showEditModal(id, reference) {
+  return {
+    type: "SHOW_EDIT_MODAL",
+    id,
+    reference
+  }
+}
+
+export function cancelEditModal() {
+  return {
+    type: "CANCEL_EDIT_MODAL"
+  }
+}
+
+export function saveEditModal(id, reference) {
+  return {
+    type: "SAVE_EDIT_MODAL",
+    id,
+    reference
+  }
+}
 
 export const requestLibrary = () => {
   return {
@@ -40,7 +63,7 @@ export const receiveLibrary = (json) => {
   }
 };
 
-export const failReceiveLibrary = () => {  // TODO: Implement
+export const failReceiveLibrary = () => {  // TODO: Implement for this and other 'receive' functions
   return {
     type: "FAIL_RECEIVE_LIBRARY"
   }

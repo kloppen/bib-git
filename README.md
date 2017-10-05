@@ -32,7 +32,6 @@ https://www.w3schools.com/html/html_responsive.asp
 
 # To-do's
 
-- Display author (multiple)
 - Search (filter) on all fields
 - Highlight search results (optional)
 - Save library (JSON)

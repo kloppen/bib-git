@@ -17,6 +17,8 @@ const references = (state = [], action) => {
       );
     case "RECEIVE_LIBRARY":
       return action.json;
+    case "SAVE_EDIT_MODAL":
+      return state;  // TODO: Implement saving changes!!!
     default:
       return state
   }

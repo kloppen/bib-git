@@ -12,6 +12,7 @@ class AuthorsList extends React.Component {
     }
   }
 
+  // TODO: Remove this function and associated local state?
   doExpand() {
     this.setState({
       isExpanded: !this.state.isExpanded

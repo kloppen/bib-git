@@ -17,6 +17,8 @@ const library = (
       return Object.assign({}, state, {
         isFetching: false
       });
+    case "SAVE_EDIT_MODAL":
+      return state;  // TODO: Implement tracking of changes
     default:
       return state
   }

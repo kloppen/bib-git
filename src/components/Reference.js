@@ -42,15 +42,6 @@ class Reference extends React.Component {
 
   // TODO: Make author fields non-editable in expanded view
 
-  // was in the following function
-  /*<Editable
-      value={this.props[rf.field]}
-      field={rf.field}
-      isTextArea={!!rf.isTextArea}
-      onEdit={(field, value) => this.onEdit(field, value)}
-    />
-    */
-
   render_expanded() {
     return (
       <div className="Ref-list-item">

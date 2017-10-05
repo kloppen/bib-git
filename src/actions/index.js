@@ -18,16 +18,6 @@ export const setFilterText = filter => {
   }
 };
 
-// TODO: This needs to be removed
-export const editReference = (id, key, value) => {
-  return {
-    type: 'EDIT_REFERENCE',
-    id: id,
-    key: key,
-    value: value
-  }
-};
-
 export function showEditScreen(id, reference) {
   return {
     type: "SHOW_EDIT_SCREEN",
@@ -49,6 +39,14 @@ export function saveEditScreen(id, reference) {
     reference
   }
 }
+
+export const editReferenceField = (key, value) => {
+  return {
+    type: 'EDIT_REFERENCE_FIELD',
+    key: key,
+    value: value
+  }
+};
 
 export const requestLibrary = () => {
   return {

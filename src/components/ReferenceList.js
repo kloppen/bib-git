@@ -14,7 +14,7 @@ const ReferenceList = ({ references, library }) => {
           <Reference key={reference.id} {...reference} />
         ))}
       </div>
-  );
+    );
   }
 };
 

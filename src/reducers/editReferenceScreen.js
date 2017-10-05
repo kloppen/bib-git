@@ -3,7 +3,7 @@ const editReferenceScreen = (
     isVisible: false,
     refID: "",
     referenceEditing: null,
-    modified: false
+    isModified: false
   },
   action
 ) => {
@@ -13,22 +13,31 @@ const editReferenceScreen = (
         isVisible: true,
         refID: action.id,
         referenceEditing: Object.assign({}, action.reference),
-        modified: false
+        isModified: false
       });
     case "CANCEL_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: false,
         refID: "",
         referenceEditing: null,
-        modified: false
+        isModified: false
       });
     case "SAVE_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: false,
         refId: "",
         referenceEditing: null,
-        modified: false
+        isModified: false
       });
+    case "EDIT_REFERENCE_FIELD":
+      if(!state.referenceEditing) {
+        return state;
+      }
+      const isChanged = !!state.referenceEditing[action.key] && action.value === state.referenceEditing[action.key];
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
+        isModified: !isChanged
+    });
     default:
       return state
   }

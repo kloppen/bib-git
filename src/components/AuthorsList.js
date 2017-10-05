@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {editReference} from "../actions/index";
 import { connect } from 'react-redux'
 import Editable from "./Editable";
 
@@ -20,13 +19,12 @@ class AuthorsList extends React.Component {
   }
 
   onEdit(key, value) {
-    let { dispatch } = this.props;
+    /*let { dispatch } = this.props;
     let action = editReference(this.props.id, key, value);
-    dispatch(action)
+    dispatch(action)*/
   }
 
   // TODO: Need to add add and subtract buttons for authors...including when authorList is null or undefined
-  // TODO: Might want to move the editing to an edit modal to allow the user to cancel more easily
   render()
   {
     if(!this.props.authorList || this.props.authorList.length <= 0) {

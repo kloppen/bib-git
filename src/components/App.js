@@ -1,40 +1,40 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import AddReference from '../containers/AddReference'
+import PropTypes from 'prop-types'
 import CitationModal from "./CitationModal"
-import EditReferenceModal from "./EditReferenceModal"
-import VisibleReferenceList from '../containers/VisibleReferenceList'
-import { setFilterText } from "../actions"
+import EditReferenceModal from "./EditReferenceScreen"
+import MainScreen from "./MainScreen"
 
-let App = ({dispatch}) => {
+let App = ({editReferenceScreen}) => {
   return (
     <div className="App">
       <div className="App-header">
         <h2>bib-git</h2>
-        <div className="Search">
-          Search:
-          <input
-            type="text"
-            title = "Search"
-            size="40"
-            onChange={
-              (event) => {
-                dispatch(setFilterText(event.target.value));
-              }
-            }
-          />
-        </div>
-        <div className="Header-buttons">
-          <AddReference />
-        </div>
       </div>
       <CitationModal/>
-      <EditReferenceModal/>
-      <VisibleReferenceList />
+      {editReferenceScreen.isVisible ?
+        (<EditReferenceModal/>) :
+        (<MainScreen/>)
+      }
     </div>
   );
 };
 
-App = connect()(App);
+const mapStateToProps = state => {
+
+  return {
+    editReferenceScreen: state.editReferenceScreen
+  }
+};
+
+App = connect(
+  mapStateToProps
+)(App);
+
+App.propTypes = {
+  editReferenceScreen: PropTypes.shape({
+    isVisible: PropTypes.bool.isRequired
+  })
+};
 
 export default App

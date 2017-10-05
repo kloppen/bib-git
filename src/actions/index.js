@@ -28,23 +28,23 @@ export const editReference = (id, key, value) => {
   }
 };
 
-export function showEditModal(id, reference) {
+export function showEditScreen(id, reference) {
   return {
-    type: "SHOW_EDIT_MODAL",
+    type: "SHOW_EDIT_SCREEN",
     id,
     reference
   }
 }
 
-export function cancelEditModal() {
+export function cancelEditScreen() {
   return {
-    type: "CANCEL_EDIT_MODAL"
+    type: "CANCEL_EDIT_SCREEN"
   }
 }
 
-export function saveEditModal(id, reference) {
+export function saveEditScreen(id, reference) {
   return {
-    type: "SAVE_EDIT_MODAL",
+    type: "SAVE_EDIT_SCREEN",
     id,
     reference
   }

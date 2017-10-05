@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import AuthorList from './AuthorsList'
-import { showCitation, showEditModal } from "../actions/index";
+import { showCitation, showEditScreen } from "../actions/index";
 import { connect } from 'react-redux'
 import { referenceFields } from "../common/referenceFields"
 
@@ -28,7 +28,7 @@ class Reference extends React.Component {
 
   doEditModal() {
     let { dispatch } = this.props;
-    let action = showEditModal(this.props.id, this.props);
+    let action = showEditScreen(this.props.id, this.props);
     dispatch(action)
   }
 

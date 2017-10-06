@@ -18,12 +18,16 @@ export const setFilterText = filter => {
   }
 };
 
-export function showEditScreen(id, reference) {
-  return {
-    type: "SHOW_EDIT_SCREEN",
-    id,
-    reference
-  }
+export function showEditScreen(id) {
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    dispatch({
+      type: "SHOW_EDIT_SCREEN",
+      id: id,
+      reference: references.filter( (r) => r.id === id)[0]
+    })
+  };
 }
 
 export function cancelEditScreen() {
@@ -32,11 +36,27 @@ export function cancelEditScreen() {
   }
 }
 
-export function saveEditScreen(id, reference) {
+export function saveEditScreen() {
+  return (dispatch, getState) => {
+    const { editReferenceScreen } = getState();
+
+    if(editReferenceScreen.isModified) {
+      const newReferenceData = editReferenceScreen.referenceEditing;
+      const id = editReferenceScreen.refID;
+      dispatch(updateReference(id, newReferenceData))
+    }
+
+    dispatch({
+      type: "SAVE_EDIT_SCREEN"
+    })
+  };
+}
+
+export function updateReference(id, newReferenceData) {
   return {
-    type: "SAVE_EDIT_SCREEN",
+    type: "UPDATE_REFERENCE",
     id,
-    reference
+    newReferenceData
   }
 }
 

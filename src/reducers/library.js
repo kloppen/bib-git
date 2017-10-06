@@ -1,6 +1,7 @@
 const library = (
   state = {
-    isFetching: false
+    isFetching: false,
+    isModified: false
   },
   action
 ) => {
@@ -17,8 +18,10 @@ const library = (
       return Object.assign({}, state, {
         isFetching: false
       });
-    case "SAVE_EDIT_MODAL":
-      return state;  // TODO: Implement tracking of changes
+    case "UPDATE_REFERENCE":
+      return Object.assign({}, state, {
+        isModified: true
+      });
     default:
       return state
   }

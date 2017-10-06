@@ -57,7 +57,13 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
   <div>
     <div className="Screen-header">
       <div className="Header-buttons">
-        <button type="button">Save</button>
+        <button type="button"
+                onClick={() => {
+                  if(editReferenceScreen.isModified) {
+                    dispatch(saveEditScreen())
+                  }
+                }}
+        >Save</button>
         <button type="button"
                 onClick={() => {
                   if(editReferenceScreen.isModified) {

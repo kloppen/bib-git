@@ -28,11 +28,9 @@ class Reference extends React.Component {
 
   doEditModal() {
     let { dispatch } = this.props;
-    let action = showEditScreen(this.props.id, this.props);
+    let action = showEditScreen(this.props.id);
     dispatch(action)
   }
-
-  // TODO: Edit modal - should load from next higher container
 
   // TODO: Add date variables
 

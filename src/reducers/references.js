@@ -9,16 +9,14 @@ const references = (state = [], action) => {
           title: action.title
         }
       ];
-    case 'EDIT_REFERENCE':
-      return state.map(reference =>
-        (reference.id === action.id)
-        ? {...reference, [action.key]: action.value }
-        : reference
-      );
     case "RECEIVE_LIBRARY":
       return action.json;
-    case "SAVE_EDIT_SCREEN":
-      return state;  // TODO: Implement saving changes!!!
+    case "UPDATE_REFERENCE":
+      return state.map(reference =>
+        (reference.id === action.id)
+        ? { ...action.newReferenceData }
+        : reference
+      );
     default:
       return state
   }

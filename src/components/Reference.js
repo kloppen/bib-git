@@ -36,10 +36,6 @@ class Reference extends React.Component {
 
   // TODO: Add name variables
 
-  // TODO: Only show populated author fields in expanded view
-
-  // TODO: Make author fields non-editable in expanded view
-
   render_expanded() {
     return (
       <div className="Ref-list-item">
@@ -47,6 +43,7 @@ class Reference extends React.Component {
         <div className="Ref-list-item-expand-right">
           <AuthorList
             authorList={this.props.author}
+            isEditable={false}
           />
         </div>
 
@@ -122,7 +119,7 @@ class Reference extends React.Component {
 
 Reference.propTypes = {
   id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   abstract: PropTypes.string,
   author: PropTypes.arrayOf(
     PropTypes.shape({

@@ -1,85 +1,82 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import Editable from "./Editable";
 
 class AuthorsList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isExpanded: false
-    }
+    this.state = {}
   }
 
-  // TODO: Remove this function and associated local state?
-  doExpand() {
-    this.setState({
-      isExpanded: !this.state.isExpanded
-    })
-  }
+  render() {
+    const editable = this.props.isEditable;
+    const fields = [
+      "given",
+      "dropping-particle",
+      "non-dropping-particle",
+      "family",
+      "literal"
+    ];
 
-  onEdit(key, value) {
-    /*let { dispatch } = this.props;
-    let action = editReference(this.props.id, key, value);
-    dispatch(action)*/
-  }
-
-  // TODO: Need to add add and subtract buttons for authors...including when authorList is null or undefined
-  render()
-  {
-    if(!this.props.authorList || this.props.authorList.length <= 0) {
-      return (<div>&nbsp;</div>)  // TODO: This should show a single author anyways, or the add button, or something
-    }
     return (
       <div>
-        {this.props.authorList.map((a, index) => (
-          <span key={index}>
-            <div className="Author-field">
-              <Editable
-                field="given"
-                value={a.given}
-              />
+        {!!this.props.authorList
+          ?this.props.authorList.map((a, index) => (
+            <div key={index} className="Author-list-row">
+              <div className={editable ? "Author-editable-left" : ""}>
+                {fields.map((f) => (
+                  <div key={f} className="Author-field">
+                    {(editable)
+                      ? (<Editable field={f}
+                                   value={a[f]}
+                                   onEdit={(field, value) => {
+                                     this.props.onEditAuthorField(index, field, value)
+                                   }}
+                      /> )
+                      :
+                      (!!a[f]) ? (<span>{a[f]}</span>) : (<span/>)
+                    }
+                  </div>
+                ))}
+
+              </div>
+              {
+                (editable)
+                  ? (
+                    <div className="Author-editable-right">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          this.props.onDeleteAuthor(index)
+                        }}
+                      >X
+                      </button>
+                    </div>
+                  )
+                  : (<span/>)
+              }
             </div>
-            <div className="Author-field">
-              <Editable
-                field="dropping-particle"
-                value={a['dropping-particle']}
-              />
-            </div>
-            <div className="Author-field">
-              <Editable
-                field="non-dropping-particle"
-                value={a['non-dropping-particle']}
-              />
-            </div>
-            <div className="Author-field">
-              <Editable
-                field="family"
-                value={a.family}
-              />
-            </div>
-            <div className="Author-field">
-              <Editable
-                field="suffix"
-                value={a.suffix}
-              />
-            </div>
-            <div className="Author-field">
-              <Editable
-                field="literal"
-                value={a.literal}
-              />
-            </div>
-            <br/>
-          </span>
-        ))}
+          )
+        )
+        : (<span/>)
+        }
+        {
+          (editable)
+            ? (
+              <button
+                type="button"
+                onClick={() => this.props.onAddAuthor()}
+              >+</button>)
+            : (<span/>)
+        }
       </div>
     );
   }
 }
 
 AuthorsList.PropTypes = {
-  authorList:  PropTypes.arrayOf(
+  authorList: PropTypes.arrayOf(
     PropTypes.shape({
       family: PropTypes.string,
       given: PropTypes.string,
@@ -87,7 +84,11 @@ AuthorsList.PropTypes = {
       'dropping-particle': PropTypes.string,
       suffix: PropTypes.string,
       literal: PropTypes.string
-  }))
+    })),
+  isEditable: PropTypes.bool.isRequired,
+  onEditAuthorField: PropTypes.func.isRequired,
+  onDeleteAuthor: PropTypes.func.isRequired,
+  onAddAuthor: PropTypes.func.isRequired
 };
 
 

@@ -1,11 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { saveEditScreen, cancelEditScreen, editReferenceField } from "../actions/index";
+import {
+  saveEditScreen,
+  cancelEditScreen,
+  editReferenceField,
+  editAuthorField,
+  addAuthorEditScreen,
+  removeAuthorEditScreen
+} from "../actions/index";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
+import AuthorList from "./AuthorsList"
 
 const refFields = referenceFields;
 
@@ -18,6 +26,35 @@ const confirmCancel = (dispatch) => {
     onConfirm: () => { dispatch(cancelEditScreen()) },
     onCancel: () => { /* Do nothing on cancel, just let alert go away */}
   })
+};
+
+const authorContents = (editReferenceScreen, dispatch) => {
+  if(!editReferenceScreen || !editReferenceScreen.referenceEditing) {
+    return (<span>No reference specified</span>)
+  }
+
+  const ref = editReferenceScreen.referenceEditing;
+
+  return (
+    <div key="author" className="Ref-list-item-expand-row">
+      <div className="Ref-list-item-expand-left">author</div>
+      <div className="Ref-list-item-expand-right">
+        <AuthorList
+          authorList={ref.author}
+          isEditable={true}
+          onEditAuthorField={(index, key, value) => {
+            dispatch(editAuthorField(index, key, value))
+          }}
+          onAddAuthor={() => {
+            dispatch(addAuthorEditScreen())
+          }}
+          onDeleteAuthor={(index) => {
+            dispatch(removeAuthorEditScreen(index))
+          }}
+        />
+      </div>
+    </div>
+  )
 };
 
 const modalContents = (editReferenceScreen, dispatch) => {
@@ -76,9 +113,10 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       </div>
     </div>
     <div className="Ref-list-item">
-      {
-        modalContents(editReferenceScreen, dispatch)
-      }
+      <span>{ authorContents(editReferenceScreen, dispatch) }</span>
+      <span>
+        { modalContents(editReferenceScreen, dispatch) }
+      </span>
     </div>
   </div>
 );

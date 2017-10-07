@@ -124,7 +124,22 @@ textarea.Editable {
     clear: left;
 }
 
+.Author-list-row {
+    overflow: auto;
+    clear: left;
+}
+
 .Author-field {
     float: left;
     width: 150px;
+}
+
+.Author-editable-left {
+    float: left;
+    width: calc(100% - 25px);
+}
+
+.Author-editable-right {
+    float: left;
+    width: 25px;
 }

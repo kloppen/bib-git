@@ -58,30 +58,37 @@ textarea.Editable {
     box-sizing: border-box;
 }
 
-.Ref-list-item-left {
+.Ref-list-item-1 {
     float: left;
-    width: 25%;
+    width: calc(30% - 60px); /* 30% x 200px = 60px */
     padding: 5px;
     box-sizing: border-box;
 }
 
-.Ref-list-item-right {
+.Ref-list-item-2 {
+    float: left;
+    width: calc(10% - 20px); /* 10% x 200px = 20px*/
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.Ref-list-item-3 {
+    float: left;
+    width: calc(60% - 120px); /* 60% x 200px = 120px */
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.Ref-list-item-4 {
     float: right;
     text-align: right;
-    width: 25%;
-    padding: 5px;
-    box-sizing: border-box;
-}
-
-.Ref-list-item-middle {
-    float: left;
-    width: 50%;
+    width: 200px;
     padding: 5px;
     box-sizing: border-box;
 }
 
 @media (max-width: 800px) {
-    .Ref-list-item-left, .Ref-list-item-middle, .Ref-list-item-right {
+    .Ref-list-item-1, .Ref-list-item-2, .Ref-list-item-3, .Ref-list-item-4 {
         width: 100%;
     }
 }

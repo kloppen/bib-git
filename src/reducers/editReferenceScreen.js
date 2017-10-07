@@ -35,6 +35,25 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
         isModified: !state.referenceEditing[action.key] || action.value !== state.referenceEditing[action.key]
       });
+    case "EDIT_DATE_FIELD":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      const newRefEditing = {
+        [action.key]: {
+          "date-parts": [
+            [
+              action.year.toString(),
+              action.month,
+              action.date
+            ]
+          ]
+        }
+      };
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, newRefEditing),
+        isModified: !state.referenceEditing[action.key] || newRefEditing !== state.referenceEditing[action.key]
+      });
     case "EDIT_NAME_FIELD":
       if (!state.referenceEditing) {
         return state;

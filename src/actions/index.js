@@ -93,6 +93,16 @@ export const removeName = (field, index) => {
   }
 };
 
+export const editDateField = (key, year, month, date) => {
+  return {
+    type: "EDIT_DATE_FIELD",
+    key,
+    year,
+    month,
+    date
+  }
+};
+
 export const requestLibrary = () => {
   return {
     type: "REQUEST_LIBRARY"

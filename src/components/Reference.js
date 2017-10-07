@@ -32,9 +32,25 @@ class Reference extends React.Component {
     dispatch(action)
   }
 
-  // TODO: Add date variables
+  show_date(date) {
+    if(!date["date-parts"]) {
+      return (<span>Malformed date</span>);
+    }
+    const date_parts = date["date-parts"][0];
 
-  // TODO: Add name variables
+    return (
+      <span>
+        {
+          [
+            !!date_parts[0] ? date_parts[0]: "",
+            !!date_parts[1] ? date_parts[1]: "",
+            !!date_parts[2] ? date_parts[2]: ""
+          ].filter(dp => dp!=="").join("/")
+        }
+
+      </span>
+    )
+  }
 
   field_contents(field) {
     switch (field.type) {
@@ -48,6 +64,15 @@ class Reference extends React.Component {
                 nameList={this.props[field.field]}
                 isEditable={false}
               />
+            </div>
+          </div>
+        );
+      case "DATE":
+        return (
+          <div key={field.field} className="Ref-list-item-expand-row">
+            <div className="Ref-list-item-expand-left">{field.field}</div>
+            <div className="Ref-list-item-expand-right">
+              { this.show_date(this.props[field.field]) }
             </div>
           </div>
         );
@@ -67,9 +92,8 @@ class Reference extends React.Component {
     return (
       <div className="Ref-list-item">
         {
-          referenceFields.filter((rf) => !!this.props[rf.field]).map(
-            (rf) => this.field_contents(rf)
-          )
+          referenceFields.filter((rf) => !!this.props[rf.field])
+            .map( (rf) => this.field_contents(rf) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button">Open</button>
@@ -102,13 +126,20 @@ class Reference extends React.Component {
   render_collapsed() {
     return (
       <div className="Ref-list-item">
-        <div className="Ref-list-item-left">
+        <div className="Ref-list-item-1">
           { this.render_author_list_collapsed() }
         </div>
-        <div className="Ref-list-item-middle">
+        <div className="Ref-list-item-2">
+          {
+            (this.props.issued && !!this.props.issued["date-parts"])
+            ? this.props.issued["date-parts"][0][0]
+              : ""
+          }
+        </div>
+        <div className="Ref-list-item-3">
           {this.props.title}
         </div>
-        <div className="Ref-list-item-right">
+        <div className="Ref-list-item-4">
           <button type="button">Open</button>
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Expand</button>
@@ -128,18 +159,7 @@ class Reference extends React.Component {
 }
 
 Reference.propTypes = {
-  id: PropTypes.string.isRequired,
-  title: PropTypes.string,
-  abstract: PropTypes.string,
-  author: PropTypes.arrayOf(
-    PropTypes.shape({
-      family: PropTypes.string,
-      given: PropTypes.string,
-      'non-dropping-particle': PropTypes.string,
-      'dropping-particle': PropTypes.string,
-      suffix: PropTypes.string,
-      literal: PropTypes.string
-  }))
+  id: PropTypes.string.isRequired
 };
 
 export default connect()(Reference)

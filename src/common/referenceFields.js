@@ -1,7 +1,10 @@
 // TODO: Support Types for references (article, book, etc...)
 
 export const referenceFields = [
-  {field: "author", type: "NAME", hint: "author"},
+  {
+    field: "author", type: "NAME",
+    hint: "author"
+  },
   {
     field: "collection-editor", type: "NAME",
     hint: "editor of the collection holding the item (e.g. the series editor for a book)"
@@ -50,6 +53,31 @@ export const referenceFields = [
     field: "translator", type: "NAME",
     hint: "translator"
   },
+  {
+    field: "accessed", type: "DATE",
+    hint: "date the item has been accessed"
+  },
+  {
+    field: "container", type: "DATE",
+    hint: "?"
+  },
+  {
+    field: "event-date", type: "DATE",
+    hint: "date the related event took place"
+  },
+  {
+    field: "issued", type: "DATE",
+    hint: "date the item was issued/published"
+  },
+  {
+    field: "original-date", type: "DATE",
+    hint: "(issue) date of the original version"
+  },
+  {
+    field: "submitted", type: "DATE",
+    hint: "date the item (e.g. a manuscript) has been submitted for publication"
+  },
+
   {
     field: "abstract", type: 'TEXT_AREA',
     hint: "abstract of the item (e.g. the abstract of a journal article)"

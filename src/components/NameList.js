@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import Editable from "./Editable";
 
-class AuthorsList extends React.Component {
+class NameList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {}
@@ -11,7 +11,7 @@ class AuthorsList extends React.Component {
 
   render() {
     const editable = this.props.isEditable;
-    const fields = [
+    const subFields = [
       "given",
       "dropping-particle",
       "non-dropping-particle",
@@ -21,17 +21,17 @@ class AuthorsList extends React.Component {
 
     return (
       <div>
-        {!!this.props.authorList
-          ?this.props.authorList.map((a, index) => (
-            <div key={index} className="Author-list-row">
-              <div className={editable ? "Author-editable-left" : ""}>
-                {fields.map((f) => (
-                  <div key={f} className="Author-field">
+        {!!this.props.nameList
+          ?this.props.nameList.map((a, index) => (
+            <div key={index} className="Name-list-row">
+              <div className={editable ? "Name-editable-left" : ""}>
+                {subFields.map((f) => (
+                  <div key={f} className="Name-field">
                     {(editable)
                       ? (<Editable field={f}
                                    value={a[f]}
-                                   onEdit={(field, value) => {
-                                     this.props.onEditAuthorField(index, field, value)
+                                   onEdit={(subField, value) => {
+                                     this.props.onEditNameField(index, subField, value)
                                    }}
                       /> )
                       :
@@ -44,11 +44,11 @@ class AuthorsList extends React.Component {
               {
                 (editable)
                   ? (
-                    <div className="Author-editable-right">
+                    <div className="Name-editable-right">
                       <button
                         type="button"
                         onClick={() => {
-                          this.props.onDeleteAuthor(index)
+                          this.props.onDeleteName(index)
                         }}
                       >X
                       </button>
@@ -66,7 +66,7 @@ class AuthorsList extends React.Component {
             ? (
               <button
                 type="button"
-                onClick={() => this.props.onAddAuthor()}
+                onClick={() => this.props.onAddName()}
               >+</button>)
             : (<span/>)
         }
@@ -75,8 +75,8 @@ class AuthorsList extends React.Component {
   }
 }
 
-AuthorsList.PropTypes = {
-  authorList: PropTypes.arrayOf(
+NameList.PropTypes = {
+  nameList: PropTypes.arrayOf(
     PropTypes.shape({
       family: PropTypes.string,
       given: PropTypes.string,
@@ -86,10 +86,10 @@ AuthorsList.PropTypes = {
       literal: PropTypes.string
     })),
   isEditable: PropTypes.bool.isRequired,
-  onEditAuthorField: PropTypes.func.isRequired,
-  onDeleteAuthor: PropTypes.func.isRequired,
-  onAddAuthor: PropTypes.func.isRequired
+  onEditNameField: PropTypes.func.isRequired,
+  onDeleteName: PropTypes.func.isRequired,
+  onAddName: PropTypes.func.isRequired
 };
 
 
-export default connect()(AuthorsList)
+export default connect()(NameList)

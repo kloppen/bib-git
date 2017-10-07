@@ -35,44 +35,45 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
         isModified: !state.referenceEditing[action.key] || action.value !== state.referenceEditing[action.key]
       });
-    case "EDIT_AUTHOR_FIELD":
+    case "EDIT_NAME_FIELD":
       if (!state.referenceEditing) {
         return state;
       }
-      const newAuthorEdit = state.referenceEditing.author.map((a, index) =>
+      const newNameValue = state.referenceEditing[action.field].map((a, index) =>
         index === action.index
           ? Object.assign({}, a, {[action.key]: action.value})
           : a
       );
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          author: newAuthorEdit
+          [action.field]: newNameValue
         }),
-        isModified: !state.referenceEditing.author[action.index][action.key] ||
-        state.referenceEditing.author[action.index][action.key] !== action.value
+        isModified: !state.referenceEditing[action.field][action.index][action.key] ||
+        state.referenceEditing[action.field][action.index][action.key] !== action.value
       });
-    case "ADD_AUTHOR_EDIT_SCREEN":
+    case "ADD_NAME":
       if (!state.referenceEditing) {
         return state;
       }
-      const newAuthorAdd = !!state.referenceEditing.author
-        ? [...state.referenceEditing.author, {}]
+      const newNameAdd = !!state.referenceEditing[action.field]
+        ? [...state.referenceEditing[action.field], {}]
         : [{}];
+      // Won't change the isModified flag until the user actually adds some text to the new name field
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          author: newAuthorAdd
+          [action.field]: newNameAdd
         })
       });
-    case "REMOVE_AUTHOR_EDIT_SCREEN":
+    case "REMOVE_NAME":
       if (!state.referenceEditing) {
         return state;
       }
-      const newAuthorRemove = state.referenceEditing.author.filter((a, index) =>
+      const newNameRemove = state.referenceEditing[action.field].filter((a, index) =>
         index !== action.index
       );
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          author: newAuthorRemove
+          [action.field]: newNameRemove
         }),
         isModified: true
       });

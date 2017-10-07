@@ -5,15 +5,15 @@ import {
   saveEditScreen,
   cancelEditScreen,
   editReferenceField,
-  editAuthorField,
-  addAuthorEditScreen,
-  removeAuthorEditScreen
+  editNameField,
+  addName,
+  removeName
 } from "../actions/index";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
-import AuthorList from "./AuthorsList"
+import NameList from "./NameList"
 
 const refFields = referenceFields;
 
@@ -43,17 +43,18 @@ const fieldContents = (reference, field, dispatch) => {
       );
     case "NAME":
       return (
-        <AuthorList
-          authorList={reference[field.field]}
+        <NameList
+          field={field.field}
+          nameList={reference[field.field]}
           isEditable={true}
-          onEditAuthorField={(index, key, value) => {
-            dispatch(editAuthorField(index, key, value))
+          onEditNameField={(index, key, value) => {
+            dispatch(editNameField(field.field, index, key, value))
           }}
-          onAddAuthor={() => {
-            dispatch(addAuthorEditScreen())
+          onAddName={() => {
+            dispatch(addName(field.field))
           }}
-          onDeleteAuthor={(index) => {
-            dispatch(removeAuthorEditScreen(index))
+          onDeleteName={(index) => {
+            dispatch(removeName(field.field, index))
           }}
         />
       );

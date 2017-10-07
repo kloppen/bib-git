@@ -68,24 +68,27 @@ export const editReferenceField = (key, value) => {
   }
 };
 
-export const editAuthorField = (index, key, value) => {
+export const editNameField = (field, index, key, value) => {
   return {
-    type: "EDIT_AUTHOR_FIELD",
+    type: "EDIT_NAME_FIELD",
+    field,
     index,
     key,
     value
   }
 };
 
-export const addAuthorEditScreen = () => {
+export const addName = (field) => {
   return {
-    type: 'ADD_AUTHOR_EDIT_SCREEN'
+    type: 'ADD_NAME',
+    field
   }
 };
 
-export const removeAuthorEditScreen = (index) => {
+export const removeName = (field, index) => {
   return {
-    type: 'REMOVE_AUTHOR_EDIT_SCREEN',
+    type: 'REMOVE_NAME',
+    field,
     index
   }
 };

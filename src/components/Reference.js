@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import AuthorList from './AuthorsList'
+import NameList from './NameList'
 import { showCitation, showEditScreen } from "../actions/index";
 import { connect } from 'react-redux'
 import { referenceFields } from "../common/referenceFields"
@@ -43,8 +43,9 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              <AuthorList
-                authorList={this.props[field.field]}
+              <NameList
+                field={field.field}
+                nameList={this.props[field.field]}
                 isEditable={false}
               />
             </div>

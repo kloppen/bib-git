@@ -21,16 +21,7 @@ const ReferenceList = ({ references, library }) => {
 ReferenceList.propTypes = {
   references: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      author: PropTypes.arrayOf(
-        PropTypes.shape({
-          family: PropTypes.string,
-          given: PropTypes.string
-        }),
-      ),
-      abstract: PropTypes.string,
-      title: PropTypes.string,
+      id: PropTypes.string.isRequired
     }).isRequired
   ).isRequired,
   library: PropTypes.shape({

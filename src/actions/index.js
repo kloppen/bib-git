@@ -129,7 +129,7 @@ export const failReceiveLibrary = () => {  // TODO: Implement for this and other
 export function fetchLibrary() {
   return function (dispatch) {
     dispatch(requestLibrary());
-    return fetch("./MyLibrary.bib")
+    return fetch("./library/MyLibrary.bib")
       .then(
         response => response.text(),
         error => console.log("Error fetching library", error)

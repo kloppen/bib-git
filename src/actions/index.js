@@ -1,4 +1,8 @@
 import fetch from 'isomorphic-fetch'
+import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
+
+window.BibLatexParser = BibLatexParser;
+window.CSLExporter = CSLExporter;
 
 let nextTodoId = 0;
 
@@ -123,12 +127,37 @@ export const failReceiveLibrary = () => {  // TODO: Implement for this and other
 };
 
 export function fetchLibrary() {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(requestLibrary());
-    return fetch("./MyLibrary.json")
+    return fetch("./MyLibrary.bib")
       .then(
-        response => response.json(),
+        response => response.text(),
         error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => new BibLatexParser(bibString, {
+          processUnexpected: true,
+          processUnknown: {
+            collaborator: "l_name"
+          }
+        })
+      )
+      .then(
+        parser => parser.output
+      )
+      .then(
+        intermediateJSON => {
+          const exporter = new CSLExporter(intermediateJSON);
+          let cslJSON = exporter.output;
+
+          return Object.keys(cslJSON).map(key =>
+            (intermediateJSON[key] &&
+              intermediateJSON[key]["unexpected_fields"] &&
+              intermediateJSON[key]["unexpected_fields"]["file"])
+              ? Object.assign({}, cslJSON[key], {file: intermediateJSON[key]["unexpected_fields"]["file"]})
+              : cslJSON[key]
+          );
+        }
       )
       .then(
         json => dispatch(receiveLibrary(json))

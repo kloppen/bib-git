@@ -27,7 +27,7 @@ https://github.com/Juris-M/citeproc-js
 http://citationstyles.org/
 https://www.npmjs.com/package/react-citeproc
 https://www.w3schools.com/html/html_responsive.asp
-
+https://www.npmjs.com/package/biblatex-csl-converter
 
 
 # To-do's
@@ -45,6 +45,7 @@ https://www.w3schools.com/html/html_responsive.asp
 - Sort reference list
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 - Reorder fields in referenceFields.js to a more logical order
+- Allow user to link a file (already on disk) to an item
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

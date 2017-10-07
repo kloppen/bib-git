@@ -36,31 +36,40 @@ class Reference extends React.Component {
 
   // TODO: Add name variables
 
+  field_contents(field) {
+    switch (field.type) {
+      case "NAME":
+        return (
+          <div key={field.field} className="Ref-list-item-expand-row">
+            <div className="Ref-list-item-expand-left">{field.field}</div>
+            <div className="Ref-list-item-expand-right">
+              <AuthorList
+                authorList={this.props[field.field]}
+                isEditable={false}
+              />
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div key={field.field} className="Ref-list-item-expand-row">
+            <div className="Ref-list-item-expand-left">{field.field}</div>
+            <div className="Ref-list-item-expand-right">
+              {this.props[field.field]}
+            </div>
+          </div>
+        );
+    }
+  }
+
   render_expanded() {
     return (
       <div className="Ref-list-item">
-        <div className="Ref-list-item-expand-left">Author</div>
-        <div className="Ref-list-item-expand-right">
-          <AuthorList
-            authorList={this.props.author}
-            isEditable={false}
-          />
-        </div>
-
         {
           referenceFields.filter((rf) => !!this.props[rf.field]).map(
-          (rf) =>
-            (
-              <div key={rf.field} className="Ref-list-item-expand-row">
-                <div className="Ref-list-item-expand-left">{rf.field}</div>
-                <div className="Ref-list-item-expand-right">
-                  {this.props[rf.field]}
-                </div>
-              </div>
-            )
-        )
+            (rf) => this.field_contents(rf)
+          )
         }
-
         <div className="Ref-list-item-expand-all">
           <button type="button">Open</button>
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>

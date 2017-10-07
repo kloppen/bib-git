@@ -1,7 +1,10 @@
 
 
+// TODO: Support Types for references (article, book, etc...)
+
 export const referenceFields = [
-  {field: "abstract", isTextArea: true, hint: "abstract of the item (e.g. the abstract of a journal article)"},
+  {field: "author", type: "NAME", hint: "author"},
+  {field: "abstract", type: 'TEXT_AREA', hint: "abstract of the item (e.g. the abstract of a journal article)"},
   {field: "annote", hint: "reader’s notes about the item content"},
   {field: "archive", hint: "archive storing the item"},
   {field: "archive_location", hint: "storage location within an archive (e.g. a box and folder number)"},

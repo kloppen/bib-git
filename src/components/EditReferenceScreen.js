@@ -28,19 +28,23 @@ const confirmCancel = (dispatch) => {
   })
 };
 
-const authorContents = (editReferenceScreen, dispatch) => {
-  if(!editReferenceScreen || !editReferenceScreen.referenceEditing) {
-    return (<span>No reference specified</span>)
-  }
-
-  const ref = editReferenceScreen.referenceEditing;
-
-  return (
-    <div key="author" className="Ref-list-item-expand-row">
-      <div className="Ref-list-item-expand-left">author</div>
-      <div className="Ref-list-item-expand-right">
+const fieldContents = (reference, field, dispatch) => {
+  switch (field.type) {
+    case "TEXT_AREA":
+      return (
+        <Editable
+          value={reference[field.field]}
+          field={field.field}
+          isTextArea={true}
+          onEdit={(field, value) => {
+            dispatch(editReferenceField(field, value))
+          }}
+        />
+      );
+    case "NAME":
+      return (
         <AuthorList
-          authorList={ref.author}
+          authorList={reference[field.field]}
           isEditable={true}
           onEditAuthorField={(index, key, value) => {
             dispatch(editAuthorField(index, key, value))
@@ -52,9 +56,19 @@ const authorContents = (editReferenceScreen, dispatch) => {
             dispatch(removeAuthorEditScreen(index))
           }}
         />
-      </div>
-    </div>
-  )
+      );
+    default:
+      return (
+        <Editable
+          value={reference[field.field]}
+          field={field.field}
+          isTextArea={false}
+          onEdit={(field, value) => {
+            dispatch(editReferenceField(field, value))
+          }}
+        />
+      );
+  }
 };
 
 const modalContents = (editReferenceScreen, dispatch) => {
@@ -62,22 +76,13 @@ const modalContents = (editReferenceScreen, dispatch) => {
     return (<span>No reference specified</span>)
   }
 
-  const ref = editReferenceScreen.referenceEditing;
-
   return refFields.map(
     (rf) =>
       (
         <div key={rf.field} className="Ref-list-item-expand-row">
           <div className="Ref-list-item-expand-left">{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            <Editable
-              value={ref[rf.field]}
-              field={rf.field}
-              isTextArea={!!rf.isTextArea}
-              onEdit={(field, value) => {
-                dispatch(editReferenceField(field, value))
-              }}
-            />
+            { fieldContents(editReferenceScreen.referenceEditing, rf, dispatch) }
           </div>
         </div>
       )
@@ -113,10 +118,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       </div>
     </div>
     <div className="Ref-list-item">
-      <span>{ authorContents(editReferenceScreen, dispatch) }</span>
-      <span>
-        { modalContents(editReferenceScreen, dispatch) }
-      </span>
+      { modalContents(editReferenceScreen, dispatch) }
     </div>
   </div>
 );

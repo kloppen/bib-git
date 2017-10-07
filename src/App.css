@@ -60,21 +60,21 @@ textarea.Editable {
 
 .Ref-list-item-1 {
     float: left;
-    width: calc(30% - 60px); /* 30% x 200px = 60px */
+    width: calc(30% - 75px); /* 30% x 250px = 75px */
     padding: 5px;
     box-sizing: border-box;
 }
 
 .Ref-list-item-2 {
     float: left;
-    width: calc(10% - 20px); /* 10% x 200px = 20px*/
+    width: calc(10% - 25px); /* 10% x 250px = 25px*/
     padding: 5px;
     box-sizing: border-box;
 }
 
 .Ref-list-item-3 {
     float: left;
-    width: calc(60% - 120px); /* 60% x 200px = 120px */
+    width: calc(60% - 150px); /* 60% x 250px = 150px */
     padding: 5px;
     box-sizing: border-box;
 }
@@ -82,7 +82,7 @@ textarea.Editable {
 .Ref-list-item-4 {
     float: right;
     text-align: right;
-    width: 200px;
+    width: 250px;
     padding: 5px;
     box-sizing: border-box;
 }

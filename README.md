@@ -36,6 +36,7 @@ https://www.w3schools.com/html/html_responsive.asp
 - Highlight search results (optional)
 - Save library (JSON)
 - Mark library as edited (or not)
+- Warn user when closing if library has been edited
 - Fix add reference behavior (add all fields)
 - Add open functionality
 - Allow changing of citation style
@@ -43,6 +44,7 @@ https://www.w3schools.com/html/html_responsive.asp
 - value checking for CSL Type field
 - Sort reference list
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
+- Reorder fields in referenceFields.js to a more logical order
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

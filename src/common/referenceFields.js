@@ -281,6 +281,11 @@ export const referenceFields = [
     field: "volume",
     hint: "(container) volume holding the item (e.g. “2” when citing a chapter from book volume 2)"
   },
+  {
+    field: "file",
+    type: "FILE",
+    hint: "the file linked with this reference entity"
+  },
 ];
 
 export default referenceFields;

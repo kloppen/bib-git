@@ -3,7 +3,8 @@ Install termux
 
 Install hackers keyboard (optional)
 
-Install go, then git-lfs (which isn't availabel directly for termux, but can be built from source):
+Install go, then git-lfs (which isn't available directly for termux, but
+can be built from source):
 
 ```
 apt install git
@@ -19,6 +20,33 @@ cp bin/git-lfs /data/data/com.termux/files/usr/bin/
 cd
 git lfs install
 ```
+
+# Setting up the Library Repo
+Export your library from your current library reference system as BibLaTeX and 
+include the attached files. The .bib file must be named "MyLibrary.bib" and
+must be located in the folder `library` under the root instalation path of this
+program. The attached files would normally be located in a sub-folder called
+`files`, but this is not necessary (though they do need to either be in the
+`library` folder or a sub-folder of it).
+
+Initialize a git repository, enable git-lfs for PDF files (and whatever other 
+type of files you use).
+
+```
+cd library
+git init
+git lfs tack "*.pdf"
+git add .gitattributes
+git add MyLibrary.bib
+git add files # or whatever you called it
+git commit -m "Impored library"
+git remote add origin #... whatever your URL for a new GitHub repo is
+git push -u origin master
+```
+
+When you update your library, use the normal commit/push workflow that you 
+would with any other git repo.
+
 
 # References
 http://redux.js.org/docs/basics/ExampleTodoList.html

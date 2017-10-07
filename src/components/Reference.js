@@ -76,6 +76,30 @@ class Reference extends React.Component {
             </div>
           </div>
         );
+      case "FILE":
+        return (
+          <div key={field.field} className="Ref-list-item-expand-row">
+            <div className="Ref-list-item-expand-left">{field.field}</div>
+            <div className="Ref-list-item-expand-right">
+              {
+                this.props[field.field].split(";").map((fileText, index) => {
+                  let fileTitle = "";
+                  let fileHREF = "";
+                  const fileObj = fileText.split(":");
+                  if(fileObj.length === 3) {
+                    fileTitle = fileObj[0];
+                    fileHREF = "./library/" + fileObj[1];
+                  } else {
+                    fileTitle = fileObj[0];
+                    fileHREF = fileObj[0];
+                  }
+
+                  return (<a key={index} href={fileHREF} target="_blank">{fileTitle}<br/></a>)
+                })
+              }
+            </div>
+          </div>
+        );
       default:
         return (
           <div key={field.field} className="Ref-list-item-expand-row">

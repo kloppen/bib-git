@@ -70,7 +70,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 
 # To-do's
 
-- Search (filter) on all fields
 - Highlight search results (optional)
 - Save library (JSON)
 - Mark library as edited (or not)

@@ -11,6 +11,7 @@ export const addReference = () => {
     const { references } = getState();
 
     while(references
+      // eslint-disable-next-line
       .map(ref => ref.id === nextReferenceId.toString())
       .reduce((prevVal, elm) => prevVal || elm, false)) {
       ++nextReferenceId
@@ -172,6 +173,10 @@ export function fetchLibrary() {
       )
   }
 }
+
+export const saveReferences = () => {
+  /* This does nothing yet */
+};
 
 export function showCitation(id) {
   return {

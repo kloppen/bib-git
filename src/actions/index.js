@@ -4,15 +4,23 @@ import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
 window.BibLatexParser = BibLatexParser;
 window.CSLExporter = CSLExporter;
 
-let nextTodoId = 0;
+let nextReferenceId = 0;
 
 export const addReference = () => {
-  return {
-    type: 'ADD_REFERENCE',
-    id: nextTodoId++,  // TODO: This needs to change to something else
-    author: "Author",
-    title: "This is the title"
-  }
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    while(references
+      .map(ref => ref.id === nextReferenceId.toString())
+      .reduce((prevVal, elm) => prevVal || elm, false)) {
+      ++nextReferenceId
+    }
+
+    dispatch({
+      type: 'ADD_REFERENCE',
+    id: nextReferenceId.toString(),
+    })
+  };
 };
 
 export const setFilterText = filter => {

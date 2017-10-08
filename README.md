@@ -74,12 +74,10 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Save library (JSON)
 - Mark library as edited (or not)
 - Warn user when closing if library has been edited
-- Fix add reference behavior (add all fields)
 - Edit file links
 - Allow changing of citation style
-- When adding new references, set a correct and reliable id
 - value checking for CSL Type field
-- Sort reference list
+- Sort reference list (optional)
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 - Reorder fields in referenceFields.js to a more logical order
 - Allow user to link a file (already on disk) to an item

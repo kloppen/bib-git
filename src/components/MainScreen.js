@@ -1,9 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import VisibleReferenceList from "../containers/VisibleReferenceList";
-import { setFilterText } from "../actions"
-import AddReference from '../containers/AddReference'
-
+import {setFilterText, addReference} from "../actions"
 
 let MainScreen = ({dispatch}) => (
   <div>
@@ -22,7 +20,16 @@ let MainScreen = ({dispatch}) => (
         />
       </div>
       <div className="Header-buttons">
-        <AddReference/>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            dispatch(addReference());
+          }}
+        >
+          <button type="submit">
+            Add Reference
+          </button>
+        </form>
       </div>
     </div>
     <VisibleReferenceList/>

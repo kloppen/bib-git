@@ -4,9 +4,7 @@ const references = (state = [], action) => {
       return [
         ...state,
         {
-          id: action.id,
-          author: action.author,
-          title: action.title
+          id: action.id
         }
       ];
     case "RECEIVE_LIBRARY":

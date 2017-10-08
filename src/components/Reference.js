@@ -120,7 +120,6 @@ class Reference extends React.Component {
             .map( (rf) => this.field_contents(rf) )
         }
         <div className="Ref-list-item-expand-all">
-          <button type="button">Open</button>
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Collapse</button>
@@ -164,7 +163,6 @@ class Reference extends React.Component {
           {this.props.title}
         </div>
         <div className="Ref-list-item-4">
-          <button type="button">Open</button>
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
           <button type="button" onClick={() => { this.doExpand() }}>Expand</button>
         </div>

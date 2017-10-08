@@ -1,8 +1,7 @@
 import fetch from 'isomorphic-fetch'
-import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
 
-window.BibLatexParser = BibLatexParser;
-window.CSLExporter = CSLExporter;
+const Cite = require('citation-js')
+
 
 let nextReferenceId = 0;
 
@@ -135,26 +134,8 @@ export const failReceiveLibrary = () => {  // TODO: Implement for this and other
   }
 };
 
-export function fetchLibrary() {
-  return function (dispatch) {
-    dispatch(requestLibrary());
-    return fetch("./library/MyLibrary.bib")
-      .then(
-        response => response.text(),
-        error => console.log("Error fetching library", error)
-      )
-      .then(
-        bibString => new BibLatexParser(bibString, {
-          processUnexpected: true,
-          processUnknown: {
-            collaborator: "l_name"
-          }
-        })
-      )
-      .then(
-        parser => parser.output
-      )
-      .then(
+/**/
+      /*.then(
         intermediateJSON => {
           const exporter = new CSLExporter(intermediateJSON);
           let cslJSON = exporter.output;
@@ -167,6 +148,32 @@ export function fetchLibrary() {
               : cslJSON[key]
           );
         }
+      )*/
+
+      // TODO: The following drops the files field
+export function fetchLibrary() {
+  return function (dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.bib")
+      .then(
+        response => response.text(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => {
+          return new Cite(bibString, {
+            forceType: "string/bibtex"
+          })
+        }
+      )
+      .then(
+        parser => {
+          const csl = parser.get({
+            type: 'json',
+            style: 'csl'
+          });
+          return csl;
+        }
       )
       .then(
         json => dispatch(receiveLibrary(json))
@@ -175,7 +182,25 @@ export function fetchLibrary() {
 }
 
 export const saveReferences = () => {
-  /* This does nothing yet */
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    const data = new Cite(references, {
+            forceType: "array/csl"
+          });
+
+    const output = data.get({
+      type: 'string',
+      style: 'bibtex'
+    });
+
+
+
+    dispatch({
+      type: "SAVE_REFERENCES",
+      data: output
+    })
+  }
 };
 
 export function showCitation(id) {

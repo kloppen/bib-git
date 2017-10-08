@@ -1,5 +1,5 @@
 # Android Setup
-Install termux
+Install termux. Make sure that you give it storage permission.
 
 Install hackers keyboard (optional)
 
@@ -20,6 +20,16 @@ cp bin/git-lfs /data/data/com.termux/files/usr/bin/
 cd
 git lfs install
 ```
+
+This program currently only works on Firefox as Chrome prevents access to
+local files. For Firefox to access local files, you'll need to give it disk
+access by going to Settings / Apps and granting it permission for "Storage."
+
+When you're open files on Firefox for Android, you'll need to tap-and-hold
+the file and select "Open with App." Just clicking the link will fail.
+
+You may choose to add an icon to the homescreen. Open index.html and under
+"..."/Page, select "Add to Home Screen."
 
 # Setting up the Library Repo
 Export your library from your current library reference system as BibLaTeX and 
@@ -66,7 +76,7 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Mark library as edited (or not)
 - Warn user when closing if library has been edited
 - Fix add reference behavior (add all fields)
-- Add open functionality
+- Edit file links
 - Allow changing of citation style
 - When adding new references, set a correct and reliable id
 - value checking for CSL Type field

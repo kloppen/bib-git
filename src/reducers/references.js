@@ -34,12 +34,6 @@ const references = (state = [], action) => {
       }
 
       return disambiguatedRefs;
-
-      /*
-      return [
-        ...state,
-        ...action.data // TODO: Need to disambiguate keys
-      ];*/
     default:
       return state
   }

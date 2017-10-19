@@ -22,6 +22,14 @@ const library = (
       return Object.assign({}, state, {
         isModified: true
       });
+    case "SAVE_REFERENCES":
+      return Object.assign({}, state, {
+        isModified: false
+      });
+    case "IMPORT_BIBLATEX":
+      return Object.assign({}, state, {
+        isModified: true
+      });
     default:
       return state
   }

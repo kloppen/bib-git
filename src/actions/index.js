@@ -1,8 +1,9 @@
 import fetch from 'isomorphic-fetch'
+
+// const Cite = require('citation-js');
 import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
 
-window.BibLatexParser = BibLatexParser;
-window.CSLExporter = CSLExporter;
+const FileSaver = require("file-saver");
 
 let nextReferenceId = 0;
 
@@ -135,6 +136,52 @@ export const failReceiveLibrary = () => {  // TODO: Implement for this and other
   }
 };
 
+
+/*
+The citation.js implementation
+- Currently (OCt-2017), this only reads the fields defined in base BibTeX.
+  as such, things like the abstract and file (links) are not read. If
+  BibLaTeX is added to citation.js in the future, this code could be
+  re-introduced.
+
+export function fetchLibrary() {
+  return function (dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.bib")
+      .then(
+        response => response.text(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => {
+          return new Cite(bibString, {
+            forceType: "string/bibtex"
+          })
+        }
+      )
+      .then(
+        parser => {
+          const csl = parser.get({
+            type: 'json',
+            style: 'csl'
+          });
+          return csl;
+        }
+      )
+      .then(
+        json => dispatch(receiveLibrary(json))
+      )
+  }
+}
+*/
+
+/*
+The biblatex-csl-converter implementation
+- biblatex-csl-converter only converts from biblatex to CSL, not the other
+  way around, so this library cannot be used to save. Because of this fact,
+  this library should be abandoned
+*/
+/*
 export function fetchLibrary() {
   return function (dispatch) {
     dispatch(requestLibrary());
@@ -173,9 +220,145 @@ export function fetchLibrary() {
       )
   }
 }
+*/
 
-export const saveReferences = () => {
-  /* This does nothing yet */
+export function fetchLibrary() {
+  return function(dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.json")
+      .then(
+        response => response.json(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        json => dispatch(receiveLibrary(json))
+      )
+  }
+}
+
+export const saveLibrary = () => {
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    const blob = new Blob([JSON.stringify(references, null, 2)], {type: "application/json"});
+    FileSaver.saveAs(blob, "MyLibrary.json");
+
+    dispatch({
+      type: "SAVE_REFERENCES"
+    })
+  }
+};
+
+/*
+The citation.js implementation
+- Currently (OCt-2017), citation.js doesn't read all the fields we need, so abandoning this for now
+
+export const saveLibrary = () => {
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    const data = new Cite(references, {
+            forceType: "array/csl"
+          });
+
+    const output = data.get({
+      type: 'string',
+      style: 'bibtex'
+    });
+
+
+
+    dispatch({
+      type: "SAVE_REFERENCES",
+      data: output
+    })
+  }
+};*/
+/*
+export function fetchLibrary() {
+  return function (dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.bib")
+      .then(
+        response => response.text(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => new BibLatexParser(bibString, {
+          processUnexpected: true,
+          processUnknown: {
+            collaborator: "l_name"
+          }
+        })
+      )
+      .then(
+        parser => parser.output
+      )
+      .then(
+        intermediateJSON => {
+          const exporter = new CSLExporter(intermediateJSON);
+          let cslJSON = exporter.output;
+
+          return Object.keys(cslJSON).map(key =>
+            (intermediateJSON[key] &&
+              intermediateJSON[key]["unexpected_fields"] &&
+              intermediateJSON[key]["unexpected_fields"]["file"])
+              ? Object.assign({}, cslJSON[key], {file: intermediateJSON[key]["unexpected_fields"]["file"]})
+              : cslJSON[key]
+          );
+        }
+      )
+      .then(
+        json => dispatch(receiveLibrary(json))
+      )
+  }
+}
+*/
+
+export const importBibLaTeX = (biblatex) => {
+  return function (dispatch) {
+    new Promise((resolve, reject) => {
+        resolve(biblatex)
+      }
+    )
+      .then(
+        bibString => new BibLatexParser(bibString, {
+          processUnexpected: true,
+          processUnknown: {
+            collaborator: "l_name"
+          }
+        })
+      )
+      .then(
+        parser => parser.output
+      )
+      .then(
+        intermediateJSON => {
+          const exporter = new CSLExporter(intermediateJSON);
+          let cslJSON = exporter.output;
+
+          return Object.keys(cslJSON).map(key =>
+            Object.assign({}, cslJSON[key],
+              (intermediateJSON[key] &&
+                intermediateJSON[key]["unexpected_fields"] &&
+                intermediateJSON[key]["unexpected_fields"]["file"])
+                ? {file: intermediateJSON[key]["unexpected_fields"]["file"]}
+                : {},
+              (intermediateJSON[key]["entry_key"])
+                ? {id: intermediateJSON[key]["entry_key"]}
+                : {}
+            )
+          );
+        }
+      )
+      .then(
+        json =>
+          dispatch({
+            type: "IMPORT_BIBLATEX",
+            data: json
+          })
+      )
+  }
 };
 
 export function showCitation(id) {

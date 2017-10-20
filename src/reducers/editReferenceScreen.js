@@ -2,7 +2,8 @@ const editReferenceScreen = (state = {
                                isVisible: false,
                                refID: "",
                                referenceEditing: null,
-                               isModified: false
+                               isModified: false,
+                               isShowingDuplicateIDError: false
                              },
                              action) => {
   switch (action.type) {
@@ -13,19 +14,16 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, action.reference),
         isModified: false
       });
-    case "CANCEL_EDIT_SCREEN":
+    case "DISMISS_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: false,
         refID: "",
         referenceEditing: null,
         isModified: false
       });
-    case "SAVE_EDIT_SCREEN":
+    case "DUPLICATE_ID_ERROR_EDIT_SCREEN":
       return Object.assign({}, state, {
-        isVisible: false,
-        refId: "",
-        referenceEditing: null,
-        isModified: false
+        isShowingDuplicateIDError: action.showError
       });
     case "EDIT_REFERENCE_FIELD":
       if (!state.referenceEditing) {

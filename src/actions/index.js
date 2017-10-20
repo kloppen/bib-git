@@ -44,25 +44,40 @@ export function showEditScreen(id) {
   };
 }
 
-export function cancelEditScreen() {
+export function dismissEditScreen() {
   return {
-    type: "CANCEL_EDIT_SCREEN"
+    type: "DISMISS_EDIT_SCREEN"
+  }
+}
+
+export function duplicateIDErrorEditScreen(showError) {
+  return {
+    type: "DUPLICATE_ID_ERROR_EDIT_SCREEN",
+    showError
   }
 }
 
 export function saveEditScreen() {
   return (dispatch, getState) => {
-    const { editReferenceScreen } = getState();
+    const { editReferenceScreen, references } = getState();
 
     if(editReferenceScreen.isModified) {
       const newReferenceData = editReferenceScreen.referenceEditing;
       const id = editReferenceScreen.refID;
-      dispatch(updateReference(id, newReferenceData))
-    }
+      const newID = editReferenceScreen.referenceEditing.id;
 
-    dispatch({
-      type: "SAVE_EDIT_SCREEN"
-    })
+      const idCount = references
+        .filter(r => r.id !== id)
+        .map(r => r.id === newID)
+        .reduce((v, total) => v + total, 0);
+
+      if (idCount > 0) {
+        dispatch(duplicateIDErrorEditScreen(true));
+      } else {
+        dispatch(updateReference(id, newReferenceData));
+        dispatch(dismissEditScreen());
+      }
+    }
   };
 }
 

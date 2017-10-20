@@ -3,14 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
   saveEditScreen,
-  cancelEditScreen,
+  dismissEditScreen,
   editReferenceField,
   editNameField,
   addName,
   removeName,
-  editDateField
+  editDateField,
+  duplicateIDErrorEditScreen
 } from "../actions/index";
-import { confirmAlert } from 'react-confirm-alert';
+import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
@@ -27,10 +28,21 @@ const confirmCancel = (dispatch) => {
     message: "Are you sure you want to close without saving?",
     confirmLabel: "Close without saving",
     cancelLabel: "Continue editing",
-    onConfirm: () => { dispatch(cancelEditScreen()) },
+    onConfirm: () => { dispatch(dismissEditScreen()) },
     onCancel: () => { /* Do nothing on cancel, just let alert go away */}
   })
 };
+
+const duplicateIDError = (dispatch) => (
+  <ReactConfirmAlert
+    title="Edit Reference"
+    message="You have entered an ID that is assigned to another item. Please change it."
+    confirmLabel="OK"
+    cancelLabel=""
+    onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
+    onCancel={() => { /* Do nothing on cancel, just let alert go away */}}
+  />
+);
 
 const fieldContents = (reference, field, dispatch) => {
   switch (field.type) {
@@ -145,12 +157,18 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
                   if(editReferenceScreen.isModified) {
                     confirmCancel(dispatch)
                   } else {
-                    dispatch(cancelEditScreen())
+                    dispatch(dismissEditScreen())
                   }
                 }}
         >Cancel</button>
       </div>
     </div>
+    <span>
+      {editReferenceScreen.isShowingDuplicateIDError
+        ? duplicateIDError(dispatch)
+        : <span/>
+      }
+    </span>
     <div className="Ref-list-item">
       { modalContents(editReferenceScreen, dispatch) }
     </div>

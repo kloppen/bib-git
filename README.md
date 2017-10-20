@@ -75,7 +75,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 # To-do's
 
 - Highlight search results (optional)
-- Save library (JSON)
 - Mark library as edited (or not)
 - Warn user when closing if library has been edited
 - Edit file links
@@ -89,8 +88,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Fix CSS for header when width changes (currently all messed up)
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
-- Minor bug - saving if there is no change fails (ie. make a change, revert it, then save)
-- Checking of ID field during edit
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

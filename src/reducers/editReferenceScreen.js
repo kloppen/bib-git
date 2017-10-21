@@ -31,7 +31,9 @@ const editReferenceScreen = (state = {
       }
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
-        isModified: !state.referenceEditing[action.key] || action.value !== state.referenceEditing[action.key]
+        isModified: state.isModified ||
+          !state.referenceEditing[action.key] ||
+          action.value !== state.referenceEditing[action.key]
       });
     case "EDIT_DATE_FIELD":
       if (!state.referenceEditing) {
@@ -50,7 +52,28 @@ const editReferenceScreen = (state = {
       };
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, newRefEditing),
-        isModified: !state.referenceEditing[action.key] || newRefEditing !== state.referenceEditing[action.key]
+        isModified: state.isModified ||
+          !state.referenceEditing[action.key] ||
+          newRefEditing !== state.referenceEditing[action.key]
+      });
+    case "EDIT_FILE_FIELD":
+      if (!state.referenceEditing) {
+        return state;
+      }
+
+      const newFileValue = state.referenceEditing[action.field].split(";").map((f, index) =>
+        index === action.index
+          ? action.value
+          : f
+      ).join(";");
+
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: newFileValue
+        }),
+        isModified: state.isModified ||
+          !state.referenceEditing[action.field] ||
+          state.referenceEditing[action.field] !== newFileValue
       });
     case "EDIT_NAME_FIELD":
       if (!state.referenceEditing) {
@@ -65,8 +88,9 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, state.referenceEditing, {
           [action.field]: newNameValue
         }),
-        isModified: !state.referenceEditing[action.field][action.index][action.key] ||
-        state.referenceEditing[action.field][action.index][action.key] !== action.value
+        isModified: state.isModified ||
+          !state.referenceEditing[action.field][action.index][action.key] ||
+          state.referenceEditing[action.field][action.index][action.key] !== action.value
       });
     case "ADD_NAME":
       if (!state.referenceEditing) {
@@ -81,6 +105,16 @@ const editReferenceScreen = (state = {
           [action.field]: newNameAdd
         })
       });
+    case "ADD_FILE":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      // Won't change the isModified flag until the user actually adds some text to the new name field
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: state.referenceEditing[action.field] + ";...pdf:files/...pdf:application/pdf"
+        })
+      });
     case "REMOVE_NAME":
       if (!state.referenceEditing) {
         return state;
@@ -91,6 +125,19 @@ const editReferenceScreen = (state = {
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
           [action.field]: newNameRemove
+        }),
+        isModified: true
+      });
+    case "REMOVE_FILE":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      const newFileRemove = state.referenceEditing[action.field].split(";").filter((a, index) =>
+        index !== action.index
+      ).join(";");
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: newFileRemove
         }),
         isModified: true
       });

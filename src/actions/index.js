@@ -97,6 +97,30 @@ export const editReferenceField = (key, value) => {
   }
 };
 
+export const editFileField = (field, index, value) => {
+  return {
+    type: "EDIT_FILE_FIELD",
+    field,
+    index,
+    value
+  }
+};
+
+export const removeFile = (field, index) => {
+  return {
+    type: 'REMOVE_FILE',
+    field,
+    index
+  }
+};
+
+export const addFile = (field) => {
+  return {
+    type: "ADD_FILE",
+    field
+  }
+};
+
 export const editNameField = (field, index, key, value) => {
   return {
     type: "EDIT_NAME_FIELD",

@@ -9,13 +9,17 @@ import {
   addName,
   removeName,
   editDateField,
-  duplicateIDErrorEditScreen
+  duplicateIDErrorEditScreen,
+  editFileField,
+  removeFile,
+  addFile
 } from "../actions/index";
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
 import NameList from "./NameList"
+import FileList from "./FileList"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
@@ -71,6 +75,21 @@ const fieldContents = (reference, field, dispatch) => {
           }}
           onDeleteName={(index) => {
             dispatch(removeName(field.field, index))
+          }}
+        />
+      );
+    case "FILE":
+      return (
+        <FileList
+          files={reference[field.field]}
+          onEditFileField={(index, value) => {
+            dispatch(editFileField(field.field, index, value))
+          }}
+          onDeleteFile={(index) => {
+            dispatch(removeFile(field.field, index))
+          }}
+          onAddFile={() => {
+            dispatch(addFile(field.field))
           }}
         />
       );

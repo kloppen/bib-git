@@ -15,22 +15,27 @@
 
 .Screen-header {
     background-color: #222;
-    padding: 40px;
+    padding: 20px;
     color: white;
+    overflow: auto;
 }
 
 .Search {
     display: block;
     text-align: left;
     float: left;
-    width: 50%;
-    min-width: 150px;
 }
 
 .Header-buttons {
     display: block;
     float: right;
     min-width: 150px;
+}
+
+@media (max-width: 1000px) {
+    .Header-buttons {
+        width: 140px;
+    }
 }
 
 .Editable {
@@ -169,6 +174,7 @@ textarea.Editable {
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
+    width: 140px;
 }
 
 .input-field:focus + label,

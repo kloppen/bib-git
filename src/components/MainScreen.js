@@ -7,22 +7,7 @@ import {setFilterText, addReference, saveLibrary, importBibLaTeX} from "../actio
 let MainScreen = ({library, dispatch}) => (
   <div>
     <div className="Screen-header">
-      <div className="Search">
-        Search:
-        <input
-          type="text"
-          title="Search"
-          size="40"
-          onChange={
-            (event) => {
-              dispatch(setFilterText(event.target.value));
-            }
-          }
-        />
-      </div>
       <div className="Header-buttons">
-
-
         <button type="button" id="addReference" className="input-field" onClick={() => dispatch(addReference())}>
           Add Reference
         </button>
@@ -50,6 +35,19 @@ let MainScreen = ({library, dispatch}) => (
           Save Library
         </button>
         <label htmlFor="saveLibrary">Save Library</label>
+      </div>
+      <div className="Search">
+        Search:
+        <input
+          type="text"
+          title="Search"
+          size="40"
+          onChange={
+            (event) => {
+              dispatch(setFilterText(event.target.value));
+            }
+          }
+        />
       </div>
     </div>
     <VisibleReferenceList/>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import CitationModal from "./CitationModal"
 import EditReferenceModal from "./EditReferenceScreen"
+import AddReferenceModal from "./AddReferenceModal"
 import MainScreen from "./MainScreen"
 
 let App = ({editReferenceScreen}) => {
@@ -12,6 +13,7 @@ let App = ({editReferenceScreen}) => {
         <h2>bib-git</h2>
       </div>
       <CitationModal/>
+      <AddReferenceModal/>
       {editReferenceScreen.isVisible ?
         (<EditReferenceModal/>) :
         (<MainScreen/>)

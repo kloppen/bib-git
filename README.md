@@ -82,7 +82,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Sort reference list (optional)
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 - Reorder fields in referenceFields.js to a more logical order
-- Fix CSS for header when width changes (currently all messed up)
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
 

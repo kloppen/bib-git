@@ -1,14 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import VisibleReferenceList from "../containers/VisibleReferenceList";
-import {setFilterText, addReference, saveLibrary, importBibLaTeX} from "../actions"
+import {setFilterText, addReferenceModal, saveLibrary, importBibLaTeX} from "../actions"
 
 
 let MainScreen = ({library, dispatch}) => (
   <div>
     <div className="Screen-header">
       <div className="Header-buttons">
-        <button type="button" id="addReference" className="input-field" onClick={() => dispatch(addReference())}>
+        <button type="button" id="addReference" className="input-field" onClick={() => dispatch(addReferenceModal())}>
           Add Reference
         </button>
         <label htmlFor="addReference">Add Reference</label>

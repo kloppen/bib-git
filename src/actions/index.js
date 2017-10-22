@@ -1,11 +1,47 @@
 import fetch from 'isomorphic-fetch'
-
-// const Cite = require('citation-js');
 import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
 
+const Cite = require('citation-js');
 const FileSaver = require("file-saver");
 
 let nextReferenceId = 0;
+
+export const addReferenceModal = () => {
+  return {
+    type: "ADD_REFERENCE_MODAL"
+  }
+};
+
+export const dismissAddReferenceModal = () => {
+  return {
+    type: "DISMISS_ADD_REFERENCE_MODAL"
+  }
+};
+
+export const getReferenceByString = (str) => {
+  return (dispatch) => {
+    new Promise((resolve, reject) => {
+      resolve(new Cite(str))
+    }).then(
+      parser => {
+          const csl = parser.get({
+            type: 'json',
+            style: 'csl'
+          });
+          return csl;
+        }
+    ).then(
+      json => dispatch(receivedReferenceByString(json))
+    )
+  }
+};
+
+export const receivedReferenceByString = (json) => {
+  return {
+    type: "RECEIVED_REFERENCE_BY_STRING",
+    json
+  }
+};
 
 export const addReference = () => {
   return (dispatch, getState) => {

@@ -182,3 +182,8 @@ textarea.Editable {
     background-color: #717171;
     outline: 1px dotted #000;
 }
+
+.Add-reference-modal-row {
+    width: 100%;
+    margin: 20px;
+}

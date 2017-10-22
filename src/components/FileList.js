@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Editable from "./Editable";
 
 const FileList = ({files, onEditFileField, onDeleteFile, onAddFile}) => {
-  const fileList = files.split(";");
+  const fileList = !!files ? files.split(";") : [];
 
   return (
     <div>

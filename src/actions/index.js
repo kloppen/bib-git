@@ -264,7 +264,7 @@ export function fetchLibrary() {
 export function fetchLibrary() {
   return function(dispatch) {
     dispatch(requestLibrary());
-    return fetch("./library/MyLibrary.json")
+    return fetch("http://localhost:5000/api/library")
       .then(
         response => response.json(),
         error => console.log("Error fetching library", error)
@@ -275,6 +275,7 @@ export function fetchLibrary() {
   }
 }
 
+// TODO: Update this to use web api
 export const saveLibrary = () => {
   return (dispatch, getState) => {
     const { references } = getState();

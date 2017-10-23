@@ -31,7 +31,7 @@ def get_library():
     return json.dumps(library_data)
 
 
-@get("api/filepath")
+@get("/api/filepath")
 def get_filepath():
     """
     Gets the path to prepend on links to reference attachments. Includes file:/// at the beginning and no trailing slash

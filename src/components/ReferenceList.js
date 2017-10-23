@@ -11,7 +11,7 @@ const ReferenceList = ({ references, library }) => {
     return (
       <div>
         {references.map(reference => (
-          <Reference key={reference.id} {...reference} />
+          <Reference key={reference.id} reference={reference} hrefRoot={library.hrefRoot} />
         ))}
       </div>
     );

@@ -465,3 +465,22 @@ export const receiveCitationStyle = (xml) => {
     xml
   }
 };
+
+export const getFilePathRoot = () => {
+  return function(dispatch) {
+    return fetch("http://localhost:5000/api/filepath")
+      .then(
+        response => response.text()
+      )
+      .then(
+        path => dispatch(receiveFilePathRoot(path))
+      )
+  }
+};
+
+export const receiveFilePathRoot = (path) => {
+  return {
+    type: "RECEIVE_FILE_PATH_ROOT",
+    path
+  }
+};

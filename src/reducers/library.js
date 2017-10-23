@@ -1,7 +1,8 @@
 const library = (
   state = {
     isFetching: false,
-    isModified: false
+    isModified: false,
+    hrefRoot: ""
   },
   action
 ) => {
@@ -29,6 +30,10 @@ const library = (
     case "IMPORT_BIBLATEX":
       return Object.assign({}, state, {
         isModified: true
+      });
+    case "RECEIVE_FILE_PATH_ROOT":
+      return Object.assign({}, state, {
+        hrefRoot: action.path
       });
     default:
       return state

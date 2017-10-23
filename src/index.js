@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from 'redux'
 import referenceApp from './reducers'
 import App from './components/App'
 import './App.css'
-import {fetchCitationLocale, fetchLibrary, fetchCitationStyle } from "./actions/index";
+import {fetchCitationLocale, fetchLibrary, fetchCitationStyle, getFilePathRoot } from "./actions/index";
 
 
 let store = createStore(
@@ -19,6 +19,7 @@ let store = createStore(
 store.dispatch(fetchLibrary());
 store.dispatch(fetchCitationLocale());
 store.dispatch(fetchCitationStyle());
+store.dispatch(getFilePathRoot());
 
 render(
   <Provider store={store}>

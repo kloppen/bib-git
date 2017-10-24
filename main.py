@@ -2,6 +2,7 @@ import bottle
 from bottle import request, response
 from bottle import post, get, put, delete
 import json
+import os
 import os.path
 import pathlib
 
@@ -27,8 +28,7 @@ def get_library():
     """
     library_path = os.path.join("library", "MyLibrary.json")
     with open(library_path, "r") as library:
-        library_data = json.load(library)
-    return json.dumps(library_data)
+        return library.read()
 
 
 @get("/api/filepath")
@@ -40,6 +40,34 @@ def get_filepath():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     dir_path = os.path.join(dir_path, "library")
     return pathlib.Path(dir_path).as_uri()
+
+
+@get("/api/csl-styles")
+def get_csl_styles_listing():
+    """
+    Gets a listing of all available CSL styles
+    :return: A JSON-formatted string (a list in JSON)
+    """
+    csl_list = os.listdir("csl-styles")
+    csl_list = [c.split(".csl")[0] for c in csl_list if c.endswith(".csl")]
+    csl_list.sort()
+    return json.dumps(csl_list)
+
+
+@get("/api/csl-styles/<name>")
+def get_csl_style(name):
+    """
+    Gets a particular CSL style.
+    :param name: the name of the CSL style to retrieve. Does not include .csl extension
+    :return: An XML object
+    """
+    try:
+        csl_path = os.path.join("csl-styles", "{}.csl".format(name))
+        with open(csl_path, "r") as csl:
+            return csl.read()
+    except IOError:
+        response.status = 400
+        return
 
 
 if __name__ == "__main__":

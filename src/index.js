@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from 'redux'
 import referenceApp from './reducers'
 import App from './components/App'
 import './App.css'
-import {fetchCitationLocale, fetchLibrary, fetchCitationStyle, getFilePathRoot } from "./actions/index";
+import {fetchCitationLocale, fetchLibrary, fetchCitationStyle, getFilePathRoot, fetchCitationStyleList } from "./actions/index";
 
 
 let store = createStore(
@@ -17,8 +17,9 @@ let store = createStore(
 );
 
 store.dispatch(fetchLibrary());
+store.dispatch(fetchCitationStyleList());
 store.dispatch(fetchCitationLocale());
-store.dispatch(fetchCitationStyle());
+store.dispatch(fetchCitationStyle("ieee"));
 store.dispatch(getFilePathRoot());
 
 render(

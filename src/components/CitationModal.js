@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { dismissCitation } from "../actions/index";
+import { dismissCitation, fetchCitationStyle } from "../actions/index";
 import Modal from 'react-modal';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 const CSL = require("citeproc");
 
@@ -13,11 +15,12 @@ const customStyles = {
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    height                : '300px'
   }
 };
 
-const modalContents = (references, citation) => {
+const citationContents = (references, citation) => {
   if(citation === undefined ||
     citation.refID === undefined ||
     citation.refID === "") {
@@ -62,7 +65,15 @@ let CitationModal = ({ references, citation, dispatch }) => (
     style={customStyles}
     contentLabel="Citation"
   >
-    <div>{ modalContents(references, citation) }</div>
+    <div>
+      <Select
+        name="cslStyle"
+        value={citation.citationStyleName}
+        options={citation.citationStyleList.map(s => ({ value: s, label: s }))}
+        onChange={val => dispatch(fetchCitationStyle(val["value"]))}
+      />
+    </div>
+    <div>{ citationContents(references, citation) }</div>
   </Modal>
 );
 

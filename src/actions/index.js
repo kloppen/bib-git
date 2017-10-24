@@ -440,15 +440,34 @@ export const receiveCitationLocale = (xml) => {
   }
 };
 
-export function fetchCitationStyle() {
+export function fetchCitationStyleList() {
+  return function(dispatch) {
+    return fetch("http://localhost:5000/api/csl-styles")
+      .then(
+        response => response.json()
+      )
+      .then(
+        styleList => dispatch(receiveCitationStyleList(styleList))
+      )
+  }
+}
+
+export function receiveCitationStyleList(styleList) {
+  return {
+    type: "RECEIVE_CITATION_STYLE_LIST",
+    styleList
+  }
+}
+
+export function fetchCitationStyle(styleName) {
   return function(dispatch) {
     dispatch(requestCitationStyle());
-    return fetch("./ieee.csl")
+    return fetch("http://localhost:5000/api/csl-styles/" + styleName)
       .then(
         response => response.text()
       )
       .then(
-        xml => dispatch(receiveCitationStyle(xml))
+        xml => dispatch(receiveCitationStyle(xml, styleName))
       )
   }
 }
@@ -459,10 +478,11 @@ export const requestCitationStyle = () => {
   }
 };
 
-export const receiveCitationStyle = (xml) => {
+export const receiveCitationStyle = (xml, styleName) => {
   return {
     type: "RECEIVE_CITATION_STYLE",
-    xml
+    xml,
+    styleName
   }
 };
 

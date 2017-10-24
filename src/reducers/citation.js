@@ -5,7 +5,9 @@ const citation = (
     isFetchingLocale: false,
     citationLocale: "",
     isFetchingStyle: false,
-    citationStyle: ""
+    citationStyle: "",
+    citationStyleName: "",
+    citationStyleList: []
   },
   action
 ) => {
@@ -33,12 +35,18 @@ const citation = (
     case "REQUEST_CITATION_STYLE":
       return Object.assign({}, state, {
         isFetchingStyle: true,
-        citationStyle: null
+        citationStyle: null,
+        citationStyleName: ""
       });
     case "RECEIVE_CITATION_STYLE":
       return Object.assign({}, state, {
         isFetchingStyle: false,
-        citationStyle: action.xml
+        citationStyle: action.xml,
+        citationStyleName: action.styleName
+      });
+    case "RECEIVE_CITATION_STYLE_LIST":
+      return Object.assign({}, state, {
+        citationStyleList: action.styleList
       });
     default:
       return state

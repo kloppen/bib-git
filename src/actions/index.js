@@ -169,7 +169,7 @@ export const receiveLibrary = (json) => {
   }
 };
 
-export const failReceiveLibrary = () => {  // TODO: Implement for this and other 'receive' functions
+export const failReceiveLibrary = () => {
   return {
     type: "FAIL_RECEIVE_LIBRARY"
   }
@@ -267,10 +267,21 @@ export function fetchLibrary() {
     return fetch("http://localhost:5000/api/library")
       .then(
         response => response.json(),
-        error => console.log("Error fetching library", error)
+        error => {
+          throw new Error("Failed to receive library" + error)
+        }
       )
       .then(
-        json => dispatch(receiveLibrary(json))
+        json => dispatch(receiveLibrary(json)),
+        error => {
+          throw new Error("Failed to receive library" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error fetching library", error);
+          dispatch(failReceiveLibrary())
+        }
       )
   }
 }
@@ -357,7 +368,7 @@ export function fetchLibrary() {
 
 export const importBibLaTeX = (biblatex) => {
   return function (dispatch) {
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
         resolve(biblatex)
       }
     )
@@ -417,15 +428,33 @@ export function dismissCitation() {
 export function fetchCitationLocale() {
   return function(dispatch) {
     dispatch(requestCitationLocale());
-    return fetch("./locales-en-US.xml")
+    return fetch("http://localhost:5000/api/csl-locales/locales-en-US")
       .then(
-        response => response.text()
+        response => response.text(),
+        error => {
+          throw new Error("Error fetching CSL locale" + error)
+        }
       )
       .then(
-        xml => dispatch(receiveCitationLocale(xml))
+        xml => dispatch(receiveCitationLocale(xml)),
+        error => {
+          throw new Error("Error fetching CSL locale" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error fetching CSL locale" + error)
+          dispatch(failReceiveCitationLocale())
+        }
       )
   }
 }
+
+export const failReceiveCitationLocale = () => {
+  return {
+    type: "FAIL_RECEIVE_CITATION_LOCALE"
+  }
+};
 
 export const requestCitationLocale = () => {
   return {
@@ -444,11 +473,29 @@ export function fetchCitationStyleList() {
   return function(dispatch) {
     return fetch("http://localhost:5000/api/csl-styles")
       .then(
-        response => response.json()
+        response => response.json(),
+        error => {
+          throw new Error("Error fetching citation style list" + error)
+        }
       )
       .then(
-        styleList => dispatch(receiveCitationStyleList(styleList))
+        styleList => dispatch(receiveCitationStyleList(styleList)),
+        error => {
+          throw new Error("Error fetching citation style list" + error)
+        }
       )
+      .catch(
+        error => {
+          console.log("Error fetching citation style list", error);
+          dispatch(failReceiveCitationStyleList())
+        }
+      )
+  }
+}
+
+export function failReceiveCitationStyleList() {
+  return {
+    type: "FAIL_RECEIVE_CITATION_STYLE_LIST"
   }
 }
 
@@ -464,13 +511,31 @@ export function fetchCitationStyle(styleName) {
     dispatch(requestCitationStyle());
     return fetch("http://localhost:5000/api/csl-styles/" + styleName)
       .then(
-        response => response.text()
+        response => response.text(),
+        error => {
+          throw new Error("Error fetching citation style" + error)
+        }
       )
       .then(
-        xml => dispatch(receiveCitationStyle(xml, styleName))
+        xml => dispatch(receiveCitationStyle(xml, styleName)),
+        error => {
+          throw new Error("Error fetching citation style" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Failed to receive citation style", error);
+          dispatch(failReceiveCitationStyle())
+        }
       )
   }
 }
+
+export const failReceiveCitationStyle = () => {
+  return {
+    type: "FAIL_RECEIVE_CITATION_STYLE"
+  }
+};
 
 export const requestCitationStyle = () => {
   return {

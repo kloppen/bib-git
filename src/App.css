@@ -182,3 +182,8 @@ textarea.Editable {
     background-color: #717171;
     outline: 1px dotted #000;
 }
+
+.Error {
+    color: #ff0000;
+    width: 100%;
+}

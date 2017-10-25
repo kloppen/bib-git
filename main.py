@@ -20,15 +20,29 @@ def enable_cors():
     response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
 
 
+def get_file_contents(directory, file):
+    """
+    Gets the contents of a file on disk
+    :param directory: The directory in which the file is
+    :param file: The name of the file, including the extension
+    :return: A string with the file contents
+    """
+    path = os.path.join(directory, file)
+    try:
+        with open(path, "r") as fc:
+            return fc.read()
+    except IOError:
+        response.status = 400
+        return
+
+
 @get("/api/library")
 def get_library():
     """
     Gets the JSON object representing the library stored on disk
     :return: A JSON-formatted string
     """
-    library_path = os.path.join("library", "MyLibrary.json")
-    with open(library_path, "r") as library:
-        return library.read()
+    return get_file_contents("library", "MyLibrary.json")
 
 
 @get("/api/filepath")
@@ -42,16 +56,26 @@ def get_filepath():
     return pathlib.Path(dir_path).as_uri()
 
 
+def get_directory_listing(directory, ext):
+    """
+    Gets a listing of all files with the extension ext in the directory dir
+    :param directory: The directory
+    :param ext: The extension (including the .)
+    :return: A JSON-formatted string (a list in JSON)
+    """
+    dir_list = os.listdir(directory)
+    dir_list = [f.split(ext)[0] for f in dir_list if f.endswith(ext)]
+    dir_list.sort()
+    return json.dumps(dir_list)
+
+
 @get("/api/csl-styles")
 def get_csl_styles_listing():
     """
     Gets a listing of all available CSL styles
     :return: A JSON-formatted string (a list in JSON)
     """
-    csl_list = os.listdir("csl-styles")
-    csl_list = [c.split(".csl")[0] for c in csl_list if c.endswith(".csl")]
-    csl_list.sort()
-    return json.dumps(csl_list)
+    return get_directory_listing("csl-styles", ".csl")
 
 
 @get("/api/csl-styles/<name>")
@@ -61,13 +85,26 @@ def get_csl_style(name):
     :param name: the name of the CSL style to retrieve. Does not include .csl extension
     :return: An XML object
     """
-    try:
-        csl_path = os.path.join("csl-styles", "{}.csl".format(name))
-        with open(csl_path, "r") as csl:
-            return csl.read()
-    except IOError:
-        response.status = 400
-        return
+    return get_file_contents("csl-styles", "{}.csl".format(name))
+
+
+@get("/api/csl-locales")
+def get_csl_locales_listing():
+    """
+    Gets a listinf of all available CSL locales
+    :return: A JSON-formatted string (a list in JSON)
+    """
+    return get_directory_listing("csl-locales", ".xml")
+
+
+@get("/api/csl-locales/<name>")
+def get_csl_locale(name):
+    """
+    Gets a particular CSL locale
+    :param name: the name of the CSL locale to retrieve. Does not include .xml extension
+    :return: An XML object
+    """
+    return get_file_contents("csl-locales", "{}.xml".format(name))
 
 
 if __name__ == "__main__":

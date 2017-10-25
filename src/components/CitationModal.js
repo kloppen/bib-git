@@ -66,6 +66,20 @@ let CitationModal = ({ references, citation, dispatch }) => (
     contentLabel="Citation"
   >
     <div>
+      <span>
+        {
+          citation.hasFailedCitation
+            ? (<div className="Error">Failed to retrieve citation style.</div>)
+            : (<div/>)
+        }
+      </span>
+      <span>
+        {
+          citation.hasFailedCitationStyleList
+            ? (<div className="Error">Failed to retreive citation style list.</div>)
+            : (<div/>)
+        }
+      </span>
       <Select
         name="cslStyle"
         value={citation.citationStyleName}

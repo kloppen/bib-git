@@ -2,6 +2,9 @@ const library = (
   state = {
     isFetching: false,
     isModified: false,
+    hasFailed: false,
+    hasFailedCitationStyleList: false,
+    hasFailedCitationLocale: false,
     hrefRoot: ""
   },
   action
@@ -17,7 +20,8 @@ const library = (
       });
     case "FAIL_RECEIVE_LIBRARY":
       return Object.assign({}, state, {
-        isFetching: false
+        isFetching: false,
+        hasFailed: true
       });
     case "UPDATE_REFERENCE":
       return Object.assign({}, state, {
@@ -34,6 +38,14 @@ const library = (
     case "RECEIVE_FILE_PATH_ROOT":
       return Object.assign({}, state, {
         hrefRoot: action.path
+      });
+    case "FAIL_RECEIVE_CITATION_STYLE_LIST":
+      return Object.assign({}, state, {
+        hasFailedCitationStyleList: true
+      });
+    case "FAIL_RECEIVE_CITATION_LOCALE":
+      return Object.assign({}, state, {
+        hasFailedCitationLocale: true
       });
     default:
       return state

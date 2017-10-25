@@ -32,6 +32,20 @@ class TestBottleApp(unittest.TestCase):
         resp = main.get_csl_style("something-that-does-not-exist")
         self.assertNotEqual(main.response, 200)
 
+    def test_get_csl_locales_listing(self):
+        resp = main.get_csl_locales_listing()
+        self.assertTrue(type(resp) is str)
+        json_resp = json.loads(resp)
+        self.assertTrue(type(json_resp) is list)
+
+    def test_get_csl_locale(self):
+        resp = main.get_csl_locale("locales-en-US")
+        self.assertTrue(type(resp) is str)
+        xml_resp = xml.etree.ElementTree.fromstring(resp)
+        self.assertIsNotNone(xml_resp)
+        resp = main.get_csl_style("something-that-does-not-exist")
+        self.assertNotEqual(main.response, 200)
+
 
 if __name__ == "__main__":
     unittest.main()

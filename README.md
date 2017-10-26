@@ -75,8 +75,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 # To-do's
 
 - Highlight search results (optional)
-- Mark library as edited (or not)
-- Allow changing of citation style
 - value checking for CSL Type field
 - Sort reference list (optional)
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
@@ -84,7 +82,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
 - Implement local storage for citation style, etc.
-- Save/edit references on server
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

@@ -46,6 +46,41 @@ class TestBottleApp(unittest.TestCase):
         resp = main.get_csl_style("something-that-does-not-exist")
         self.assertNotEqual(main.response, 200)
 
+    def test_update_reference(self):
+        res = main.update_library_item_pure(
+            old_id="id1",
+            updated_ref={"id": "id1_new", "title": "title1_new"},
+            cur_library=[
+                {"id": "id1", "title": "title1"},
+                {"id": "id2", "title": "title2"}
+            ]
+        )
+        self.assertListEqual(
+            res,
+            [
+                {"id": "id1_new", "title": "title1_new"},
+                {"id": "id2", "title": "title2"}
+            ]
+        )
+
+    def test_insert_reference(self):
+        res = main.update_library_item_pure(
+            old_id="id3",
+            updated_ref={"id": "id3", "title": "title3"},
+            cur_library=[
+                {"id": "id1", "title": "title1"},
+                {"id": "id2", "title": "title2"}
+            ]
+        )
+        self.assertListEqual(
+            res,
+            [
+                {"id": "id1", "title": "title1"},
+                {"id": "id2", "title": "title2"},
+                {"id": "id3", "title": "title3"}
+            ]
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

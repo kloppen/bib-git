@@ -75,17 +75,45 @@ export function saveEditScreen() {
         dispatch(duplicateIDErrorEditScreen(true));
       } else {
         dispatch(updateReference(id, newReferenceData));
-        dispatch(dismissEditScreen());
       }
+    } else {
+      // not modified. Just exit.
+      dispatch(dismissEditScreen());
     }
   };
 }
 
 export function updateReference(id, newReferenceData) {
+  return(dispatch) => {
+    return fetch(
+      "http://localhost:5000/api/library/" + encodeURIComponent(id),
+      {
+        method: "PUT",
+        body: JSON.stringify(newReferenceData)
+      }
+    )
+      .then(
+        response => {
+          dispatch(updateReferenceLocal(id, newReferenceData));
+          dispatch(dismissEditScreen());
+        },
+        error => dispatch(failUpdateReference())
+      )
+  };
+
+}
+
+export function updateReferenceLocal(id, newReferenceData) {
   return {
     type: "UPDATE_REFERENCE",
     id,
     newReferenceData
+  }
+}
+
+export function failUpdateReference() {
+  return {
+    type: "FAIL_UPDATE_REFERENCE"
   }
 }
 

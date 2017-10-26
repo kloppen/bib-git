@@ -3,7 +3,8 @@ const editReferenceScreen = (state = {
                                refID: "",
                                referenceEditing: null,
                                isModified: false,
-                               isShowingDuplicateIDError: false
+                               isShowingDuplicateIDError: false,
+                               hasFailedUpdatedReference: false
                              },
                              action) => {
   switch (action.type) {
@@ -14,14 +15,16 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, {
           id: action.id
         }),
-        isModified: false
+        isModified: false,
+        hasFailedUpdatedReference: false
       });
     case "SHOW_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: true,
         refID: action.id,
         referenceEditing: Object.assign({}, action.reference),
-        isModified: false
+        isModified: false,
+        hasFailedUpdatedReference: false
       });
     case "DISMISS_EDIT_SCREEN":
       return Object.assign({}, state, {
@@ -29,6 +32,10 @@ const editReferenceScreen = (state = {
         refID: "",
         referenceEditing: null,
         isModified: false
+      });
+    case "FAIL_UPDATE_REFERENCE":
+      return Object.assign({}, state, {
+        hasFailedUpdatedReference: true
       });
     case "DUPLICATE_ID_ERROR_EDIT_SCREEN":
       return Object.assign({}, state, {

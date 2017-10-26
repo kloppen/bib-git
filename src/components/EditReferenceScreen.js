@@ -166,9 +166,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       <div className="Header-buttons">
         <button type="button"
                 onClick={() => {
-                  if(editReferenceScreen.isModified) {
-                    dispatch(saveEditScreen())
-                  }
+                  dispatch(saveEditScreen())
                 }}
         >Save</button>
         <button type="button"
@@ -182,6 +180,13 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
         >Cancel</button>
       </div>
     </div>
+    <span>
+      {
+        editReferenceScreen.hasFailedUpdatedReference
+          ? (<div className="Error">Failed to update reference on server</div>)
+          : (<span/>)
+      }
+    </span>
     <span>
       {editReferenceScreen.isShowingDuplicateIDError
         ? duplicateIDError(dispatch)

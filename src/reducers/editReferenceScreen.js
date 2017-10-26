@@ -7,6 +7,15 @@ const editReferenceScreen = (state = {
                              },
                              action) => {
   switch (action.type) {
+    case 'ADD_REFERENCE':
+      return Object.assign({}, state, {
+        isVisible: true,
+        refID: action.id,
+        referenceEditing: Object.assign({}, {
+          id: action.id
+        }),
+        isModified: false
+      });
     case "SHOW_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: true,

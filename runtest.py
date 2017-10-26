@@ -81,6 +81,24 @@ class TestBottleApp(unittest.TestCase):
             ]
         )
 
+    def test_get_file_list(self):
+        res = main.get_file_list(True)
+        self.assertTrue(type(res) is list)
+        # check that the dict has the correct keys
+        self.assertTrue("file_name" in res[0])
+        self.assertTrue("path" in res[0])
+        self.assertTrue("mime_type" in res[0])
+        count_unlinked = len(res)
+
+        res = main.get_file_list(False)
+        self.assertTrue(type(res) is list)
+        # check that the dict has the correct keys
+        self.assertTrue("file_name" in res[0])
+        self.assertTrue("path" in res[0])
+        self.assertTrue("mime_type" in res[0])
+        count_all = len(res)
+        self.assertGreater(count_all, count_unlinked)  # this will fail if no references in library are linked
+
 
 if __name__ == "__main__":
     unittest.main()

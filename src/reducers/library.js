@@ -1,7 +1,6 @@
 const library = (
   state = {
     isFetching: false,
-    isModified: false,
     hasFailed: false,
     hasFailedCitationStyleList: false,
     hasFailedCitationLocale: false,
@@ -22,18 +21,6 @@ const library = (
       return Object.assign({}, state, {
         isFetching: false,
         hasFailed: true
-      });
-    case "UPDATE_REFERENCE":
-      return Object.assign({}, state, {
-        isModified: true
-      });
-    case "SAVE_REFERENCES":
-      return Object.assign({}, state, {
-        isModified: false
-      });
-    case "IMPORT_BIBLATEX":
-      return Object.assign({}, state, {
-        isModified: true
       });
     case "RECEIVE_FILE_PATH_ROOT":
       return Object.assign({}, state, {

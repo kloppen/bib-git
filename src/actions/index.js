@@ -18,10 +18,7 @@ export const addReference = () => {
       ++nextReferenceId
     }
 
-    dispatch({
-      type: 'ADD_REFERENCE',
-    id: nextReferenceId.toString(),
-    })
+    dispatch(showEditScreen(nextReferenceId))
   };
 };
 
@@ -56,10 +53,12 @@ export function showEditScreen(id) {
         ()=> {
           const {references} = getState();
 
+          const refToEdit = references.filter((r) => r.id === id)[0];
+
           dispatch({
             type: "SHOW_EDIT_SCREEN",
             id: id,
-            reference: references.filter((r) => r.id === id)[0]
+            reference: !!refToEdit ? refToEdit : {}
           })
         },
         error => {

@@ -96,10 +96,10 @@ class FileList extends React.Component {
               this.props.allowableFileList
                 .map(f =>
                   ({value: [f["file_name"], f["path"], f["mime_type"]].join(":"), label: f["path"]}))
-                .filter(f => this.props.files.split(";")
+                .filter(f => (!this.props.files || this.props.files.split(";")
                   .filter(curF => f.value === curF)
                   .length === 0
-                )
+                ))
             }
             onChange={val => {
               this.setState({

@@ -42,6 +42,18 @@ class FileList extends React.Component {
     })
   }
 
+  fileLink(fileText, index) {
+    let fileHREF = "";
+    const fileObj = fileText.split(":");
+    if(fileObj.length === 3) {
+      fileHREF = this.props.hrefRoot + "/" + fileObj[1];
+    } else {
+      fileHREF = fileObj[0];
+    }
+
+    return (<a key={index} href={fileHREF} target="_blank">Open File<br/></a>)
+  }
+
   render() {
     const fileList = !!this.props.files ? this.props.files.split(";") : [];
 
@@ -57,6 +69,7 @@ class FileList extends React.Component {
                               this.props.onEditFileField(index, value)
                             }}
                   />
+                  <div className="Name-editable-left-link">{this.fileLink(f, index)}</div>
                 </div>
                 <div className="Name-editable-right">
                   <button

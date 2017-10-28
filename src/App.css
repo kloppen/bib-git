@@ -151,6 +151,11 @@ textarea.Editable {
     width: calc(100% - 25px);
 }
 
+.Name-editable-left-link {
+    float: right;
+    margin-right: 20px;
+}
+
 .Name-editable-right {
     float: left;
     width: 25px;

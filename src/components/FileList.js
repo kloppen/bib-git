@@ -104,7 +104,7 @@ class FileList extends React.Component {
             onChange={val => {
               this.setState({
                 ...this.state,
-                fileToAdd: val.value
+                fileToAdd: !!val ? val.value : ""
               })
             }}
           />

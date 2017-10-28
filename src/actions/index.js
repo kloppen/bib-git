@@ -424,7 +424,7 @@ export function fetchLibrary() {
 */
 
 export const importBibLaTeX = (biblatex) => {
-  return function (dispatch) {
+  return function (dispatch, getState) {
     new Promise((resolve) => {
         resolve(biblatex)
       }
@@ -460,11 +460,20 @@ export const importBibLaTeX = (biblatex) => {
         }
       )
       .then(
-        json =>
-          dispatch({
-            type: "IMPORT_BIBLATEX",
-            data: json
-          })
+        json => {
+          const tryToAdd = (currentList, newItem) => {
+            if(currentList.map((i) => i.id === newItem.id).reduce((v, p) => v || p, false)) {
+              return tryToAdd(currentList, Object.assign({}, newItem, {id: newItem["id"] + "1"}));
+            }
+            return Object.assign({}, newItem);
+          };
+
+          for(let r of json) {
+            let { references } = getState();
+            let newRef = tryToAdd(references, r);
+            dispatch(updateReference(newRef.id, newRef))
+          }
+        }
       )
   }
 };

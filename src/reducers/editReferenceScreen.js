@@ -116,9 +116,10 @@ const editReferenceScreen = (state = {
       if (!state.referenceEditing || action.file === "") {
         return state;
       }
+      const filesField = !!state.referenceEditing[action.field] ? state.referenceEditing[action.field].split(";") : [];
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          [action.field]: [...state.referenceEditing[action.field].split(";"), action.file].join(";")
+          [action.field]: [...filesField, action.file].join(";")
         }),
         isModified: true
       });

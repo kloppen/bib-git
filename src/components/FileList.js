@@ -51,7 +51,7 @@ class FileList extends React.Component {
           ? fileList.map((f, index) => (
               <div key={index} className="Name-list-row">
                 <div className="Name-editable-left">
-                  <Editable field={"Doesn't matter"}
+                  <Editable field="file"
                             value={f}
                             onEdit={(field, value) => {
                               this.props.onEditFileField(index, value)
@@ -92,9 +92,15 @@ class FileList extends React.Component {
           <Select
             name="filePicker"
             value={this.state.fileToAdd}
-            options={this.props.allowableFileList.map(f =>
-              ({ value: [f["file_name"], f["path"], f["mime_type"]].join(":"), label: f["path"] })
-            )}
+            options={
+              this.props.allowableFileList
+                .map(f =>
+                  ({value: [f["file_name"], f["path"], f["mime_type"]].join(":"), label: f["path"]}))
+                .filter(f => this.props.files.split(";")
+                  .filter(curF => f.value === curF)
+                  .length === 0
+                )
+            }
             onChange={val => {
               this.setState({
                 ...this.state,

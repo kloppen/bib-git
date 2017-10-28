@@ -128,7 +128,7 @@ const editReferenceScreen = (state = {
       }
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          [action.field]: state.referenceEditing[action.field] + ";" + action.file
+          [action.field]: [...state.referenceEditing[action.field].split(";"), action.file].join(";")
         }),
         isModified: true
       });

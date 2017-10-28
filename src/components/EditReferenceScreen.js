@@ -44,11 +44,11 @@ const duplicateIDError = (dispatch) => (
     confirmLabel="OK"
     cancelLabel=""
     onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
-    onCancel={() => { /* Do nothing on cancel, just let alert go away */}}
+    onCancel={() => { /* Do nothing on cancel, just let, alert go away */}}
   />
 );
 
-const fieldContents = (reference, field, dispatch) => {
+const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
   switch (field.type) {
     case "TEXT_AREA":
       return (
@@ -88,9 +88,10 @@ const fieldContents = (reference, field, dispatch) => {
           onDeleteFile={(index) => {
             dispatch(removeFile(field.field, index))
           }}
-          onAddFile={() => {
-            dispatch(addFile(field.field))
+          onAddFile={(file) => {
+            dispatch(addFile(field.field, file))
           }}
+          allowableFileList={editReferenceScreen.fileList}
         />
       );
     case "DATE":
@@ -147,7 +148,7 @@ const modalContents = (editReferenceScreen, dispatch) => {
         <div key={rf.field} className="Ref-list-item-expand-row">
           <div className="Ref-list-item-expand-left">{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            { fieldContents(editReferenceScreen.referenceEditing, rf, dispatch) }
+            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, rf, dispatch) }
           </div>
         </div>
       )
@@ -166,9 +167,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       <div className="Header-buttons">
         <button type="button"
                 onClick={() => {
-                  if(editReferenceScreen.isModified) {
-                    dispatch(saveEditScreen())
-                  }
+                  dispatch(saveEditScreen())
                 }}
         >Save</button>
         <button type="button"
@@ -182,6 +181,13 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
         >Cancel</button>
       </div>
     </div>
+    <span>
+      {
+        editReferenceScreen.hasFailedUpdatedReference
+          ? (<div className="Error">Failed to update reference on server</div>)
+          : (<span/>)
+      }
+    </span>
     <span>
       {editReferenceScreen.isShowingDuplicateIDError
         ? duplicateIDError(dispatch)

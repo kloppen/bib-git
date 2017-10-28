@@ -31,10 +31,10 @@ let MainScreen = ({library, dispatch}) => (
         />
         <label htmlFor="importBibLaTeX">Import BibLaTeX</label>
 
-        <button type="button" id="saveLibrary" className="input-field" onClick={() => dispatch(saveLibrary())}>
-          Save Library
+        <button type="button" id="exportLibrary" className="input-field" onClick={() => dispatch(saveLibrary())}>
+          Export Library
         </button>
-        <label htmlFor="saveLibrary">Save Library</label>
+        <label htmlFor="exportLibrary">Export Library</label>
       </div>
       <div className="Search">
         Search:

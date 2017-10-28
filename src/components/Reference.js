@@ -22,13 +22,13 @@ class Reference extends React.Component {
 
   onCitation() {
     let { dispatch } = this.props;
-    let action = showCitation(this.props.id);
+    let action = showCitation(this.props.reference.id);
     dispatch(action)
   }
 
   doEditModal() {
     let { dispatch } = this.props;
-    let action = showEditScreen(this.props.id);
+    let action = showEditScreen(this.props.reference.id);
     dispatch(action)
   }
 
@@ -61,7 +61,7 @@ class Reference extends React.Component {
             <div className="Ref-list-item-expand-right">
               <NameList
                 field={field.field}
-                nameList={this.props[field.field]}
+                nameList={this.props.reference[field.field]}
                 isEditable={false}
               />
             </div>
@@ -72,7 +72,7 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              { this.show_date(this.props[field.field]) }
+              { this.show_date(this.props.reference[field.field]) }
             </div>
           </div>
         );
@@ -82,13 +82,13 @@ class Reference extends React.Component {
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
               {
-                this.props[field.field].split(";").map((fileText, index) => {
+                this.props.reference[field.field].split(";").map((fileText, index) => {
                   let fileTitle = "";
                   let fileHREF = "";
                   const fileObj = fileText.split(":");
                   if(fileObj.length === 3) {
                     fileTitle = fileObj[0];
-                    fileHREF = "./library/" + fileObj[1];
+                    fileHREF = this.props.hrefRoot + "/" + fileObj[1];
                   } else {
                     fileTitle = fileObj[0];
                     fileHREF = fileObj[0];
@@ -105,7 +105,7 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              {this.props[field.field]}
+              {this.props.reference[field.field]}
             </div>
           </div>
         );
@@ -116,7 +116,7 @@ class Reference extends React.Component {
     return (
       <div className="Ref-list-item">
         {
-          referenceFields.filter((rf) => !!this.props[rf.field])
+          referenceFields.filter((rf) => !!this.props.reference[rf.field])
             .map( (rf) => this.field_contents(rf) )
         }
         <div className="Ref-list-item-expand-all">
@@ -129,10 +129,10 @@ class Reference extends React.Component {
   }
 
   render_author_list_collapsed() {
-    if(!this.props.author) {
+    if(!this.props.reference.author) {
       return ""
     }
-    return this.props.author.map((author) => {
+    return this.props.reference.author.map((author) => {
       if(author.literal) {
         return author.literal
       }
@@ -154,13 +154,13 @@ class Reference extends React.Component {
         </div>
         <div className="Ref-list-item-2">
           {
-            (this.props.issued && !!this.props.issued["date-parts"])
-            ? this.props.issued["date-parts"][0][0]
+            (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
+            ? this.props.reference.issued["date-parts"][0][0]
               : ""
           }
         </div>
         <div className="Ref-list-item-3">
-          {this.props.title}
+          {this.props.reference.title}
         </div>
         <div className="Ref-list-item-4">
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
@@ -181,7 +181,10 @@ class Reference extends React.Component {
 }
 
 Reference.propTypes = {
-  id: PropTypes.string.isRequired
+  reference: PropTypes.shape({
+    id: PropTypes.string.isRequired
+  }).isRequired,
+  hrefRoot: PropTypes.string.isRequired
 };
 
 export default connect()(Reference)

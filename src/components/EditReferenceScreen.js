@@ -44,11 +44,11 @@ const duplicateIDError = (dispatch) => (
     confirmLabel="OK"
     cancelLabel=""
     onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
-    onCancel={() => { /* Do nothing on cancel, just let alert go away */}}
+    onCancel={() => { /* Do nothing on cancel, just let, alert go away */}}
   />
 );
 
-const fieldContents = (reference, field, dispatch) => {
+const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
   switch (field.type) {
     case "TEXT_AREA":
       return (
@@ -88,9 +88,10 @@ const fieldContents = (reference, field, dispatch) => {
           onDeleteFile={(index) => {
             dispatch(removeFile(field.field, index))
           }}
-          onAddFile={() => {
-            dispatch(addFile(field.field))
+          onAddFile={(file) => {
+            dispatch(addFile(field.field, file))
           }}
+          allowableFileList={editReferenceScreen.fileList}
         />
       );
     case "DATE":
@@ -147,7 +148,7 @@ const modalContents = (editReferenceScreen, dispatch) => {
         <div key={rf.field} className="Ref-list-item-expand-row">
           <div className="Ref-list-item-expand-left">{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            { fieldContents(editReferenceScreen.referenceEditing, rf, dispatch) }
+            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, rf, dispatch) }
           </div>
         </div>
       )

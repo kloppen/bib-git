@@ -4,7 +4,8 @@ const editReferenceScreen = (state = {
                                referenceEditing: null,
                                isModified: false,
                                isShowingDuplicateIDError: false,
-                               hasFailedUpdatedReference: false
+                               hasFailedUpdatedReference: false,
+                               fileList: []
                              },
                              action) => {
   switch (action.type) {
@@ -122,14 +123,14 @@ const editReferenceScreen = (state = {
         })
       });
     case "ADD_FILE":
-      if (!state.referenceEditing) {
+      if (!state.referenceEditing || action.file === "") {
         return state;
       }
-      // Won't change the isModified flag until the user actually adds some text to the new name field
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
-          [action.field]: state.referenceEditing[action.field] + ";...pdf:files/...pdf:application/pdf"
-        })
+          [action.field]: state.referenceEditing[action.field] + ";" + action.file
+        }),
+        isModified: true
       });
     case "REMOVE_NAME":
       if (!state.referenceEditing) {
@@ -156,6 +157,10 @@ const editReferenceScreen = (state = {
           [action.field]: newFileRemove
         }),
         isModified: true
+      });
+    case "RECEIVE_FILE_LIST":
+      return Object.assign({}, state, {
+        fileList: action.json
       });
     default:
       return state

@@ -34,14 +34,42 @@ export const setFilterText = filter => {
 
 export function showEditScreen(id) {
   return (dispatch, getState) => {
-    const { references } = getState();
+    return fetch("http://localhost:5000/api/files?unlinked")
+      .then(
+        resp => resp.json(),
+        error => {
+          throw new Error("Failed to file list" + error)
+        }
+      )
+      .then(
+        json => {
+          dispatch({
+            type: "RECEIVE_FILE_LIST",
+            json
+          })
+        },
+        error => {
+          throw new Error("Failed to file list" + error)
+        }
+      )
+      .then(
+        ()=> {
+          const {references} = getState();
 
-    dispatch({
-      type: "SHOW_EDIT_SCREEN",
-      id: id,
-      reference: references.filter( (r) => r.id === id)[0]
-    })
-  };
+          dispatch({
+            type: "SHOW_EDIT_SCREEN",
+            id: id,
+            reference: references.filter((r) => r.id === id)[0]
+          })
+        },
+        error => {
+          console.log("Failed to file list", error)
+        }
+      )
+
+  }
+
+
 }
 
 export function dismissEditScreen() {
@@ -142,10 +170,11 @@ export const removeFile = (field, index) => {
   }
 };
 
-export const addFile = (field) => {
+export const addFile = (field, file) => {
   return {
     type: "ADD_FILE",
-    field
+    field,
+    file
   }
 };
 

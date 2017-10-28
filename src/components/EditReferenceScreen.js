@@ -3,18 +3,23 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
   saveEditScreen,
-  cancelEditScreen,
+  dismissEditScreen,
   editReferenceField,
   editNameField,
   addName,
   removeName,
-  editDateField
+  editDateField,
+  duplicateIDErrorEditScreen,
+  editFileField,
+  removeFile,
+  addFile
 } from "../actions/index";
-import { confirmAlert } from 'react-confirm-alert';
+import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
 import NameList from "./NameList"
+import FileList from "./FileList"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
@@ -27,12 +32,23 @@ const confirmCancel = (dispatch) => {
     message: "Are you sure you want to close without saving?",
     confirmLabel: "Close without saving",
     cancelLabel: "Continue editing",
-    onConfirm: () => { dispatch(cancelEditScreen()) },
+    onConfirm: () => { dispatch(dismissEditScreen()) },
     onCancel: () => { /* Do nothing on cancel, just let alert go away */}
   })
 };
 
-const fieldContents = (reference, field, dispatch) => {
+const duplicateIDError = (dispatch) => (
+  <ReactConfirmAlert
+    title="Edit Reference"
+    message="You have entered an ID that is assigned to another item. Please change it."
+    confirmLabel="OK"
+    cancelLabel=""
+    onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
+    onCancel={() => { /* Do nothing on cancel, just let, alert go away */}}
+  />
+);
+
+const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
   switch (field.type) {
     case "TEXT_AREA":
       return (
@@ -60,6 +76,22 @@ const fieldContents = (reference, field, dispatch) => {
           onDeleteName={(index) => {
             dispatch(removeName(field.field, index))
           }}
+        />
+      );
+    case "FILE":
+      return (
+        <FileList
+          files={reference[field.field]}
+          onEditFileField={(index, value) => {
+            dispatch(editFileField(field.field, index, value))
+          }}
+          onDeleteFile={(index) => {
+            dispatch(removeFile(field.field, index))
+          }}
+          onAddFile={(file) => {
+            dispatch(addFile(field.field, file))
+          }}
+          allowableFileList={editReferenceScreen.fileList}
         />
       );
     case "DATE":
@@ -116,7 +148,7 @@ const modalContents = (editReferenceScreen, dispatch) => {
         <div key={rf.field} className="Ref-list-item-expand-row">
           <div className="Ref-list-item-expand-left">{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            { fieldContents(editReferenceScreen.referenceEditing, rf, dispatch) }
+            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, rf, dispatch) }
           </div>
         </div>
       )
@@ -135,9 +167,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       <div className="Header-buttons">
         <button type="button"
                 onClick={() => {
-                  if(editReferenceScreen.isModified) {
-                    dispatch(saveEditScreen())
-                  }
+                  dispatch(saveEditScreen())
                 }}
         >Save</button>
         <button type="button"
@@ -145,12 +175,25 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
                   if(editReferenceScreen.isModified) {
                     confirmCancel(dispatch)
                   } else {
-                    dispatch(cancelEditScreen())
+                    dispatch(dismissEditScreen())
                   }
                 }}
         >Cancel</button>
       </div>
     </div>
+    <span>
+      {
+        editReferenceScreen.hasFailedUpdatedReference
+          ? (<div className="Error">Failed to update reference on server</div>)
+          : (<span/>)
+      }
+    </span>
+    <span>
+      {editReferenceScreen.isShowingDuplicateIDError
+        ? duplicateIDError(dispatch)
+        : <span/>
+      }
+    </span>
     <div className="Ref-list-item">
       { modalContents(editReferenceScreen, dispatch) }
     </div>

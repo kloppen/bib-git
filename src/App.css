@@ -15,22 +15,27 @@
 
 .Screen-header {
     background-color: #222;
-    padding: 40px;
+    padding: 20px;
     color: white;
+    overflow: auto;
 }
 
 .Search {
     display: block;
     text-align: left;
     float: left;
-    width: 50%;
-    min-width: 150px;
 }
 
 .Header-buttons {
     display: block;
     float: right;
     min-width: 150px;
+}
+
+@media (max-width: 1000px) {
+    .Header-buttons {
+        width: 140px;
+    }
 }
 
 .Editable {
@@ -149,4 +154,36 @@ textarea.Editable {
 .Name-editable-right {
     float: left;
     width: 25px;
+}
+
+.input-field {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.input-field + label {
+    font-weight: 700;
+    color: white;
+    display: inline-block;
+    cursor: pointer;
+    border: thin solid #717171;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    width: 140px;
+}
+
+.input-field:focus + label,
+.input-field + label:hover {
+    background-color: #717171;
+    outline: 1px dotted #000;
+}
+
+.Error {
+    color: #ff0000;
+    width: 100%;
 }

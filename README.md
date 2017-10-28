@@ -34,10 +34,14 @@ You may choose to add an icon to the homescreen. Open index.html and under
 # Setting up the Library Repo
 Export your library from your current library reference system as BibLaTeX and 
 include the attached files. The .bib file must be named "MyLibrary.bib" and
-must be located in the folder `library` under the root instalation path of this
+must be located in the folder `library` under the root installation path of this
 program. The attached files would normally be located in a sub-folder called
 `files`, but this is not necessary (though they do need to either be in the
-`library` folder or a sub-folder of it).
+`library` folder or a sub-folder of it). You'll need to import the .bib file
+using the "Import BibLaTeX" function in the bib-git program. This will convert
+to CSL and you can save the resulting file (using the "Save Library") button
+in the `library` folder using the name `MyLibrary.json`. You can then delete
+the .bib file if you wish (recommended).
 
 Initialize a git repository, enable git-lfs for PDF files (and whatever other 
 type of files you use).
@@ -71,16 +75,13 @@ https://www.npmjs.com/package/biblatex-csl-converter
 # To-do's
 
 - Highlight search results (optional)
-- Save library (JSON)
-- Mark library as edited (or not)
-- Warn user when closing if library has been edited
-- Edit file links
-- Allow changing of citation style
 - value checking for CSL Type field
 - Sort reference list (optional)
 - Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 - Reorder fields in referenceFields.js to a more logical order
-- Allow user to link a file (already on disk) to an item
+- Create reference from DOI (functionality available from citation.js)
+- Delete reference
+- Implement local storage for citation style, etc.
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

@@ -2,6 +2,10 @@
 
 export const referenceFields = [
   {
+    field: "id",
+    hint: "the identification of the reference (not part of CSL)"
+  },
+  {
     field: "author", type: "NAME",
     hint: "author"
   },

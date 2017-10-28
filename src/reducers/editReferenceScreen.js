@@ -2,30 +2,45 @@ const editReferenceScreen = (state = {
                                isVisible: false,
                                refID: "",
                                referenceEditing: null,
-                               isModified: false
+                               isModified: false,
+                               isShowingDuplicateIDError: false,
+                               hasFailedUpdatedReference: false,
+                               fileList: []
                              },
                              action) => {
   switch (action.type) {
+    case 'ADD_REFERENCE':
+      return Object.assign({}, state, {
+        isVisible: true,
+        refID: action.id,
+        referenceEditing: Object.assign({}, {
+          id: action.id
+        }),
+        isModified: false,
+        hasFailedUpdatedReference: false
+      });
     case "SHOW_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: true,
         refID: action.id,
         referenceEditing: Object.assign({}, action.reference),
-        isModified: false
+        isModified: false,
+        hasFailedUpdatedReference: false
       });
-    case "CANCEL_EDIT_SCREEN":
+    case "DISMISS_EDIT_SCREEN":
       return Object.assign({}, state, {
         isVisible: false,
         refID: "",
         referenceEditing: null,
         isModified: false
       });
-    case "SAVE_EDIT_SCREEN":
+    case "FAIL_UPDATE_REFERENCE":
       return Object.assign({}, state, {
-        isVisible: false,
-        refId: "",
-        referenceEditing: null,
-        isModified: false
+        hasFailedUpdatedReference: true
+      });
+    case "DUPLICATE_ID_ERROR_EDIT_SCREEN":
+      return Object.assign({}, state, {
+        isShowingDuplicateIDError: action.showError
       });
     case "EDIT_REFERENCE_FIELD":
       if (!state.referenceEditing) {
@@ -33,7 +48,9 @@ const editReferenceScreen = (state = {
       }
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
-        isModified: !state.referenceEditing[action.key] || action.value !== state.referenceEditing[action.key]
+        isModified: state.isModified ||
+          !state.referenceEditing[action.key] ||
+          action.value !== state.referenceEditing[action.key]
       });
     case "EDIT_DATE_FIELD":
       if (!state.referenceEditing) {
@@ -52,7 +69,28 @@ const editReferenceScreen = (state = {
       };
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, newRefEditing),
-        isModified: !state.referenceEditing[action.key] || newRefEditing !== state.referenceEditing[action.key]
+        isModified: state.isModified ||
+          !state.referenceEditing[action.key] ||
+          newRefEditing !== state.referenceEditing[action.key]
+      });
+    case "EDIT_FILE_FIELD":
+      if (!state.referenceEditing) {
+        return state;
+      }
+
+      const newFileValue = state.referenceEditing[action.field].split(";").map((f, index) =>
+        index === action.index
+          ? action.value
+          : f
+      ).join(";");
+
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: newFileValue
+        }),
+        isModified: state.isModified ||
+          !state.referenceEditing[action.field] ||
+          state.referenceEditing[action.field] !== newFileValue
       });
     case "EDIT_NAME_FIELD":
       if (!state.referenceEditing) {
@@ -67,8 +105,9 @@ const editReferenceScreen = (state = {
         referenceEditing: Object.assign({}, state.referenceEditing, {
           [action.field]: newNameValue
         }),
-        isModified: !state.referenceEditing[action.field][action.index][action.key] ||
-        state.referenceEditing[action.field][action.index][action.key] !== action.value
+        isModified: state.isModified ||
+          !state.referenceEditing[action.field][action.index][action.key] ||
+          state.referenceEditing[action.field][action.index][action.key] !== action.value
       });
     case "ADD_NAME":
       if (!state.referenceEditing) {
@@ -83,6 +122,16 @@ const editReferenceScreen = (state = {
           [action.field]: newNameAdd
         })
       });
+    case "ADD_FILE":
+      if (!state.referenceEditing || action.file === "") {
+        return state;
+      }
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: [...state.referenceEditing[action.field].split(";"), action.file].join(";")
+        }),
+        isModified: true
+      });
     case "REMOVE_NAME":
       if (!state.referenceEditing) {
         return state;
@@ -95,6 +144,23 @@ const editReferenceScreen = (state = {
           [action.field]: newNameRemove
         }),
         isModified: true
+      });
+    case "REMOVE_FILE":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      const newFileRemove = state.referenceEditing[action.field].split(";").filter((a, index) =>
+        index !== action.index
+      ).join(";");
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: newFileRemove
+        }),
+        isModified: true
+      });
+    case "RECEIVE_FILE_LIST":
+      return Object.assign({}, state, {
+        fileList: action.json
       });
     default:
       return state

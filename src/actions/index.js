@@ -1,8 +1,9 @@
 import fetch from 'isomorphic-fetch'
+
+// const Cite = require('citation-js');
 import { BibLatexParser, CSLExporter } from 'biblatex-csl-converter'
 
-window.BibLatexParser = BibLatexParser;
-window.CSLExporter = CSLExporter;
+const FileSaver = require("file-saver");
 
 let nextReferenceId = 0;
 
@@ -33,43 +34,114 @@ export const setFilterText = filter => {
 
 export function showEditScreen(id) {
   return (dispatch, getState) => {
-    const { references } = getState();
+    return fetch("http://localhost:5000/api/files?unlinked")
+      .then(
+        resp => resp.json(),
+        error => {
+          throw new Error("Failed to file list" + error)
+        }
+      )
+      .then(
+        json => {
+          dispatch({
+            type: "RECEIVE_FILE_LIST",
+            json
+          })
+        },
+        error => {
+          throw new Error("Failed to file list" + error)
+        }
+      )
+      .then(
+        ()=> {
+          const {references} = getState();
 
-    dispatch({
-      type: "SHOW_EDIT_SCREEN",
-      id: id,
-      reference: references.filter( (r) => r.id === id)[0]
-    })
-  };
+          dispatch({
+            type: "SHOW_EDIT_SCREEN",
+            id: id,
+            reference: references.filter((r) => r.id === id)[0]
+          })
+        },
+        error => {
+          console.log("Failed to file list", error)
+        }
+      )
+
+  }
+
+
 }
 
-export function cancelEditScreen() {
+export function dismissEditScreen() {
   return {
-    type: "CANCEL_EDIT_SCREEN"
+    type: "DISMISS_EDIT_SCREEN"
+  }
+}
+
+export function duplicateIDErrorEditScreen(showError) {
+  return {
+    type: "DUPLICATE_ID_ERROR_EDIT_SCREEN",
+    showError
   }
 }
 
 export function saveEditScreen() {
   return (dispatch, getState) => {
-    const { editReferenceScreen } = getState();
+    const { editReferenceScreen, references } = getState();
 
     if(editReferenceScreen.isModified) {
       const newReferenceData = editReferenceScreen.referenceEditing;
       const id = editReferenceScreen.refID;
-      dispatch(updateReference(id, newReferenceData))
-    }
+      const newID = editReferenceScreen.referenceEditing.id;
 
-    dispatch({
-      type: "SAVE_EDIT_SCREEN"
-    })
+      const idCount = references
+        .filter(r => r.id !== id)
+        .map(r => r.id === newID)
+        .reduce((v, total) => v + total, 0);
+
+      if (idCount > 0) {
+        dispatch(duplicateIDErrorEditScreen(true));
+      } else {
+        dispatch(updateReference(id, newReferenceData));
+      }
+    } else {
+      // not modified. Just exit.
+      dispatch(dismissEditScreen());
+    }
   };
 }
 
 export function updateReference(id, newReferenceData) {
+  return(dispatch) => {
+    return fetch(
+      "http://localhost:5000/api/library/" + encodeURIComponent(id),
+      {
+        method: "PUT",
+        body: JSON.stringify(newReferenceData)
+      }
+    )
+      .then(
+        response => {
+          dispatch(updateReferenceLocal(id, newReferenceData));
+          dispatch(dismissEditScreen());
+        },
+        error => dispatch(failUpdateReference())
+      )
+  };
+
+}
+
+export function updateReferenceLocal(id, newReferenceData) {
   return {
     type: "UPDATE_REFERENCE",
     id,
     newReferenceData
+  }
+}
+
+export function failUpdateReference() {
+  return {
+    type: "FAIL_UPDATE_REFERENCE"
   }
 }
 
@@ -78,6 +150,31 @@ export const editReferenceField = (key, value) => {
     type: 'EDIT_REFERENCE_FIELD',
     key: key,
     value: value
+  }
+};
+
+export const editFileField = (field, index, value) => {
+  return {
+    type: "EDIT_FILE_FIELD",
+    field,
+    index,
+    value
+  }
+};
+
+export const removeFile = (field, index) => {
+  return {
+    type: 'REMOVE_FILE',
+    field,
+    index
+  }
+};
+
+export const addFile = (field, file) => {
+  return {
+    type: "ADD_FILE",
+    field,
+    file
   }
 };
 
@@ -129,12 +226,58 @@ export const receiveLibrary = (json) => {
   }
 };
 
-export const failReceiveLibrary = () => {  // TODO: Implement for this and other 'receive' functions
+export const failReceiveLibrary = () => {
   return {
     type: "FAIL_RECEIVE_LIBRARY"
   }
 };
 
+
+/*
+The citation.js implementation
+- Currently (OCt-2017), this only reads the fields defined in base BibTeX.
+  as such, things like the abstract and file (links) are not read. If
+  BibLaTeX is added to citation.js in the future, this code could be
+  re-introduced.
+
+export function fetchLibrary() {
+  return function (dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.bib")
+      .then(
+        response => response.text(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => {
+          return new Cite(bibString, {
+            forceType: "string/bibtex"
+          })
+        }
+      )
+      .then(
+        parser => {
+          const csl = parser.get({
+            type: 'json',
+            style: 'csl'
+          });
+          return csl;
+        }
+      )
+      .then(
+        json => dispatch(receiveLibrary(json))
+      )
+  }
+}
+*/
+
+/*
+The biblatex-csl-converter implementation
+- biblatex-csl-converter only converts from biblatex to CSL, not the other
+  way around, so this library cannot be used to save. Because of this fact,
+  this library should be abandoned
+*/
+/*
 export function fetchLibrary() {
   return function (dispatch) {
     dispatch(requestLibrary());
@@ -173,9 +316,166 @@ export function fetchLibrary() {
       )
   }
 }
+*/
 
-export const saveReferences = () => {
-  /* This does nothing yet */
+export function fetchLibrary() {
+  return function(dispatch) {
+    dispatch(requestLibrary());
+    return fetch("http://localhost:5000/api/library")
+      .then(
+        response => response.json(),
+        error => {
+          throw new Error("Failed to receive library" + error)
+        }
+      )
+      .then(
+        json => dispatch(receiveLibrary(json)),
+        error => {
+          throw new Error("Failed to receive library" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error fetching library", error);
+          dispatch(failReceiveLibrary())
+        }
+      )
+  }
+}
+
+// TODO: Update this to use web api...or remove this
+export const saveLibrary = () => {
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    const blob = new Blob([JSON.stringify(references, null, 2)], {type: "application/json"});
+    FileSaver.saveAs(blob, "MyLibrary.json");
+
+    dispatch({
+      type: "SAVE_REFERENCES"
+    })
+  }
+};
+
+/*
+The citation.js implementation
+- Currently (OCt-2017), citation.js doesn't read all the fields we need, so abandoning this for now
+
+export const saveLibrary = () => {
+  return (dispatch, getState) => {
+    const { references } = getState();
+
+    const data = new Cite(references, {
+            forceType: "array/csl"
+          });
+
+    const output = data.get({
+      type: 'string',
+      style: 'bibtex'
+    });
+
+
+
+    dispatch({
+      type: "SAVE_REFERENCES",
+      data: output
+    })
+  }
+};*/
+/*
+export function fetchLibrary() {
+  return function (dispatch) {
+    dispatch(requestLibrary());
+    return fetch("./library/MyLibrary.bib")
+      .then(
+        response => response.text(),
+        error => console.log("Error fetching library", error)
+      )
+      .then(
+        bibString => new BibLatexParser(bibString, {
+          processUnexpected: true,
+          processUnknown: {
+            collaborator: "l_name"
+          }
+        })
+      )
+      .then(
+        parser => parser.output
+      )
+      .then(
+        intermediateJSON => {
+          const exporter = new CSLExporter(intermediateJSON);
+          let cslJSON = exporter.output;
+
+          return Object.keys(cslJSON).map(key =>
+            (intermediateJSON[key] &&
+              intermediateJSON[key]["unexpected_fields"] &&
+              intermediateJSON[key]["unexpected_fields"]["file"])
+              ? Object.assign({}, cslJSON[key], {file: intermediateJSON[key]["unexpected_fields"]["file"]})
+              : cslJSON[key]
+          );
+        }
+      )
+      .then(
+        json => dispatch(receiveLibrary(json))
+      )
+  }
+}
+*/
+
+export const importBibLaTeX = (biblatex) => {
+  return function (dispatch, getState) {
+    new Promise((resolve) => {
+        resolve(biblatex)
+      }
+    )
+      .then(
+        bibString => new BibLatexParser(bibString, {
+          processUnexpected: true,
+          processUnknown: {
+            collaborator: "l_name"
+          }
+        })
+      )
+      .then(
+        parser => parser.output
+      )
+      .then(
+        intermediateJSON => {
+          const exporter = new CSLExporter(intermediateJSON);
+          let cslJSON = exporter.output;
+
+          return Object.keys(cslJSON).map(key =>
+            Object.assign({}, cslJSON[key],
+              (intermediateJSON[key] &&
+                intermediateJSON[key]["unexpected_fields"] &&
+                intermediateJSON[key]["unexpected_fields"]["file"])
+                ? {file: intermediateJSON[key]["unexpected_fields"]["file"]}
+                : {},
+              (intermediateJSON[key]["entry_key"])
+                ? {id: intermediateJSON[key]["entry_key"]}
+                : {}
+            )
+          );
+        }
+      )
+      .then(
+        json => {
+          const tryToAdd = (currentList, newItem) => {
+            if(currentList.map((i) => i.id === newItem.id).reduce((v, p) => v || p, false)) {
+              return tryToAdd(currentList, Object.assign({}, newItem, {id: newItem["id"] + "1"}));
+            }
+            return Object.assign({}, newItem);
+          };
+
+          for(let r of json) {
+            let { references } = getState();
+            let newRef = tryToAdd(references, r);
+            dispatch(updateReference(newRef.id, newRef))
+          }
+        }
+      )
+  }
 };
 
 export function showCitation(id) {
@@ -194,15 +494,33 @@ export function dismissCitation() {
 export function fetchCitationLocale() {
   return function(dispatch) {
     dispatch(requestCitationLocale());
-    return fetch("./locales-en-US.xml")
+    return fetch("http://localhost:5000/api/csl-locales/locales-en-US")
       .then(
-        response => response.text()
+        response => response.text(),
+        error => {
+          throw new Error("Error fetching CSL locale" + error)
+        }
       )
       .then(
-        xml => dispatch(receiveCitationLocale(xml))
+        xml => dispatch(receiveCitationLocale(xml)),
+        error => {
+          throw new Error("Error fetching CSL locale" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error fetching CSL locale" + error)
+          dispatch(failReceiveCitationLocale())
+        }
       )
   }
 }
+
+export const failReceiveCitationLocale = () => {
+  return {
+    type: "FAIL_RECEIVE_CITATION_LOCALE"
+  }
+};
 
 export const requestCitationLocale = () => {
   return {
@@ -217,18 +535,73 @@ export const receiveCitationLocale = (xml) => {
   }
 };
 
-export function fetchCitationStyle() {
+export function fetchCitationStyleList() {
   return function(dispatch) {
-    dispatch(requestCitationStyle());
-    return fetch("./ieee.csl")
+    return fetch("http://localhost:5000/api/csl-styles")
       .then(
-        response => response.text()
+        response => response.json(),
+        error => {
+          throw new Error("Error fetching citation style list" + error)
+        }
       )
       .then(
-        xml => dispatch(receiveCitationStyle(xml))
+        styleList => dispatch(receiveCitationStyleList(styleList)),
+        error => {
+          throw new Error("Error fetching citation style list" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error fetching citation style list", error);
+          dispatch(failReceiveCitationStyleList())
+        }
       )
   }
 }
+
+export function failReceiveCitationStyleList() {
+  return {
+    type: "FAIL_RECEIVE_CITATION_STYLE_LIST"
+  }
+}
+
+export function receiveCitationStyleList(styleList) {
+  return {
+    type: "RECEIVE_CITATION_STYLE_LIST",
+    styleList
+  }
+}
+
+export function fetchCitationStyle(styleName) {
+  return function(dispatch) {
+    dispatch(requestCitationStyle());
+    return fetch("http://localhost:5000/api/csl-styles/" + styleName)
+      .then(
+        response => response.text(),
+        error => {
+          throw new Error("Error fetching citation style" + error)
+        }
+      )
+      .then(
+        xml => dispatch(receiveCitationStyle(xml, styleName)),
+        error => {
+          throw new Error("Error fetching citation style" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Failed to receive citation style", error);
+          dispatch(failReceiveCitationStyle())
+        }
+      )
+  }
+}
+
+export const failReceiveCitationStyle = () => {
+  return {
+    type: "FAIL_RECEIVE_CITATION_STYLE"
+  }
+};
 
 export const requestCitationStyle = () => {
   return {
@@ -236,9 +609,29 @@ export const requestCitationStyle = () => {
   }
 };
 
-export const receiveCitationStyle = (xml) => {
+export const receiveCitationStyle = (xml, styleName) => {
   return {
     type: "RECEIVE_CITATION_STYLE",
-    xml
+    xml,
+    styleName
+  }
+};
+
+export const getFilePathRoot = () => {
+  return function(dispatch) {
+    return fetch("http://localhost:5000/api/filepath")
+      .then(
+        response => response.text()
+      )
+      .then(
+        path => dispatch(receiveFilePathRoot(path))
+      )
+  }
+};
+
+export const receiveFilePathRoot = (path) => {
+  return {
+    type: "RECEIVE_FILE_PATH_ROOT",
+    path
   }
 };

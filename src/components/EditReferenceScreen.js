@@ -48,7 +48,7 @@ const duplicateIDError = (dispatch) => (
   />
 );
 
-const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
+const fieldContents = (editReferenceScreen, reference, library, field, dispatch) => {
   switch (field.type) {
     case "TEXT_AREA":
       return (
@@ -92,6 +92,7 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
             dispatch(addFile(field.field, file))
           }}
           allowableFileList={editReferenceScreen.fileList}
+          hrefRoot={library.hrefRoot}
         />
       );
     case "DATE":
@@ -137,7 +138,7 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
   }
 };
 
-const modalContents = (editReferenceScreen, dispatch) => {
+const modalContents = (editReferenceScreen, library, dispatch) => {
   if(!editReferenceScreen || !editReferenceScreen.referenceEditing) {
     return (<span>No reference specified</span>)
   }
@@ -148,7 +149,7 @@ const modalContents = (editReferenceScreen, dispatch) => {
         <div key={rf.field} className="Ref-list-item-expand-row">
           <div className="Ref-list-item-expand-left">{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, rf, dispatch) }
+            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, library, rf, dispatch) }
           </div>
         </div>
       )
@@ -157,11 +158,12 @@ const modalContents = (editReferenceScreen, dispatch) => {
 
 const mapStateToProps = state => {
   return {
-    editReferenceScreen: state.editReferenceScreen
+    editReferenceScreen: state.editReferenceScreen,
+    library: state.library
   }
 };
 
-let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
+let EditReferenceScreen = ({editReferenceScreen, library, dispatch}) => (
   <div>
     <div className="Screen-header">
       <div className="Header-buttons">
@@ -195,7 +197,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       }
     </span>
     <div className="Ref-list-item">
-      { modalContents(editReferenceScreen, dispatch) }
+      { modalContents(editReferenceScreen, library, dispatch) }
     </div>
   </div>
 );

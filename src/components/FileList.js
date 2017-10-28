@@ -151,7 +151,8 @@ FileList.PropTypes = {
   onEditFileField: PropTypes.func.isRequired,
   onDeleteFile: PropTypes.func.isRequired,
   onAddFile: PropTypes.func.isRequired,
-  allowableFileList: PropTypes.array.isRequired
+  allowableFileList: PropTypes.array.isRequired,
+  hrefRoot: PropTypes.string.isRequired
 };
 
 export default FileList

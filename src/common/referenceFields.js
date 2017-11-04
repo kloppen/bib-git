@@ -1,9 +1,12 @@
-// TODO: Support Types for references (article, book, etc...)
 
 export const referenceFields = [
   {
     field: "id",
     hint: "the identification of the reference (not part of CSL)"
+  },
+  {
+    field: "type", type: "TYPE",
+    hint: "the type of the reference (ie. article, book, etc.)"
   },
   {
     field: "author", type: "NAME",

@@ -132,7 +132,7 @@ textarea.Editable {
 }
 
 .Ref-list-item-expand-row {
-    overflow: auto;
+    overflow: visible;
     clear: left;
 }
 

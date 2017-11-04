@@ -23,8 +23,48 @@ import FileList from "./FileList"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 const refFields = referenceFields;
+
+const allowableTypes = [
+  "article",
+  "article-magazine",
+  "article-newspaper",
+  "article-journal",
+  "bill",
+  "book",
+  "broadcast",
+  "chapter",
+  "dataset",
+  "entry",
+  "entry-dictionary",
+  "entry-encyclopedia",
+  "figure",
+  "graphic",
+  "interview",
+  "legislation",
+  "legal_case",
+  "manuscript",
+  "map",
+  "motion_picture",
+  "musical_score",
+  "pamphlet",
+  "paper-conference",
+  "patent",
+  "post",
+  "post-weblog",
+  "personal_communication",
+  "report",
+  "review",
+  "review-book",
+  "song",
+  "speech",
+  "thesis",
+  "treaty",
+  "webpage"
+];
 
 const confirmCancel = (dispatch) => {
   confirmAlert({
@@ -123,6 +163,21 @@ const fieldContents = (editReferenceScreen, reference, library, field, dispatch)
             ))
           }}
         />
+      );
+    case "TYPE":
+      return (
+        <Select
+            name="typePicker"
+            value={reference[field.field]}
+            options={
+              allowableTypes
+                .map(t =>
+                  ({value: t, label: t}))
+            }
+            onChange={value => {
+              dispatch(editReferenceField(field.field, !!value ? value.value : ""))
+            }}
+          />
       );
     default:
       return (

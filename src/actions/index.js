@@ -342,7 +342,6 @@ export function fetchLibrary() {
   }
 }
 
-// TODO: Update this to use web api...or remove this
 export const saveLibrary = () => {
   return (dispatch, getState) => {
     const { references } = getState();

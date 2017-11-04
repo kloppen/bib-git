@@ -25,6 +25,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import ReactTooltip from 'react-tooltip'
 
 const refFields = referenceFields;
 
@@ -202,7 +203,10 @@ const modalContents = (editReferenceScreen, library, dispatch) => {
     (rf) =>
       (
         <div key={rf.field} className="Ref-list-item-expand-row">
-          <div className="Ref-list-item-expand-left">{rf.field}</div>
+          <div
+            className="Ref-list-item-expand-left"
+            data-tip={rf.hint}
+          >{rf.field}</div>
           <div className="Ref-list-item-expand-right">
             { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, library, rf, dispatch) }
           </div>
@@ -220,6 +224,7 @@ const mapStateToProps = state => {
 
 let EditReferenceScreen = ({editReferenceScreen, library, dispatch}) => (
   <div>
+    <ReactTooltip />
     <div className="Screen-header">
       <div className="Header-buttons">
         <button type="button"

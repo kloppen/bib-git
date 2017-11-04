@@ -77,7 +77,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Highlight search results (optional)
 - value checking for CSL Type field
 - Sort reference list (optional)
-- Add tooltips from here: http://docs.citationstyles.org/en/stable/specification.html#standard-variables
 - Reorder fields in referenceFields.js to a more logical order
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference

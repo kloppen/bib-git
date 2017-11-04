@@ -171,25 +171,35 @@ class Reference extends React.Component {
   }
 
   highlighted_text(text, uprFilter) {
-    if(!text || !uprFilter) {
+    if(!text || !uprFilter || uprFilter.length === 0) {
       return text
     }
 
     return (
       <span>
         {
-          (text.match(/(\S+)(\s+)+/g) || []).map(s =>
-            s.toUpperCase().includes(uprFilter)
-              ? <span className="Highlighted">{s}</span>
-              : s
-          )
+          (
+            text.match(/(\S+)(\s+)+/g) || [])
+            .map(s => {
+              return {
+                "string": s,
+                "shouldHighlight": uprFilter
+                  .map(flt => s.toUpperCase().includes(flt))
+                  .reduce((v, pv) => v || pv, false)
+              }
+            })
+            .map(word =>
+              word.shouldHighlight
+                ? <span className="Highlighted">{word.string}</span>
+                : word.string
+            )
         }
       </span>
     )
   }
 
   render() {
-    const uprFilter = this.props.visibilityFilter.toUpperCase(); //.match(/\S+/g) || [];  // since match returns null if no match
+    const uprFilter = this.props.visibilityFilter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
 
     if(this.state.isExpanded) {
       return(this.render_expanded(uprFilter))

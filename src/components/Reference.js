@@ -112,7 +112,7 @@ class Reference extends React.Component {
     }
   }
 
-  render_expanded() {
+  render_expanded(uprFilter) {
     return (
       <div className="Ref-list-item">
         {
@@ -146,7 +146,7 @@ class Reference extends React.Component {
     }).join(", ")
   }
 
-  render_collapsed() {
+  render_collapsed(uprFilter) {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
@@ -160,7 +160,7 @@ class Reference extends React.Component {
           }
         </div>
         <div className="Ref-list-item-3">
-          {this.props.reference.title}
+          {this.highlighted_text(this.props.reference.title, uprFilter)}
         </div>
         <div className="Ref-list-item-4">
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
@@ -170,12 +170,31 @@ class Reference extends React.Component {
     )
   }
 
-  render()
-  {
+  highlighted_text(text, uprFilter) {
+    if(!text || !uprFilter) {
+      return text
+    }
+
+    return (
+      <span>
+        {
+          (text.match(/(\S+)(\s+)+/g) || []).map(s =>
+            s.toUpperCase().includes(uprFilter)
+              ? <span className="Highlighted">{s}</span>
+              : s
+          )
+        }
+      </span>
+    )
+  }
+
+  render() {
+    const uprFilter = this.props.visibilityFilter.toUpperCase(); //.match(/\S+/g) || [];  // since match returns null if no match
+
     if(this.state.isExpanded) {
-      return(this.render_expanded())
+      return(this.render_expanded(uprFilter))
     } else {
-      return(this.render_collapsed())
+      return(this.render_collapsed(uprFilter))
     }
   }
 }
@@ -184,6 +203,7 @@ Reference.propTypes = {
   reference: PropTypes.shape({
     id: PropTypes.string.isRequired
   }).isRequired,
+  visibilityFilter: PropTypes.string,
   hrefRoot: PropTypes.string.isRequired
 };
 

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Reference from './Reference'
 
-const ReferenceList = ({references, library}) => (
+const ReferenceList = ({references, library, visibilityFilter}) => (
   <span>
     <span>
       {
@@ -32,7 +32,12 @@ const ReferenceList = ({references, library}) => (
           : (
             <div>
               {references.map(reference => (
-                <Reference key={reference.id} reference={reference} hrefRoot={library.hrefRoot}/>
+                <Reference
+                  key={reference.id}
+                  reference={reference}
+                  hrefRoot={library.hrefRoot}
+                  visibilityFilter={visibilityFilter}
+                />
               ))}
             </div>
           )
@@ -49,7 +54,8 @@ ReferenceList.propTypes = {
   ).isRequired,
   library: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired
-  }).isRequired
+  }).isRequired,
+  visibilityFilter: PropTypes.string.isRequired
 };
 
 export default ReferenceList

@@ -188,9 +188,9 @@ class Reference extends React.Component {
                   .reduce((v, pv) => v || pv, false)
               }
             })
-            .map(word =>
+            .map((word, index) =>
               word.shouldHighlight
-                ? <span className="Highlighted">{word.string}</span>
+                ? <span className="Highlighted" key={index}>{word.string}</span>
                 : word.string
             )
         }

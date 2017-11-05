@@ -168,7 +168,12 @@ class Reference extends React.Component {
           }
         </div>
         <div className="Ref-list-item-3">
-          {this.highlighted_text(this.props.reference.title, uprFilter)}
+          {
+            this.highlighted_text(
+              this.props.reference.title,
+              uprFilter
+            )
+          }
         </div>
         <div className="Ref-list-item-4">
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>

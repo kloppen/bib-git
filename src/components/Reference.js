@@ -33,26 +33,19 @@ class Reference extends React.Component {
   }
 
   show_date(date) {
-    if(!date["date-parts"]) {
+    if (!date["date-parts"]) {
       return (<span>Malformed date</span>);
     }
     const date_parts = date["date-parts"][0];
 
-    return (
-      <span>
-        {
-          [
-            !!date_parts[0] ? date_parts[0]: "",
-            !!date_parts[1] ? date_parts[1]: "",
-            !!date_parts[2] ? date_parts[2]: ""
-          ].filter(dp => dp!=="").join("/")
-        }
-
-      </span>
-    )
+    return [
+      !!date_parts[0] ? date_parts[0] : "",
+      !!date_parts[1] ? date_parts[1] : "",
+      !!date_parts[2] ? date_parts[2] : ""
+    ].filter(dp => dp !== "").join("/")
   }
 
-  field_contents(field) {
+  field_contents(field, uprFilter) {
     switch (field.type) {
       case "NAME":
         return (
@@ -72,7 +65,12 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              { this.show_date(this.props.reference[field.field]) }
+              {
+                this.highlighted_text(
+                  this.show_date(this.props.reference[field.field]),
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );
@@ -105,7 +103,12 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              {this.props.reference[field.field]}
+              {
+                this.highlighted_text(
+                  this.props.reference[field.field],
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );
@@ -117,7 +120,7 @@ class Reference extends React.Component {
       <div className="Ref-list-item">
         {
           referenceFields.filter((rf) => !!this.props.reference[rf.field])
-            .map( (rf) => this.field_contents(rf) )
+            .map( (rf) => this.field_contents(rf, uprFilter) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>

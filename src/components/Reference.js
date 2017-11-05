@@ -159,9 +159,12 @@ class Reference extends React.Component {
         </div>
         <div className="Ref-list-item-2">
           {
-            (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
-            ? this.props.reference.issued["date-parts"][0][0]
-              : ""
+            this.highlighted_text(
+              (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
+              ? this.props.reference.issued["date-parts"][0][0]
+                : "",
+              uprFilter
+            )
           }
         </div>
         <div className="Ref-list-item-3">
@@ -183,7 +186,7 @@ class Reference extends React.Component {
     return (
       <span>
         {
-          (text.match(/(\S+)(\s+)*/g) || [])
+          (text.toString().match(/(\S+)(\s+)*/g) || [])
             .map(s => {
               return {
                 "string": s,

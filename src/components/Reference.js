@@ -150,7 +150,12 @@ class Reference extends React.Component {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
-          { this.render_author_list_collapsed() }
+          {
+            this.highlighted_text(
+              this.render_author_list_collapsed(),
+              uprFilter
+            )
+          }
         </div>
         <div className="Ref-list-item-2">
           {
@@ -178,8 +183,7 @@ class Reference extends React.Component {
     return (
       <span>
         {
-          (
-            text.match(/(\S+)(\s+)+/g) || [])
+          (text.match(/(\S+)(\s+)*/g) || [])
             .map(s => {
               return {
                 "string": s,

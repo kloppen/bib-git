@@ -18,7 +18,7 @@ import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
-import NameList from "./NameList"
+import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -104,7 +104,7 @@ const fieldContents = (editReferenceScreen, reference, library, field, dispatch)
       );
     case "NAME":
       return (
-        <NameList
+        <EditableNameList
           field={field.field}
           nameList={reference[field.field]}
           isEditable={true}

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import NameList from './NameList'
 import { showCitation, showEditScreen } from "../actions/index";
 import { connect } from 'react-redux'
 import { referenceFields } from "../common/referenceFields"
+import { nameSubFields } from '../common/nameSubFields'
 
 
 class Reference extends React.Component {
@@ -45,6 +45,30 @@ class Reference extends React.Component {
     ].filter(dp => dp !== "").join("/")
   }
 
+  show_name_list(nameList, uprFilter) {
+    if (!nameList) {
+      return ""
+    }
+
+    return nameList.map((a, index) => (
+        <div key={index} className="Name-list-row">
+          <div>
+            {nameSubFields.map((f) => (
+              <div key={f} className="Name-field">
+                {
+                  !!a[f]
+                    ? this.highlighted_text(a[f], uprFilter)
+                    : (<span/>)
+                }
+              </div>
+            ))}
+
+          </div>
+        </div>
+      )
+    )
+  }
+
   field_contents(field, uprFilter) {
     switch (field.type) {
       case "NAME":
@@ -52,11 +76,12 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              <NameList
-                field={field.field}
-                nameList={this.props.reference[field.field]}
-                isEditable={false}
-              />
+              {
+                this.show_name_list(
+                  this.props.reference[field.field],
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );

@@ -18,13 +18,54 @@ import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
-import NameList from "./NameList"
+import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+import ReactTooltip from 'react-tooltip'
 
 const refFields = referenceFields;
+
+const allowableTypes = [
+  "article",
+  "article-magazine",
+  "article-newspaper",
+  "article-journal",
+  "bill",
+  "book",
+  "broadcast",
+  "chapter",
+  "dataset",
+  "entry",
+  "entry-dictionary",
+  "entry-encyclopedia",
+  "figure",
+  "graphic",
+  "interview",
+  "legislation",
+  "legal_case",
+  "manuscript",
+  "map",
+  "motion_picture",
+  "musical_score",
+  "pamphlet",
+  "paper-conference",
+  "patent",
+  "post",
+  "post-weblog",
+  "personal_communication",
+  "report",
+  "review",
+  "review-book",
+  "song",
+  "speech",
+  "thesis",
+  "treaty",
+  "webpage"
+];
 
 const confirmCancel = (dispatch) => {
   confirmAlert({
@@ -48,7 +89,7 @@ const duplicateIDError = (dispatch) => (
   />
 );
 
-const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
+const fieldContents = (editReferenceScreen, reference, library, field, dispatch) => {
   switch (field.type) {
     case "TEXT_AREA":
       return (
@@ -63,7 +104,7 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
       );
     case "NAME":
       return (
-        <NameList
+        <EditableNameList
           field={field.field}
           nameList={reference[field.field]}
           isEditable={true}
@@ -92,6 +133,7 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
             dispatch(addFile(field.field, file))
           }}
           allowableFileList={editReferenceScreen.fileList}
+          hrefRoot={library.hrefRoot}
         />
       );
     case "DATE":
@@ -123,6 +165,21 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
           }}
         />
       );
+    case "TYPE":
+      return (
+        <Select
+            name="typePicker"
+            value={reference[field.field]}
+            options={
+              allowableTypes
+                .map(t =>
+                  ({value: t, label: t}))
+            }
+            onChange={value => {
+              dispatch(editReferenceField(field.field, !!value ? value.value : ""))
+            }}
+          />
+      );
     default:
       return (
         <Editable
@@ -137,7 +194,7 @@ const fieldContents = (editReferenceScreen, reference, field, dispatch) => {
   }
 };
 
-const modalContents = (editReferenceScreen, dispatch) => {
+const modalContents = (editReferenceScreen, library, dispatch) => {
   if(!editReferenceScreen || !editReferenceScreen.referenceEditing) {
     return (<span>No reference specified</span>)
   }
@@ -146,9 +203,12 @@ const modalContents = (editReferenceScreen, dispatch) => {
     (rf) =>
       (
         <div key={rf.field} className="Ref-list-item-expand-row">
-          <div className="Ref-list-item-expand-left">{rf.field}</div>
+          <div
+            className="Ref-list-item-expand-left"
+            data-tip={rf.hint}
+          >{rf.field}</div>
           <div className="Ref-list-item-expand-right">
-            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, rf, dispatch) }
+            { fieldContents(editReferenceScreen, editReferenceScreen.referenceEditing, library, rf, dispatch) }
           </div>
         </div>
       )
@@ -157,12 +217,14 @@ const modalContents = (editReferenceScreen, dispatch) => {
 
 const mapStateToProps = state => {
   return {
-    editReferenceScreen: state.editReferenceScreen
+    editReferenceScreen: state.editReferenceScreen,
+    library: state.library
   }
 };
 
-let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
+let EditReferenceScreen = ({editReferenceScreen, library, dispatch}) => (
   <div>
+    <ReactTooltip />
     <div className="Screen-header">
       <div className="Header-buttons">
         <button type="button"
@@ -195,7 +257,7 @@ let EditReferenceScreen = ({editReferenceScreen, dispatch}) => (
       }
     </span>
     <div className="Ref-list-item">
-      { modalContents(editReferenceScreen, dispatch) }
+      { modalContents(editReferenceScreen, library, dispatch) }
     </div>
   </div>
 );

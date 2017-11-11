@@ -132,7 +132,7 @@ textarea.Editable {
 }
 
 .Ref-list-item-expand-row {
-    overflow: auto;
+    overflow: visible;
     clear: left;
 }
 
@@ -149,6 +149,11 @@ textarea.Editable {
 .Name-editable-left {
     float: left;
     width: calc(100% - 25px);
+}
+
+.Name-editable-left-link {
+    float: right;
+    margin-right: 20px;
 }
 
 .Name-editable-right {
@@ -186,4 +191,8 @@ textarea.Editable {
 .Error {
     color: #ff0000;
     width: 100%;
+}
+
+.Highlighted {
+    background-color: #ffff00;
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import NameList from './NameList'
 import { showCitation, showEditScreen } from "../actions/index";
 import { connect } from 'react-redux'
 import { referenceFields } from "../common/referenceFields"
+import { nameSubFields } from '../common/nameSubFields'
 
 
 class Reference extends React.Component {
@@ -33,37 +33,55 @@ class Reference extends React.Component {
   }
 
   show_date(date) {
-    if(!date["date-parts"]) {
+    if (!date["date-parts"]) {
       return (<span>Malformed date</span>);
     }
     const date_parts = date["date-parts"][0];
 
-    return (
-      <span>
-        {
-          [
-            !!date_parts[0] ? date_parts[0]: "",
-            !!date_parts[1] ? date_parts[1]: "",
-            !!date_parts[2] ? date_parts[2]: ""
-          ].filter(dp => dp!=="").join("/")
-        }
+    return [
+      !!date_parts[0] ? date_parts[0] : "",
+      !!date_parts[1] ? date_parts[1] : "",
+      !!date_parts[2] ? date_parts[2] : ""
+    ].filter(dp => dp !== "").join("/")
+  }
 
-      </span>
+  show_name_list(nameList, uprFilter) {
+    if (!nameList) {
+      return ""
+    }
+
+    return nameList.map((a, index) => (
+        <div key={index} className="Name-list-row">
+          <div>
+            {nameSubFields.map((f) => (
+              <div key={f} className="Name-field">
+                {
+                  !!a[f]
+                    ? this.highlighted_text(a[f], uprFilter)
+                    : (<span/>)
+                }
+              </div>
+            ))}
+
+          </div>
+        </div>
+      )
     )
   }
 
-  field_contents(field) {
+  field_contents(field, uprFilter) {
     switch (field.type) {
       case "NAME":
         return (
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              <NameList
-                field={field.field}
-                nameList={this.props.reference[field.field]}
-                isEditable={false}
-              />
+              {
+                this.show_name_list(
+                  this.props.reference[field.field],
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );
@@ -72,7 +90,12 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              { this.show_date(this.props.reference[field.field]) }
+              {
+                this.highlighted_text(
+                  this.show_date(this.props.reference[field.field]),
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );
@@ -105,19 +128,24 @@ class Reference extends React.Component {
           <div key={field.field} className="Ref-list-item-expand-row">
             <div className="Ref-list-item-expand-left">{field.field}</div>
             <div className="Ref-list-item-expand-right">
-              {this.props.reference[field.field]}
+              {
+                this.highlighted_text(
+                  this.props.reference[field.field],
+                  uprFilter
+                )
+              }
             </div>
           </div>
         );
     }
   }
 
-  render_expanded() {
+  render_expanded(uprFilter) {
     return (
       <div className="Ref-list-item">
         {
           referenceFields.filter((rf) => !!this.props.reference[rf.field])
-            .map( (rf) => this.field_contents(rf) )
+            .map( (rf) => this.field_contents(rf, uprFilter) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>
@@ -146,21 +174,34 @@ class Reference extends React.Component {
     }).join(", ")
   }
 
-  render_collapsed() {
+  render_collapsed(uprFilter) {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
-          { this.render_author_list_collapsed() }
+          {
+            this.highlighted_text(
+              this.render_author_list_collapsed(),
+              uprFilter
+            )
+          }
         </div>
         <div className="Ref-list-item-2">
           {
-            (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
-            ? this.props.reference.issued["date-parts"][0][0]
-              : ""
+            this.highlighted_text(
+              (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
+              ? this.props.reference.issued["date-parts"][0][0]
+                : "",
+              uprFilter
+            )
           }
         </div>
         <div className="Ref-list-item-3">
-          {this.props.reference.title}
+          {
+            this.highlighted_text(
+              this.props.reference.title,
+              uprFilter
+            )
+          }
         </div>
         <div className="Ref-list-item-4">
           <button type="button" onClick={() => { this.onCitation() }}>Citation</button>
@@ -170,12 +211,40 @@ class Reference extends React.Component {
     )
   }
 
-  render()
-  {
+  highlighted_text(text, uprFilter) {
+    if(!text || !uprFilter || uprFilter.length === 0) {
+      return text
+    }
+
+    return (
+      <span>
+        {
+          (text.toString().match(/(\S+)(\s+)*/g) || [])
+            .map(s => {
+              return {
+                "string": s,
+                "shouldHighlight": uprFilter
+                  .map(flt => s.toUpperCase().includes(flt))
+                  .reduce((v, pv) => v || pv, false)
+              }
+            })
+            .map((word, index) =>
+              word.shouldHighlight
+                ? <span className="Highlighted" key={index}>{word.string}</span>
+                : word.string
+            )
+        }
+      </span>
+    )
+  }
+
+  render() {
+    const uprFilter = this.props.visibilityFilter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
+
     if(this.state.isExpanded) {
-      return(this.render_expanded())
+      return(this.render_expanded(uprFilter))
     } else {
-      return(this.render_collapsed())
+      return(this.render_collapsed(uprFilter))
     }
   }
 }
@@ -184,6 +253,7 @@ Reference.propTypes = {
   reference: PropTypes.shape({
     id: PropTypes.string.isRequired
   }).isRequired,
+  visibilityFilter: PropTypes.string,
   hrefRoot: PropTypes.string.isRequired
 };
 

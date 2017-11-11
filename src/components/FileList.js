@@ -42,6 +42,18 @@ class FileList extends React.Component {
     })
   }
 
+  fileLink(fileText, index) {
+    let fileHREF = "";
+    const fileObj = fileText.split(":");
+    if(fileObj.length === 3) {
+      fileHREF = this.props.hrefRoot + "/" + fileObj[1];
+    } else {
+      fileHREF = fileObj[0];
+    }
+
+    return (<a key={index} href={fileHREF} target="_blank">Open File<br/></a>)
+  }
+
   render() {
     const fileList = !!this.props.files ? this.props.files.split(";") : [];
 
@@ -57,6 +69,7 @@ class FileList extends React.Component {
                               this.props.onEditFileField(index, value)
                             }}
                   />
+                  <div className="Name-editable-left-link">{this.fileLink(f, index)}</div>
                 </div>
                 <div className="Name-editable-right">
                   <button
@@ -96,10 +109,10 @@ class FileList extends React.Component {
               this.props.allowableFileList
                 .map(f =>
                   ({value: [f["file_name"], f["path"], f["mime_type"]].join(":"), label: f["path"]}))
-                .filter(f => this.props.files.split(";")
+                .filter(f => (!this.props.files || this.props.files.split(";")
                   .filter(curF => f.value === curF)
                   .length === 0
-                )
+                ))
             }
             onChange={val => {
               this.setState({
@@ -138,7 +151,8 @@ FileList.PropTypes = {
   onEditFileField: PropTypes.func.isRequired,
   onDeleteFile: PropTypes.func.isRequired,
   onAddFile: PropTypes.func.isRequired,
-  allowableFileList: PropTypes.array.isRequired
+  allowableFileList: PropTypes.array.isRequired,
+  hrefRoot: PropTypes.string.isRequired
 };
 
 export default FileList

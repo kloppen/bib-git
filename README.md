@@ -1,3 +1,28 @@
+# Setup
+Clone the repo to your disk
+
+```
+git clone https://github.com/kloppen/bib-git
+cd bib-git
+git submodule update --init --recursive
+```
+
+You may want to write a launch script. Create a file in your directory of choice with the following content. Modify paths as required.
+
+```
+#/bin/bash
+cd bib-git
+if pgrep -f "python main.py" > /dev/null
+then
+	echo "beck end already running"
+else
+	source activate bib-git	
+	python main.py &
+fi
+xdg-open build/index.html &
+```
+
+
 # Android Setup
 Install termux. Make sure that you give it storage permission.
 
@@ -79,3 +104,6 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
 - Implement local storage for citation style, etc.
+- Show linebreaks when displaying fields
+- Enter key for textarea
+- Show report number if present in collapsed view

@@ -106,4 +106,5 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Implement local storage for citation style, etc.
 - date parts
 - fix CORS for update
+- search box when returning from edit screen
 

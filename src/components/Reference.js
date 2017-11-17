@@ -221,29 +221,27 @@ class Reference extends React.Component {
   }
 
   highlighted_text(text, uprFilter) {
-    if(!text || !uprFilter || uprFilter.length === 0) {
-      return text
-    }
-
     return (text || "").toString().split("\n").map(
       (t, index) => (
         <span key={index} className="Editable-paragraph">
           {
             t === "" ? (<br/>) :
-              (t.toString().match(/(\S+)(\s+)*/g) || [])
-                .map(s => {
-                  return {
-                    "string": s,
-                    "shouldHighlight": uprFilter
-                      .map(flt => s.toUpperCase().includes(flt))
-                      .reduce((v, pv) => v || pv, false)
-                  }
-                })
-                .map((word, index) =>
-                  word.shouldHighlight
-                    ? <span className="Highlighted" key={index}>{word.string}</span>
-                    : word.string
-                )
+              !uprFilter || uprFilter.length === 0
+                ? t
+                : (t.toString().match(/(\S+)(\s+)*/g) || [])
+                  .map(s => {
+                    return {
+                      "string": s,
+                      "shouldHighlight": uprFilter
+                        .map(flt => s.toUpperCase().includes(flt))
+                        .reduce((v, pv) => v || pv, false)
+                    }
+                  })
+                  .map((word, index) =>
+                    word.shouldHighlight
+                      ? <span className="Highlighted" key={index}>{word.string}</span>
+                      : word.string
+                  )
           }
         </span>
       )

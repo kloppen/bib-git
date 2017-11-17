@@ -4,7 +4,7 @@ import VisibleReferenceList from "../containers/VisibleReferenceList";
 import {setFilterText, addReference, saveLibrary, importBibLaTeX} from "../actions"
 
 
-let MainScreen = ({library, dispatch}) => (
+let MainScreen = ({library, visibilityFilter, dispatch}) => (
   <div>
     <div className="Screen-header">
       <div className="Header-buttons">
@@ -47,6 +47,7 @@ let MainScreen = ({library, dispatch}) => (
               dispatch(setFilterText(event.target.value));
             }
           }
+          defaultValue={ visibilityFilter }
         />
       </div>
     </div>
@@ -56,7 +57,8 @@ let MainScreen = ({library, dispatch}) => (
 
 const mapStateToProps = state => {
   return {
-    library: state.library
+    library: state.library,
+    visibilityFilter: state.visibilityFilter
   }
 };
 

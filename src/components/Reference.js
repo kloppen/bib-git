@@ -178,12 +178,21 @@ class Reference extends React.Component {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
-          {
-            this.highlighted_text(
-              this.render_author_list_collapsed(),
-              uprFilter
-            )
-          }
+          <span className="Ref-list-item-1-row">
+            {
+              this.highlighted_text(
+                this.render_author_list_collapsed(),
+                uprFilter
+              )
+            }
+          </span>
+          <span className="Ref-list-item-1-row">
+            {
+              this.props.reference.number
+                ? this.highlighted_text(this.props.reference.number, uprFilter)
+                : <span/>
+            }
+          </span>
         </div>
         <div className="Ref-list-item-2">
           {

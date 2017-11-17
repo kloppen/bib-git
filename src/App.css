@@ -75,6 +75,11 @@ textarea.Editable {
     box-sizing: border-box;
 }
 
+.Ref-list-item-1-row {
+    float: left;
+    width: 100%;
+}
+
 .Ref-list-item-2 {
     float: left;
     width: calc(10% - 25px); /* 10% x 250px = 25px*/

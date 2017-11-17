@@ -216,25 +216,28 @@ class Reference extends React.Component {
       return text
     }
 
-    return (
-      <span>
-        {
-          (text.toString().match(/(\S+)(\s+)*/g) || [])
-            .map(s => {
-              return {
-                "string": s,
-                "shouldHighlight": uprFilter
-                  .map(flt => s.toUpperCase().includes(flt))
-                  .reduce((v, pv) => v || pv, false)
-              }
-            })
-            .map((word, index) =>
-              word.shouldHighlight
-                ? <span className="Highlighted" key={index}>{word.string}</span>
-                : word.string
-            )
-        }
-      </span>
+    return (text || "").toString().split("\n").map(
+      (t, index) => (
+        <span key={index} className="Editable-paragraph">
+          {
+            t === "" ? (<br/>) :
+              (t.toString().match(/(\S+)(\s+)*/g) || [])
+                .map(s => {
+                  return {
+                    "string": s,
+                    "shouldHighlight": uprFilter
+                      .map(flt => s.toUpperCase().includes(flt))
+                      .reduce((v, pv) => v || pv, false)
+                  }
+                })
+                .map((word, index) =>
+                  word.shouldHighlight
+                    ? <span className="Highlighted" key={index}>{word.string}</span>
+                    : word.string
+                )
+          }
+        </span>
+      )
     )
   }
 

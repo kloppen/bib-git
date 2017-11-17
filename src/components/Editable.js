@@ -10,7 +10,7 @@ class Editable extends React.Component {
   }
 
   checkEnter(e) {
-    if(e.key === 'Enter') {
+    if(e.key === 'Enter' && !this.props.isTextArea) {
       this.save()
     } else if(e.key === 'Escape') {
       this.cancel()
@@ -44,7 +44,9 @@ class Editable extends React.Component {
       <span onClick={() => { this.edit() }}>
         {!this.props.value || this.props.value === "" ?
           (<span className="Editable-empty">{ this.props.field }</span>)
-          : this.props.value
+          : this.props.value.split("\n").map(
+            (t, index) => (<span key={index} className="Editable-paragraph">{t === "" ? (<br/>) : t}</span>)
+          )
         }
       </span>
     )

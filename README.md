@@ -104,6 +104,7 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
 - Implement local storage for citation style, etc.
-- Show linebreaks when displaying fields
-- Enter key for textarea
 - Show report number if present in collapsed view
+- date parts
+- fix CORS for update
+

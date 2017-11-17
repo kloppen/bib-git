@@ -50,6 +50,11 @@ textarea.Editable {
     height: 150px;
 }
 
+.Editable-paragraph {
+    width: 100%;
+    float: left;
+}
+
 .Ref-list-item {
     display: block;
     text-align: left;

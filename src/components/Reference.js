@@ -45,7 +45,7 @@ class Reference extends React.Component {
     ].filter(dp => dp !== "").join("/")
   }
 
-  show_name_list(nameList, uprFilter) {
+  show_name_list(nameList, filterRE) {
     if (!nameList) {
       return ""
     }
@@ -57,7 +57,7 @@ class Reference extends React.Component {
               <div key={f} className="Name-field">
                 {
                   !!a[f]
-                    ? this.highlighted_text(a[f], uprFilter)
+                    ? this.highlighted_text(a[f], filterRE)
                     : (<span/>)
                 }
               </div>
@@ -69,7 +69,7 @@ class Reference extends React.Component {
     )
   }
 
-  field_contents(field, uprFilter) {
+  field_contents(field, filterRE) {
     switch (field.type) {
       case "NAME":
         return (
@@ -79,7 +79,7 @@ class Reference extends React.Component {
               {
                 this.show_name_list(
                   this.props.reference[field.field],
-                  uprFilter
+                  filterRE
                 )
               }
             </div>
@@ -93,7 +93,7 @@ class Reference extends React.Component {
               {
                 this.highlighted_text(
                   this.show_date(this.props.reference[field.field]),
-                  uprFilter
+                  filterRE
                 )
               }
             </div>
@@ -131,7 +131,7 @@ class Reference extends React.Component {
               {
                 this.highlighted_text(
                   this.props.reference[field.field],
-                  uprFilter
+                  filterRE
                 )
               }
             </div>
@@ -140,12 +140,12 @@ class Reference extends React.Component {
     }
   }
 
-  render_expanded(uprFilter) {
+  render_expanded(filterRE) {
     return (
       <div className="Ref-list-item">
         {
           referenceFields.filter((rf) => !!this.props.reference[rf.field])
-            .map( (rf) => this.field_contents(rf, uprFilter) )
+            .map( (rf) => this.field_contents(rf, filterRE) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>
@@ -174,7 +174,7 @@ class Reference extends React.Component {
     }).join(", ")
   }
 
-  render_collapsed(uprFilter) {
+  render_collapsed(filterRE) {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
@@ -182,14 +182,17 @@ class Reference extends React.Component {
             {
               this.highlighted_text(
                 this.render_author_list_collapsed(),
-                uprFilter
+                filterRE
               )
             }
           </span>
           <span className="Ref-list-item-1-row">
             {
               this.props.reference.number
-                ? this.highlighted_text(this.props.reference.number, uprFilter)
+                ? this.highlighted_text(
+                  this.props.reference.number,
+                  filterRE
+                )
                 : <span/>
             }
           </span>
@@ -200,7 +203,7 @@ class Reference extends React.Component {
               (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
               ? this.props.reference.issued["date-parts"][0][0]
                 : "",
-              uprFilter
+              filterRE
             )
           }
         </div>
@@ -208,7 +211,7 @@ class Reference extends React.Component {
           {
             this.highlighted_text(
               this.props.reference.title,
-              uprFilter
+              filterRE
             )
           }
         </div>
@@ -220,28 +223,25 @@ class Reference extends React.Component {
     )
   }
 
-  highlighted_text(text, uprFilter) {
+  highlight_paragraph(text, filterRE) {
+    return text.toString()
+      .split(filterRE)
+      .map((t, index) =>
+        t.match(filterRE)
+          ? (<span className="Highlighted" key={index}>{t}</span>)
+          : t
+      );
+  }
+
+  highlighted_text(text, filterRE) {
     return (text || "").toString().split("\n").map(
       (t, index) => (
-        <span key={index} className="Editable-paragraph">
+        <span key={index} className="Ref-paragraph">
           {
             t === "" ? (<br/>) :
-              !uprFilter || uprFilter.length === 0
+              !filterRE
                 ? t
-                : (t.toString().match(/(\S+)(\s+)*/g) || [])
-                  .map(s => {
-                    return {
-                      "string": s,
-                      "shouldHighlight": uprFilter
-                        .map(flt => s.toUpperCase().includes(flt))
-                        .reduce((v, pv) => v || pv, false)
-                    }
-                  })
-                  .map((word, index) =>
-                    word.shouldHighlight
-                      ? <span className="Highlighted" key={index}>{word.string}</span>
-                      : word.string
-                  )
+                : this.highlight_paragraph(t, filterRE)
           }
         </span>
       )
@@ -249,12 +249,16 @@ class Reference extends React.Component {
   }
 
   render() {
-    const uprFilter = this.props.visibilityFilter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
+    const searchFilter = this.props.visibilityFilter.match(/\S+/g) || [];  // since match returns null if no match
+
+    const filterRE = searchFilter.length === 0
+      ? null
+      : new RegExp("(" + searchFilter.join("|") + ")", "i");
 
     if(this.state.isExpanded) {
-      return(this.render_expanded(uprFilter))
+      return(this.render_expanded(filterRE))
     } else {
-      return(this.render_collapsed(uprFilter))
+      return(this.render_collapsed(filterRE))
     }
   }
 }

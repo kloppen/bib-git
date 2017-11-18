@@ -36,8 +36,12 @@ const editReferenceScreen = (state = {
       if (!state.referenceEditing) {
         return state;
       }
+      const newRefEditing = Object.assign({}, state.referenceEditing, {[action.key]: action.value});
+      if(!action.value || action.value === "") {
+        delete newRefEditing[action.key]
+      }
       return Object.assign({}, state, {
-        referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
+        referenceEditing: newRefEditing,
         isModified: state.isModified ||
           !state.referenceEditing[action.key] ||
           action.value !== state.referenceEditing[action.key]

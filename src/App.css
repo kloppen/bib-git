@@ -206,3 +206,11 @@ textarea.Editable {
 .Highlighted {
     background-color: #ffff00;
 }
+
+.DateEdit-yyyy {
+    width: 75px;
+}
+
+.DateEdit-xx {
+    width: 40px;
+}

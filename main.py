@@ -17,13 +17,14 @@ def enable_cors():
     Don't use the wildcard '*' for Access-Control-Allow-Origin in production.
     """
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+    response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, PATCH, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, Authorization, Content-Length, X-Requested-With, X-CSRF-Token'
 
 
 @route('/', method='OPTIONS')
 @route('/<path:path>', method='OPTIONS')
 def options_handler(path=None):
+    response.status = 200
     return
 
 
@@ -72,7 +73,7 @@ def update_library_item_pure(old_id: str, updated_ref: dict, cur_library: list) 
     return updated_library
 
 
-@put("/api/library/<old_id>")
+@put("/api/library/<old_id:path>")
 def update_library_item(old_id: str):
     """
     Updates a library item, if it exists; otherwise, creates it

@@ -50,6 +50,11 @@ textarea.Editable {
     height: 150px;
 }
 
+.Editable-paragraph {
+    width: 100%;
+    float: left;
+}
+
 .Ref-list-item {
     display: block;
     text-align: left;
@@ -68,6 +73,11 @@ textarea.Editable {
     width: calc(30% - 75px); /* 30% x 250px = 75px */
     padding: 5px;
     box-sizing: border-box;
+}
+
+.Ref-list-item-1-row {
+    float: left;
+    width: 100%;
 }
 
 .Ref-list-item-2 {
@@ -136,6 +146,11 @@ textarea.Editable {
     clear: left;
 }
 
+.Ref-paragraph {
+    width: 100%;
+    float: left;
+}
+
 .Name-list-row {
     overflow: auto;
     clear: left;
@@ -195,4 +210,12 @@ textarea.Editable {
 
 .Highlighted {
     background-color: #ffff00;
+}
+
+.DateEdit-yyyy {
+    width: 75px;
+}
+
+.DateEdit-xx {
+    width: 40px;
 }

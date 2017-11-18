@@ -8,8 +8,7 @@ import {
   editNameField,
   addName,
   removeName,
-  editDateField,
-  duplicateIDErrorEditScreen,
+  IDErrorEditScreen,
   editFileField,
   removeFile,
   addFile
@@ -18,11 +17,10 @@ import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import referenceFields from "../common/referenceFields";
 import Editable from "./Editable"
+import DateEdit from "./DateEdit"
 import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import ReactTooltip from 'react-tooltip'
@@ -78,13 +76,13 @@ const confirmCancel = (dispatch) => {
   })
 };
 
-const duplicateIDError = (dispatch) => (
+const IDError = (dispatch) => (
   <ReactConfirmAlert
     title="Edit Reference"
-    message="You have entered an ID that is assigned to another item. Please change it."
+    message="You have entered an invalid ID or one that is assigned to another item. Please change it."
     confirmLabel="OK"
     cancelLabel=""
-    onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
+    onConfirm={() => { dispatch(IDErrorEditScreen(false)) }}
     onCancel={() => { /* Do nothing on cancel, just let, alert go away */}}
   />
 );
@@ -137,31 +135,12 @@ const fieldContents = (editReferenceScreen, reference, library, field, dispatch)
         />
       );
     case "DATE":
-      let selectedDate = "";
-      if(!!reference[field.field] && !!reference[field.field]["date-parts"][0]) {
-        const date_parts = reference[field.field]["date-parts"][0];
-        selectedDate=moment().set({
-          'year': !!date_parts[0] ? date_parts[0] : 1,
-          'month': !!date_parts[1] ? date_parts[1] - 1 : 1, // moment uses months 0-11
-          'date': !!date_parts[2] ? date_parts[2] : 1
-        })
-      }
-
       return (
-        <DatePicker
-          selected={selectedDate}
-          showYearDropdown
-          dateFormatCalendar="MMMM"
-          dateFormat="YYYY/MM/DD"
-          scrollableYearDropdown
-          yearDropdownItemNumber={100}
-          onChange={(date) => {
-            dispatch(editDateField(
-              field.field,
-              date.year(),
-              date.month() + 1,
-              date.date()
-            ))
+        <DateEdit
+          value={reference[field.field]}
+          field={field.field}
+          onEdit={(field, value) => {
+            dispatch(editReferenceField(field, value))
           }}
         />
       );
@@ -251,8 +230,8 @@ let EditReferenceScreen = ({editReferenceScreen, library, dispatch}) => (
       }
     </span>
     <span>
-      {editReferenceScreen.isShowingDuplicateIDError
-        ? duplicateIDError(dispatch)
+      {editReferenceScreen.isShowingIDError
+        ? IDError(dispatch)
         : <span/>
       }
     </span>

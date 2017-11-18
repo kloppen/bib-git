@@ -77,9 +77,9 @@ export function dismissEditScreen() {
   }
 }
 
-export function duplicateIDErrorEditScreen(showError) {
+export function IDErrorEditScreen(showError) {
   return {
-    type: "DUPLICATE_ID_ERROR_EDIT_SCREEN",
+    type: "ID_ERROR_EDIT_SCREEN",
     showError
   }
 }
@@ -98,8 +98,8 @@ export function saveEditScreen() {
         .map(r => r.id === newID)
         .reduce((v, total) => v + total, 0);
 
-      if (idCount > 0) {
-        dispatch(duplicateIDErrorEditScreen(true));
+      if (idCount > 0 || newID.trim() === "") {
+        dispatch(IDErrorEditScreen(true));
       } else {
         dispatch(updateReference(id, newReferenceData));
       }
@@ -199,16 +199,6 @@ export const removeName = (field, index) => {
     type: 'REMOVE_NAME',
     field,
     index
-  }
-};
-
-export const editDateField = (key, year, month, date) => {
-  return {
-    type: "EDIT_DATE_FIELD",
-    key,
-    year,
-    month,
-    date
   }
 };
 

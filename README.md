@@ -106,4 +106,3 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Implement local storage for citation style, etc.
 - make hilighting more efficient (fewer react-text elements)
 - don't save empty fields
-- prevent saving with empty ID

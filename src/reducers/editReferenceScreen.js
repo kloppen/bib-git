@@ -3,7 +3,7 @@ const editReferenceScreen = (state = {
                                refID: "",
                                referenceEditing: null,
                                isModified: false,
-                               isShowingDuplicateIDError: false,
+                               isShowingIDError: false,
                                hasFailedUpdatedReference: false,
                                fileList: []
                              },
@@ -28,9 +28,9 @@ const editReferenceScreen = (state = {
       return Object.assign({}, state, {
         hasFailedUpdatedReference: true
       });
-    case "DUPLICATE_ID_ERROR_EDIT_SCREEN":
+    case "ID_ERROR_EDIT_SCREEN":
       return Object.assign({}, state, {
-        isShowingDuplicateIDError: action.showError
+        isShowingIDError: action.showError
       });
     case "EDIT_REFERENCE_FIELD":
       if (!state.referenceEditing) {

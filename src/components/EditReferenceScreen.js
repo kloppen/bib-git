@@ -8,7 +8,7 @@ import {
   editNameField,
   addName,
   removeName,
-  duplicateIDErrorEditScreen,
+  IDErrorEditScreen,
   editFileField,
   removeFile,
   addFile
@@ -76,13 +76,13 @@ const confirmCancel = (dispatch) => {
   })
 };
 
-const duplicateIDError = (dispatch) => (
+const IDError = (dispatch) => (
   <ReactConfirmAlert
     title="Edit Reference"
-    message="You have entered an ID that is assigned to another item. Please change it."
+    message="You have entered an invalid ID or one that is assigned to another item. Please change it."
     confirmLabel="OK"
     cancelLabel=""
-    onConfirm={() => { dispatch(duplicateIDErrorEditScreen(false)) }}
+    onConfirm={() => { dispatch(IDErrorEditScreen(false)) }}
     onCancel={() => { /* Do nothing on cancel, just let, alert go away */}}
   />
 );
@@ -230,8 +230,8 @@ let EditReferenceScreen = ({editReferenceScreen, library, dispatch}) => (
       }
     </span>
     <span>
-      {editReferenceScreen.isShowingDuplicateIDError
-        ? duplicateIDError(dispatch)
+      {editReferenceScreen.isShowingIDError
+        ? IDError(dispatch)
         : <span/>
       }
     </span>

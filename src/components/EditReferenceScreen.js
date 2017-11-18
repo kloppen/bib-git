@@ -8,7 +8,6 @@ import {
   editNameField,
   addName,
   removeName,
-  editDateField,
   duplicateIDErrorEditScreen,
   editFileField,
   removeFile,
@@ -21,9 +20,7 @@ import Editable from "./Editable"
 import DateEdit from "./DateEdit"
 import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import ReactTooltip from 'react-tooltip'

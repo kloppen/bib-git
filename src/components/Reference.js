@@ -223,7 +223,7 @@ class Reference extends React.Component {
   highlighted_text(text, uprFilter) {
     return (text || "").toString().split("\n").map(
       (t, index) => (
-        <span key={index} className="Editable-paragraph">
+        <span key={index} className="Ref-paragraph">
           {
             t === "" ? (<br/>) :
               !uprFilter || uprFilter.length === 0

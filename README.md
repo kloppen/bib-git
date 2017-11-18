@@ -104,5 +104,5 @@ https://www.npmjs.com/package/biblatex-csl-converter
 - Create reference from DOI (functionality available from citation.js)
 - Delete reference
 - Implement local storage for citation style, etc.
-- date parts
+- make hilighting more efficient (fewer react-text elements)
 

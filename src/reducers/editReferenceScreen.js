@@ -3,7 +3,7 @@ const editReferenceScreen = (state = {
                                refID: "",
                                referenceEditing: null,
                                isModified: false,
-                               isShowingDuplicateIDError: false,
+                               isShowingIDError: false,
                                hasFailedUpdatedReference: false,
                                fileList: []
                              },
@@ -28,40 +28,23 @@ const editReferenceScreen = (state = {
       return Object.assign({}, state, {
         hasFailedUpdatedReference: true
       });
-    case "DUPLICATE_ID_ERROR_EDIT_SCREEN":
+    case "ID_ERROR_EDIT_SCREEN":
       return Object.assign({}, state, {
-        isShowingDuplicateIDError: action.showError
+        isShowingIDError: action.showError
       });
     case "EDIT_REFERENCE_FIELD":
       if (!state.referenceEditing) {
         return state;
       }
+      const newRefEditing = Object.assign({}, state.referenceEditing, {[action.key]: action.value});
+      if(!action.value || action.value === "") {
+        delete newRefEditing[action.key]
+      }
       return Object.assign({}, state, {
-        referenceEditing: Object.assign({}, state.referenceEditing, {[action.key]: action.value}),
+        referenceEditing: newRefEditing,
         isModified: state.isModified ||
           !state.referenceEditing[action.key] ||
           action.value !== state.referenceEditing[action.key]
-      });
-    case "EDIT_DATE_FIELD":
-      if (!state.referenceEditing) {
-        return state;
-      }
-      const newRefEditing = {
-        [action.key]: {
-          "date-parts": [
-            [
-              action.year.toString(),
-              action.month,
-              action.date
-            ]
-          ]
-        }
-      };
-      return Object.assign({}, state, {
-        referenceEditing: Object.assign({}, state.referenceEditing, newRefEditing),
-        isModified: state.isModified ||
-          !state.referenceEditing[action.key] ||
-          newRefEditing !== state.referenceEditing[action.key]
       });
     case "EDIT_FILE_FIELD":
       if (!state.referenceEditing) {

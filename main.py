@@ -37,7 +37,7 @@ def get_file_contents(directory: str, file: str) -> str:
     """
     path = os.path.join(directory, file)
     try:
-        with open(path, "r") as fc:
+        with open(path, "r", encoding="utf8") as fc:
             return fc.read()
     except IOError:
         response.status = 400
@@ -85,7 +85,7 @@ def update_library_item(old_id: str):
     cur_lib = json.loads(cur_lib_str)
     updated_ref = json.loads(str(request.body.read(), "UTF-8"))
     updated_lib = update_library_item_pure(old_id, updated_ref, cur_lib)
-    with open(os.path.join("library", "MyLibrary.json"), "w") as f:
+    with open(os.path.join("library", "MyLibrary.json"), "w", encoding="UTF8") as f:
         f.write(json.dumps(updated_lib, indent=2, ensure_ascii=False))
 
 
@@ -183,7 +183,7 @@ def get_file_list(unlinked: bool) -> list:
     file_list = [
         {
             "file_name": f,
-            "path": str(pathlib.Path(os.path.join(dir_path, f)).relative_to(library_root)),
+            "path": str(pathlib.PurePosixPath(pathlib.Path(os.path.join(dir_path, f)).relative_to(library_root))),
             "mime_type": mimetypes.guess_type(os.path.join(dir_path, f))[0]
         }
         for dir_path, dir_names, file_names in os.walk(files_root) for f in file_names]
@@ -191,9 +191,9 @@ def get_file_list(unlinked: bool) -> list:
     if not unlinked:
         return file_list
 
-    referenced_files = list(get_library_referenced_files())
+    referenced_files = [os.path.normpath(f) for f in get_library_referenced_files()]
 
-    return [f for f in file_list if f["path"] not in referenced_files]
+    return [f for f in file_list if os.path.normpath(f["path"]) not in referenced_files]
 
 
 @get("/api/files")

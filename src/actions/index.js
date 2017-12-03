@@ -89,9 +89,21 @@ export function saveEditScreen() {
     const { editReferenceScreen, references } = getState();
 
     if(editReferenceScreen.isModified) {
-      const newReferenceData = editReferenceScreen.referenceEditing;
       const id = editReferenceScreen.refID;
       const newID = editReferenceScreen.referenceEditing.id;
+
+      // remove any empty fields from newReferenceData
+      const newReferenceData = Object.keys(editReferenceScreen.referenceEditing)
+        .filter(k => {
+          let curVal = editReferenceScreen.referenceEditing[k];
+          return (curVal !== "" &&
+            !(curVal.constructor === Object && Object.keys(curVal).length === 0) &&
+            !(curVal.constructor === Array && curVal.length === 0));
+        })
+        .reduce((obj, key) => {
+          obj[key] = editReferenceScreen.referenceEditing[key];
+          return obj;
+        }, {});
 
       const idCount = references
         .filter(r => r.id !== id)

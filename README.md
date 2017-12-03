@@ -22,6 +22,17 @@ fi
 xdg-open build/index.html &
 ```
 
+Or on Windows:
+
+```
+SETLOCAL
+SET PYPATH="C:\Users\Stefan Kloppenborg\AppData\Local\conda\conda\envs\bib-git\python.exe"
+SET BROWSERPATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+cd bib-git
+start "" %PYPATH% "main.py"
+start %BROWSERPATH% build/index.html
+```
+
 
 # Android Setup
 Install termux. Make sure that you give it storage permission.

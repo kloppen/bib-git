@@ -44,7 +44,7 @@ class Editable extends React.Component {
       <span onClick={() => { this.edit() }}>
         {!this.props.value || this.props.value === "" ?
           (<span className="Editable-empty">{ this.props.field }</span>)
-          : this.props.value.split("\n").map(
+          : this.props.value.toString().split("\n").map(
             (t, index) => (<span key={index} className="Editable-paragraph">{t === "" ? (<br/>) : t}</span>)
           )
         }

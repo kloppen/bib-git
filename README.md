@@ -51,11 +51,11 @@ fi
 xdg-open build/index.html &
 ```
 
-Or on Windows:
+Or on Windows (make sure that you replace the paths with the correct paths for your system):
 
 ```
 SETLOCAL
-SET PYPATH="C:\Users\Stefan Kloppenborg\AppData\Local\conda\conda\envs\bib-git\python.exe"
+SET PYPATH="C:\Users\MyUserName\AppData\Local\conda\conda\envs\bib-git\python.exe"
 SET BROWSERPATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 cd bib-git
 start "" %PYPATH% "main.py"

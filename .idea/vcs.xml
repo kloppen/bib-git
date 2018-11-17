@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/csl-locales" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/csl-styles" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/library" vcs="Git" />
   </component>
 </project>

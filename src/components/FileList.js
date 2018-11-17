@@ -66,7 +66,7 @@ class FileList extends React.Component {
       fileHREF = fileObj[0];
     }
 
-    return (<a key={index} href={fileHREF} target="_blank">Open File<br/></a>)
+    return (<a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">Open File<br/></a>)
   }
 
   render() {

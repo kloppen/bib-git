@@ -132,7 +132,7 @@ class Reference extends React.Component {
                     fileHREF = fileObj[0];
                   }
 
-                  return (<a key={index} href={fileHREF} target="_blank">{fileTitle}<br/></a>)
+                  return (<a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">{fileTitle}<br/></a>)
                 })
               }
             </div>

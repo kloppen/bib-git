@@ -68,7 +68,7 @@ class EditableNameList extends React.Component {
   }
 }
 
-EditableNameList.PropTypes = {
+EditableNameList.propTypes = {
   nameList: PropTypes.arrayOf(
     PropTypes.shape({
       family: PropTypes.string,

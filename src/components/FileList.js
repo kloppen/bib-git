@@ -161,7 +161,7 @@ class FileList extends React.Component {
   }
 }
 
-FileList.PropTypes = {
+FileList.propTypes = {
   files: PropTypes.string.isRequired,
   onEditFileField: PropTypes.func.isRequired,
   onDeleteFile: PropTypes.func.isRequired,

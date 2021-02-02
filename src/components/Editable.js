@@ -104,7 +104,7 @@ class Editable extends React.Component {
   }
 }
 
-Editable.PropTypes = {
+Editable.propTypes = {
   field: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,

@@ -35,7 +35,6 @@ import Editable from "./Editable"
 import DateEdit from "./DateEdit"
 import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
-import 'react-datepicker/dist/react-datepicker.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import ReactTooltip from 'react-tooltip'

@@ -167,7 +167,7 @@ class DateEdit extends React.Component {
   }
 }
 
-DateEdit.PropTypes = {
+DateEdit.propTypes = {
   field: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired

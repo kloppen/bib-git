@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import bottle
-from bottle import request, response, route
+from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
 import json
 import os
@@ -23,6 +23,9 @@ import pathlib
 import mimetypes
 
 app = application = bottle.default_app()
+
+HOST = "127.0.0.1"
+PORT = 5000
 
 
 @app.hook('after_request')
@@ -41,6 +44,27 @@ def enable_cors():
 def options_handler(path=None):
     response.status = 200
     return
+
+
+@route("")
+@route("/")
+def index():
+    return static_file("index.html", root="./build")
+
+
+@route("/<filename>")
+def send_static(filename):
+    return static_file(filename, root="./build")
+
+
+@route("/static/<filename:path>")
+def send_static_static(filename):
+    return static_file(filename, root="./build/static")
+
+
+@route("/library/files<filename:path>")
+def send_file(filename):
+    return static_file(filename, root="./library/files")
 
 
 def get_file_contents(directory: str, file: str) -> str:
@@ -110,6 +134,7 @@ def get_filepath() -> str:
     Gets the path to prepend on links to reference attachments. Includes file:/// at the beginning and no trailing slash
     :return: A string representing the path
     """
+    return f"http://{HOST}:{PORT}/library"
     dir_path = os.path.dirname(os.path.realpath(__file__))
     dir_path = os.path.join(dir_path, "library")
     return pathlib.Path(dir_path).as_uri()
@@ -150,7 +175,7 @@ def get_csl_style(name) -> str:
 @get("/api/csl-locales")
 def get_csl_locales_listing() -> str:
     """
-    Gets a listinf of all available CSL locales
+    Gets a listing of all available CSL locales
     :return: A JSON-formatted string (a list in JSON)
     """
     return get_directory_listing("csl-locales", ".xml")
@@ -229,4 +254,4 @@ def get_file_list_handler():
 
 
 if __name__ == "__main__":
-    bottle.run(app, host="127.0.0.1", port=5000)
+    bottle.run(app, host=HOST, port=PORT)

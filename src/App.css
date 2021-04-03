@@ -8,14 +8,17 @@
 
 .App-header {
     background-color: #222;
-    height: 70px;
-    padding: 20px;
+    padding: 20px 0 0 0;
     color: white;
+}
+
+.App-header h2 {
+    margin: 0;
 }
 
 .Screen-header {
     background-color: #222;
-    padding: 20px;
+    padding: 10px; /* was 20 px */
     color: white;
     overflow: auto;
 }

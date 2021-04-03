@@ -112,7 +112,7 @@ git remote add origin #... whatever your URL for a new GitHub repo is
 git push -u origin master
 ```
 
-If some of you attached files have the extension `PDF` or `Pdf` or are different types of binary files, make sure that you set git-lfs to track those extensions toon.
+If some of you attached files have the extension `PDF` or `Pdf` or are different types of binary files, make sure that you set git-lfs to track those extensions too.
 
 When you update your library, use the normal commit/push workflow that you 
 would with any other git repo.

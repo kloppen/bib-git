@@ -76,14 +76,17 @@ export const referenceFields = [
   },
   {
     field: "abstract", type: 'TEXT_AREA',
+    includeYAML: false,
     hint: "abstract of the item (e.g. the abstract of a journal article)"
   },
   {
     field: "annote",
+    includeYAML: false,
     hint: "reader’s notes about the item content"
   },
   {
     field: "note",
+    includeYAML: false,
     hint: "(short) inline note giving additional item details (e.g. a concise summary or commentary)"
   },
   {
@@ -212,7 +215,7 @@ export const referenceFields = [
   },
   {
     field: "status",
-    hint: "publication) status of the item (e.g. “forthcoming”)"
+    hint: "publication status of the item (e.g. “forthcoming”)"
   },
   {
     field: "version",
@@ -304,6 +307,7 @@ export const referenceFields = [
   {
     field: "file",
     type: "FILE",
+    includeYAML: false,
     hint: "the file linked with this reference entity"
   },
 ];

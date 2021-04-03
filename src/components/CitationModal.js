@@ -19,6 +19,8 @@ import { connect } from 'react-redux'
 import { dismissCitation, fetchCitationStyle } from "../actions/index";
 import Modal from 'react-modal';
 import Select from 'react-select';
+import YAML from 'yaml'
+import referenceFields from "../common/referenceFields";
 import 'react-select/dist/react-select.css';
 
 const CSL = require("citeproc");
@@ -27,6 +29,7 @@ const customStyles = {
   content : {
     top                   : '50%',
     left                  : '50%',
+    width                 : '75%',
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
@@ -69,6 +72,40 @@ const citationContents = (references, citation) => {
   return (<span dangerouslySetInnerHTML={{__html: bibEntry[1]}} />)
 };
 
+const yamlContents = (references, citation) => {
+  if(citation === undefined ||
+    citation.refID === undefined ||
+    citation.refID === "") {
+    return (<span>No reference specified</span>)
+  }
+
+  let ref = references.filter((r) => r.id === citation.refID );
+  if(ref.length < 1) {
+    return (<span>Reference not found</span>)
+  }
+
+  let sorted_ref = {};
+  for (const rf of referenceFields) {
+    if (rf.field in ref[0] && rf.includeYAML !== false) {
+      if (rf.type === "DATE") {
+        const dateParts = ["year", "month", "day"]
+        let date = {}
+        for (const [i, dp] of ref[0][rf.field]["date-parts"][0].slice(0, dateParts.length).entries()) {
+          date[dateParts[i]] = dp
+        }
+        sorted_ref[rf.field] = date
+      } else {
+        sorted_ref[rf.field] = ref[0][rf.field]
+      }
+    }
+  }
+
+  const doc = new YAML.Document();
+  doc.contents = [sorted_ref];
+
+  return doc.toString()
+}
+
 let CitationModal = ({ references, citation, dispatch }) => (
   <Modal
     isOpen={citation.isVisible}
@@ -91,7 +128,7 @@ let CitationModal = ({ references, citation, dispatch }) => (
       <span>
         {
           citation.hasFailedCitationStyleList
-            ? (<div className="Error">Failed to retreive citation style list.</div>)
+            ? (<div className="Error">Failed to retrieve citation style list.</div>)
             : (<div/>)
         }
       </span>
@@ -103,6 +140,8 @@ let CitationModal = ({ references, citation, dispatch }) => (
       />
     </div>
     <div>{ citationContents(references, citation) }</div>
+    <div><br/></div>
+    <textarea readOnly style={{ width: "100%", height: "175px" }} value={ yamlContents(references, citation) } />
   </Modal>
 );
 

@@ -17,7 +17,8 @@
     "react-tooltip": "^3.9.0",
     "redux": "^3.7.2",
     "redux-localstorage": "^0.4.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yaml": "^1.10.2"
   },
   "scripts": {
     "start": "react-scripts start",

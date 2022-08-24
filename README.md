@@ -48,7 +48,7 @@ else
 	source activate bib-git	
 	python main.py &
 fi
-xdg-open http://127.0.0.1:5000/ &
+xdg-open http://127.0.0.1:5032/ &
 ```
 
 Or on Windows (make sure that you replace the paths with the correct paths for your system):
@@ -59,7 +59,7 @@ SET PYPATH="C:\Users\MyUserName\AppData\Local\conda\conda\envs\bib-git\python.ex
 SET BROWSERPATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 cd bib-git
 start "" %PYPATH% "main.py"
-start %BROWSERPATH% http://127.0.0.1:5000/
+start %BROWSERPATH% http://127.0.0.1:5032/
 ```
 
 Running the launch script should launch the application. From here, you can import your existing library or create a new one. More on importing an existing library later.

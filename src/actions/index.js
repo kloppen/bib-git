@@ -22,6 +22,8 @@ const FileSaver = require("file-saver");
 
 let nextReferenceId = 0;
 
+const apiServer = "http://localhost:5032";
+
 export const addReference = () => {
   return (dispatch, getState) => {
     const { references } = getState();
@@ -46,7 +48,7 @@ export const setFilterText = filter => {
 
 export function showEditScreen(id) {
   return (dispatch, getState) => {
-    return fetch("http://localhost:5000/api/files?unlinked")
+    return fetch(`${apiServer}/api/files?unlinked`)
       .then(
         resp => resp.json(),
         error => {
@@ -140,7 +142,7 @@ export function saveEditScreen() {
 export function updateReference(id, newReferenceData) {
   return(dispatch) => {
     return fetch(
-      "http://localhost:5000/api/library/" + encodeURIComponent(id),
+      `${apiServer}/api/library/${encodeURIComponent(id)}`,
       {
         method: "PUT",
         body: JSON.stringify(newReferenceData)
@@ -337,7 +339,7 @@ export function fetchLibrary() {
 export function fetchLibrary() {
   return function(dispatch) {
     dispatch(requestLibrary());
-    return fetch("http://localhost:5000/api/library")
+    return fetch(`${apiServer}/api/library`)
       .then(
         response => response.json(),
         error => {
@@ -509,7 +511,7 @@ export function dismissCitation() {
 export function fetchCitationLocale() {
   return function(dispatch) {
     dispatch(requestCitationLocale());
-    return fetch("http://localhost:5000/api/csl-locales/locales-en-US")
+    return fetch(`${apiServer}/api/csl-locales/locales-en-US`)
       .then(
         response => response.text(),
         error => {
@@ -552,7 +554,7 @@ export const receiveCitationLocale = (xml) => {
 
 export function fetchCitationStyleList() {
   return function(dispatch) {
-    return fetch("http://localhost:5000/api/csl-styles")
+    return fetch(`${apiServer}/api/csl-styles`)
       .then(
         response => response.json(),
         error => {
@@ -590,7 +592,7 @@ export function receiveCitationStyleList(styleList) {
 export function fetchCitationStyle(styleName) {
   return function(dispatch) {
     dispatch(requestCitationStyle());
-    return fetch("http://localhost:5000/api/csl-styles/" + styleName)
+    return fetch(`${apiServer}/api/csl-styles/${styleName}`)
       .then(
         response => response.text(),
         error => {
@@ -634,7 +636,7 @@ export const receiveCitationStyle = (xml, styleName) => {
 
 export const getFilePathRoot = () => {
   return function(dispatch) {
-    return fetch("http://localhost:5000/api/filepath")
+    return fetch(`${apiServer}/api/filepath`)
       .then(
         response => response.text()
       )

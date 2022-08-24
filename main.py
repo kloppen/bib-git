@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from gevent import monkey
+monkey.patch_all()
 import bottle
 from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
@@ -254,4 +256,4 @@ def get_file_list_handler():
 
 
 if __name__ == "__main__":
-    bottle.run(app, host=HOST, port=PORT)
+    bottle.run(app, host=HOST, port=PORT, server='gevent')

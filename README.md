@@ -55,11 +55,13 @@ Or on Windows (make sure that you replace the paths with the correct paths for y
 
 ```
 SETLOCAL
-SET PYPATH="C:\Users\MyUserName\AppData\Local\conda\conda\envs\bib-git\python.exe"
+SET CONDAACTIVATE="C:\ProgramData\Miniconda3\Scripts\activate.bat"
 SET BROWSERPATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+
+CALL %CONDAACTIVATE% bib-git
 cd bib-git
-start "" %PYPATH% "main.py"
 start %BROWSERPATH% http://127.0.0.1:5032/
+CALL "python" "main.py"
 ```
 
 Running the launch script should launch the application. From here, you can import your existing library or create a new one. More on importing an existing library later.

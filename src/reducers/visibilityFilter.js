@@ -13,10 +13,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const visibilityFilter = (state = "", action) => {
+const visibilityFilter = (
+  state = [
+    {"field": "", "value": "", "tokenize": true, "caseSensitive": false}
+  ],
+  action) => {
   switch (action.type) {
     case "SET_FILTER_TEXT":
-      return action.filter;
+      return [{"field": "", "value": action.filter, "tokenize": true, "caseSensitive": false}];
     default:
       return state
   }

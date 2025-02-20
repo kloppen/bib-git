@@ -16,37 +16,51 @@
 import { connect } from 'react-redux'
 import ReferenceList from '../components/ReferenceList'
 import { referenceFields } from "../common/referenceFields";
+import { filterToStringList, correctCase } from "../common/processFilter"
 
 const refFields = referenceFields;
 
-const getVisibleReferences = (references, filter) => {
-  const uprFilter = filter.toUpperCase().match(/\S+/g) || [];  // since match returns null if no match
+const checkReferenceForFilter = (cur_ref, cur_filter) => {
+  // cur_filer should have the following strucutre
+  // {"field": "", "value": "", "tokenize": true, "caseSensitive": false}
+  let value = filterToStringList(cur_filter);
 
-  return references.filter(
-    (r) =>
-      uprFilter.map(flt =>
-        refFields.map(field => {
-          if(!r[field.field]) {
+  return value.map(flt_val => {
+    return refFields.map(field => {
+      if(!cur_ref[field.field]) {
+        return false;
+      }
+      if(cur_filter.field !== "" && field.field !== cur_filter.field) {
+        return false;
+      }
+      switch(field.type) {
+        case "NAME":
+          return cur_ref[field.field].map(
+            author => Object.keys(author).map(
+              key => correctCase(author[key].toString(), cur_filter).includes(flt_val)
+            ).reduce((prevVal, elm) => prevVal || elm, false)
+          ).reduce((prevVal, elm) => prevVal || elm, false);
+        case "DATE":
+          return correctCase(cur_ref[field.field]["date-parts"].toString(), cur_filter).includes(flt_val);
+        case "FILE":
+          if(cur_filter.field === "") {
             return false;
+          } else {
+            return correctCase(cur_ref[field.field].toString(), cur_filter).includes(flt_val);
           }
-          switch(field.type) {
-            case "NAME":
-              return r[field.field].map(
-                author => Object.keys(author).map(
-                  key => author[key].toString().toUpperCase().includes(flt)
-                ).reduce((prevVal, elm) => prevVal || elm, false)
-              ).reduce((prevVal, elm) => prevVal || elm, false);
-            case "DATE":
-              return r[field.field]["date-parts"].toString().toUpperCase().includes(flt);
-            case "FILE":
-              return false;
-            default:
-              return r[field.field].toString().toUpperCase().includes(flt)
-          }
+        default:
+          return correctCase(cur_ref[field.field].toString(), cur_filter).includes(flt_val);
+      }
+    }).reduce((prevVal, elm) => prevVal || elm, false) // any field (that matches criteria)
+  }).reduce((prevVal, elm) => prevVal && elm, true) // all flt_val's need to be present
+};
 
-        }).reduce((prevVal, elm) => prevVal || elm, false)
-      )
+const getVisibleReferences = (references, filters) => {
+  return references.filter(
+    (cur_ref) => {
+      return filters.map(cur_filter => checkReferenceForFilter(cur_ref, cur_filter))
         .reduce((prevVal, elm) => prevVal && elm, true)
+    }
   );
 };
 

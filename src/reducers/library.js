@@ -19,6 +19,7 @@ const library = (
     hasFailed: false,
     hasFailedCitationStyleList: false,
     hasFailedCitationLocale: false,
+    hasFailedDeadLinks: false,
     hrefRoot: ""
   },
   action
@@ -48,6 +49,10 @@ const library = (
     case "FAIL_RECEIVE_CITATION_LOCALE":
       return Object.assign({}, state, {
         hasFailedCitationLocale: true
+      });
+    case "FAIL_DEAD_LINKS":
+      return Object.assign({}, state, {
+        hasFailedDeadLinks: true
       });
     default:
       return state

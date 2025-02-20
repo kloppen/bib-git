@@ -250,6 +250,25 @@ export const failReceiveLibrary = () => {
   }
 };
 
+export const requestDeadLinks = () => {
+  return {
+    type: "REQUEST_DEAD_LINKS"
+  }
+};
+
+export const receiveDeadLinks = (json) => {
+  return {
+    type: "RECEIVE_DEAD_LINKS",
+    json
+  }
+};
+
+export const failDeadLinks = () => {
+  return {
+    type: "FAIL_DEAD_LINKS"
+  }
+};
+
 
 /*
 The citation.js implementation
@@ -372,6 +391,31 @@ export const saveLibrary = () => {
       type: "SAVE_REFERENCES"
     })
   }
+};
+
+export const checkDead = () => {
+  return (dispatch) => {
+    dispatch(requestDeadLinks());
+    return fetch(`${apiServer}/api/dead-links`)
+      .then(
+        response => response.json(),
+        error => {
+          throw new Error("Failed to get dead links" + error)
+        }
+      )
+      .then(
+        json => dispatch(receiveDeadLinks(json)),
+        error => {
+          throw new Error("Failed to receive dead links" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error receiving dead links", error);
+          dispatch(failDeadLinks())
+        }
+      )
+  };
 };
 
 /*

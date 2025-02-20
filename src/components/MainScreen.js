@@ -16,7 +16,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import VisibleReferenceList from "../containers/VisibleReferenceList";
-import {setFilterText, addReference, saveLibrary, importBibLaTeX} from "../actions"
+import {setFilterText, addReference, saveLibrary, importBibLaTeX, checkDead} from "../actions"
 
 
 let MainScreen = ({library, visibilityFilter, dispatch}) => (
@@ -27,6 +27,11 @@ let MainScreen = ({library, visibilityFilter, dispatch}) => (
           Add Reference
         </button>
         <label htmlFor="addReference">Add Reference</label>
+
+        <button type="button" id="checkDead" className="input-field" onClick={() => dispatch(checkDead())}>
+          Check for Dead
+        </button>
+        <label htmlFor="checkDead">Check for Dead</label>
 
         <input
           id="importBibLaTeX"
@@ -62,7 +67,7 @@ let MainScreen = ({library, visibilityFilter, dispatch}) => (
               dispatch(setFilterText(event.target.value));
             }
           }
-          defaultValue={ visibilityFilter }
+          defaultValue={ visibilityFilter.value }
         />
       </div>
     </div>

@@ -255,5 +255,15 @@ def get_file_list_handler():
     return json.dumps(file_list)
 
 
+@get("/api/dead-links")
+def get_dead_links():
+    ref_files = get_library_referenced_files()
+    ref_files = set(ref_files)
+    disk_files = get_file_list(False)
+    disk_files = set([df["path"] for df in disk_files])
+    dead_links = ref_files.difference(disk_files)
+    return json.dumps(list(dead_links))
+    
+
 if __name__ == "__main__":
     bottle.run(app, host=HOST, port=PORT, server='gevent')

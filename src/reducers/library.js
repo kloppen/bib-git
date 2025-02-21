@@ -54,6 +54,14 @@ const library = (
       return Object.assign({}, state, {
         hasFailedDeadLinks: true
       });
+    case "RECEIVE_DEAD_LINKS":
+      return Object.assign({}, state, {
+        hasReceivedDeadLinks: true
+      });
+    case "DISMISS_DEAD_LINKS":
+      return Object.assign({}, state, {
+        hasReceivedDeadLinks: false
+      });
     default:
       return state
   }

@@ -269,6 +269,12 @@ export const failDeadLinks = () => {
   }
 };
 
+export const dismissDead = () => {
+  return {
+    type: "DISMISS_DEAD_LINKS"
+  };
+};
+
 
 /*
 The citation.js implementation

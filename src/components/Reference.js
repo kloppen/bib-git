@@ -132,8 +132,17 @@ class Reference extends React.Component {
                     fileTitle = fileObj[0];
                     fileHREF = fileObj[0];
                   }
-
-                  return (<a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">{fileTitle}<br/></a>)
+                  return (
+                    <a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">
+                      {
+                        filterRE !== null && filterRE.test(fileHREF) ?
+                        (<span className="Highlighted" key={index}>{fileTitle}</span>)
+                          :
+                          fileTitle
+                      }
+                      <br/>
+                    </a>
+                  );
                 })
               }
             </div>

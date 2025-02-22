@@ -33,16 +33,19 @@ export const filterToStringList = (filter) => {
 
 export const generateFieldFilterRE = (filter_list) => {
     const fieldRE = referenceFields.map(cur_field => {
-        const matching_filters = filter_list.filter(flt => (flt.field === "" || flt.field === cur_field))
+        const matching_filters = filter_list.filter(flt => (flt.field === "" || flt.field === cur_field.field))
         const filter_string_lists = matching_filters.map(flt => {
             return filterToStringList(flt).join("|");
         });
-        const filter_text = filter_string_lists.join("|")
+        const non_empty_list = filter_string_lists.filter(
+            s => s.length > 0 && s[0] !== ""
+        );
+        const filter_text = non_empty_list.join("|")
         return {
             field: cur_field.field,
             filter_re: filter_text.length === 0
                 ? null
-                : new RegExp("(" + filter_string_lists.join("|") + ")", "i")
+                : new RegExp("(" + filter_text + ")", "i")
         };
     });
 

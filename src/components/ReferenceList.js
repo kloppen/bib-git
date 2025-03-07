@@ -42,7 +42,14 @@ const ReferenceList = ({references, library, visibilityFilter}) => (
     </span>
     <span>
       {
-        library.isFetching
+        library.hasFailedDeadLinks
+          ? (<div className="Error">Failed to retrieve dead links.</div>)
+          : (<span/>)
+      }
+    </span>
+    <span>
+      {
+        library.isFetching // TODO: Probably need to update this for hilighting missing files
           ? (<div>Retrieving Library...</div>)
           : (
             <div>
@@ -70,7 +77,7 @@ ReferenceList.propTypes = {
   library: PropTypes.shape({
     isFetching: PropTypes.bool.isRequired
   }).isRequired,
-  visibilityFilter: PropTypes.string.isRequired
+  visibilityFilter: PropTypes.array.isRequired
 };
 
 export default ReferenceList

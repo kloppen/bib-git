@@ -119,6 +119,16 @@ If some of you attached files have the extension `PDF` or `Pdf` or are different
 When you update your library, use the normal commit/push workflow that you 
 would with any other git repo.
 
+# Ignoring Dead Links
+In some cases, it may be useful to ignore certain dead links on some computers.
+For example, if certain files are not synced to all computers, but you don't
+want those to show up when you click the "Check for Dead" button.
+To ignore certain files, create a text file called `deadlinkignore.local`.
+Each line should contain a pattern matching one or more file to ignore.
+Pattern matching uses Unix shell-style wildcards.
+See [Python fnmatch](https://docs.python.org/3/library/fnmatch.html) for
+more information.
+
 # Contributing
 If you would like to contribute to this repository, I'd welcome your contributiosn. Please send me a pull request along with a description of what you're trying to change and why. I don't plan on being a particularly active maintainer for this particular repository, so please allow some time for me to respond.
 

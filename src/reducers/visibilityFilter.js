@@ -13,12 +13,32 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-const visibilityFilter = (state = "", action) => {
+const visibilityFilter = (
+  state = [
+    {"id": "search", "field": "", "value": "", "tokenize": true, "caseSensitive": false}
+  ],
+  action) => {
+
   switch (action.type) {
     case "SET_FILTER_TEXT":
-      return action.filter;
+      return state.filter(f => f.id !== "search")
+        .concat([{"id": "search", "field": "", "value": action.filter, "tokenize": true, "caseSensitive": false}]);
+    case "RECEIVE_DEAD_LINKS":
+      const files = action.json;
+      return state.filter(f => f.id !== "deadlink")
+        .concat(files.map(f => {
+          return {
+            "id": "deadlink",
+            "field": "file",
+            "value": f,
+            "tokenize": false,
+            "caseSensitive": false
+          };
+        }));
+    case "DISMISS_DEAD_LINKS":
+      return state.filter(f => f.id !== "deadlink");
     default:
-      return state
+      return state;
   }
 };
 

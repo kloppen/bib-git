@@ -20,6 +20,9 @@ yarn-error.log*
 # library
 /library
 
+# ignore file list
+deadlinkignore.local
+
 .idea/workspace.xml
 
 .eslintcache

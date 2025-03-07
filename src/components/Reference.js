@@ -19,6 +19,7 @@ import { showCitation, showEditScreen } from "../actions/index";
 import { connect } from 'react-redux'
 import { referenceFields } from "../common/referenceFields"
 import { nameSubFields } from '../common/nameSubFields'
+import { generateFieldFilterRE, getFieldFilterRE } from '../common/processFilter'
 
 
 class Reference extends React.Component {
@@ -131,8 +132,17 @@ class Reference extends React.Component {
                     fileTitle = fileObj[0];
                     fileHREF = fileObj[0];
                   }
-
-                  return (<a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">{fileTitle}<br/></a>)
+                  return (
+                    <a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">
+                      {
+                        filterRE !== null && filterRE.test(fileHREF) ?
+                        (<span className="Highlighted" key={index}>{fileTitle}</span>)
+                          :
+                          fileTitle
+                      }
+                      <br/>
+                    </a>
+                  );
                 })
               }
             </div>
@@ -155,12 +165,12 @@ class Reference extends React.Component {
     }
   }
 
-  render_expanded(filterRE) {
+  render_expanded(filter_list) {
     return (
       <div className="Ref-list-item">
         {
           referenceFields.filter((rf) => !!this.props.reference[rf.field])
-            .map( (rf) => this.field_contents(rf, filterRE) )
+            .map( (rf) => this.field_contents(rf, getFieldFilterRE(filter_list, rf.field)) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>
@@ -189,7 +199,7 @@ class Reference extends React.Component {
     }).join(", ")
   }
 
-  render_collapsed(filterRE) {
+  render_collapsed(filter_list) {
     return (
       <div className="Ref-list-item">
         <div className="Ref-list-item-1">
@@ -197,7 +207,7 @@ class Reference extends React.Component {
             {
               this.highlighted_text(
                 this.render_author_list_collapsed(),
-                filterRE
+                getFieldFilterRE(filter_list, "author")
               )
             }
           </span>
@@ -206,7 +216,7 @@ class Reference extends React.Component {
               this.props.reference.number
                 ? this.highlighted_text(
                   this.props.reference.number,
-                  filterRE
+                  getFieldFilterRE(filter_list, "number")
                 )
                 : <span/>
             }
@@ -218,7 +228,7 @@ class Reference extends React.Component {
               (this.props.reference.issued && !!this.props.reference.issued["date-parts"])
               ? this.props.reference.issued["date-parts"][0][0]
                 : "",
-              filterRE
+                getFieldFilterRE(filter_list, "issued")
             )
           }
         </div>
@@ -226,7 +236,7 @@ class Reference extends React.Component {
           {
             this.highlighted_text(
               this.props.reference.title,
-              filterRE
+              getFieldFilterRE(filter_list, "title")
             )
           }
         </div>
@@ -264,16 +274,12 @@ class Reference extends React.Component {
   }
 
   render() {
-    const searchFilter = this.props.visibilityFilter.match(/\S+/g) || [];  // since match returns null if no match
-
-    const filterRE = searchFilter.length === 0
-      ? null
-      : new RegExp("(" + searchFilter.join("|") + ")", "i");
+    const field_filters = generateFieldFilterRE(this.props.visibilityFilter);
 
     if(this.state.isExpanded) {
-      return(this.render_expanded(filterRE))
+      return(this.render_expanded(field_filters)) // TODO: Update
     } else {
-      return(this.render_collapsed(filterRE))
+      return(this.render_collapsed(field_filters))
     }
   }
 }
@@ -282,7 +288,7 @@ Reference.propTypes = {
   reference: PropTypes.shape({
     id: PropTypes.string.isRequired
   }).isRequired,
-  visibilityFilter: PropTypes.string,
+  visibilityFilter: PropTypes.array,
   hrefRoot: PropTypes.string.isRequired
 };
 

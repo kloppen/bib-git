@@ -18,6 +18,7 @@ monkey.patch_all()
 import bottle
 from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
+import fnmatch
 import json
 import os
 import os.path
@@ -257,11 +258,23 @@ def get_file_list_handler():
 
 @get("/api/dead-links")
 def get_dead_links():
+    if pathlib.Path("deadlinkignore.local").is_file():
+        with open("deadlinkignore.local") as file:
+            ignore = [line.rstrip() for line in file]
+    else:
+        ignore = []
+
     ref_files = get_library_referenced_files()
     ref_files = set(ref_files)
     disk_files = get_file_list(False)
     disk_files = set([df["path"] for df in disk_files])
     dead_links = ref_files.difference(disk_files)
+
+    dead_links = [f for f
+                  in list(dead_links)
+                  if not any([fnmatch.fnmatch(f, ig) for ig in ignore])
+                  ]
+
     return json.dumps(list(dead_links))
     
 

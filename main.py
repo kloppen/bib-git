@@ -29,6 +29,8 @@ app = application = bottle.default_app()
 
 HOST = "127.0.0.1"
 PORT = 5032
+REMOTE_FOLDER = "library"
+REMOTE_LIBRARY = "remote.json"
 
 
 @app.hook('after_request')
@@ -276,7 +278,62 @@ def get_dead_links():
                   ]
 
     return json.dumps(list(dead_links))
-    
+
+
+def find_item(library, id):
+    for li in library:
+        if id == li["id"]:
+            return li
+    return {}
+
+
+def diff_items(local, remote):
+    diff = {}
+    for kl, vl in local.items():
+        if kl in remote:
+            remote_val = remote[kl]
+            is_different = vl != remote_val
+        else:
+            remote_val = None
+            is_different = True
+        diff[kl] = {
+            "local": vl,
+            "remote": remote_val,
+            "is_different": is_different
+        }
+    for kr, vr in remote.items():
+        if kr not in diff:
+            diff[kr] = {
+                "local": None,
+                "remote": vr,
+                "is_different": True
+            }
+    return diff
+
+
+def is_diff_different(diff):
+    return any([diff[v]["is_different"] for v in diff])
+
+
+@get("/api/diff")
+def get_diff():
+    local_str = get_file_contents("library", "MyLibrary.json")
+    remote_str = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    local = json.loads(local_str)
+    remote = json.loads(remote_str)
+
+    diff = []
+    for local_item in local:
+        remote_item = find_item(remote, local_item["id"])
+        curr_diff = diff_items(local_item, remote_item)
+        if is_diff_different(curr_diff):
+            diff.append(curr_diff)
+    for remote_item in remote:
+        local_item = find_item(local, remote_item["id"])
+        if len(local_item.keys()) == 0:
+            diff.append(diff_items(local_item, remote_item))
+    return json.dumps(diff)
+
 
 if __name__ == "__main__":
     bottle.run(app, host=HOST, port=PORT, server='gevent')

@@ -292,21 +292,24 @@ def diff_items(local, remote):
     for kl, vl in local.items():
         if kl in remote:
             remote_val = remote[kl]
-            is_different = vl != remote_val
         else:
-            remote_val = None
-            is_different = True
+            remote_val = None if kl != "id" else vl
+        is_different = vl != remote_val
         diff[kl] = {
             "local": vl,
             "remote": remote_val,
-            "is_different": is_different
+            "is_different": is_different,
+            "use": ""
         }
     for kr, vr in remote.items():
         if kr not in diff:
+            local_val = None if kr != "id" else vr
+            is_different = vr != local_val
             diff[kr] = {
-                "local": None,
+                "local": local_val,
                 "remote": vr,
-                "is_different": True
+                "is_different": is_different,
+                "use": ""
             }
     return diff
 

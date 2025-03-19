@@ -16,7 +16,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import VisibleReferenceList from "../containers/VisibleReferenceList";
-import {setFilterText, addReference, saveLibrary, importBibLaTeX, checkDead, dismissDead} from "../actions"
+import {setFilterText, addReference, saveLibrary,
+  importBibLaTeX, checkDead, dismissDead, startDiff} from "../actions"
 
 
 let MainScreen = ({library, visibilityFilter, dispatch}) => (
@@ -27,9 +28,18 @@ let MainScreen = ({library, visibilityFilter, dispatch}) => (
           Add Reference
         </button>
         <label htmlFor="addReference">Add Reference</label>
+
+        <button type="button" id="startDiff" className="input-field"
+          onClick={() => dispatch(startDiff())}>
+          Diff with Remote
+        </button>
+        <label htmlFor="startDiff">
+          Diff with Remote
+        </label>
+
         <button type="button" id="checkDead" className="input-field"
           onClick={() => library.hasReceivedDeadLinks ? dispatch(dismissDead()) : dispatch(checkDead())}>
-          Check for Dead1
+          Check for Dead
         </button>
         <label htmlFor="checkDead">
           { library.hasReceivedDeadLinks ? "Dismiss Dead Links" : "Check for Dead" }

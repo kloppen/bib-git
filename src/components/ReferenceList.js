@@ -49,6 +49,13 @@ const ReferenceList = ({references, library, visibilityFilter}) => (
     </span>
     <span>
       {
+        library.hasFailedDiff
+          ? (<div className="Error">Failed to retrieve diff.</div>)
+          : (<span/>)
+      }
+    </span>
+    <span>
+      {
         library.isFetching // TODO: Probably need to update this for hilighting missing files
           ? (<div>Retrieving Library...</div>)
           : (

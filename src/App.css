@@ -222,3 +222,48 @@ textarea.Editable {
 .DateEdit-xx {
     width: 40px;
 }
+
+.Diff-row {
+    width: calc(100%);
+    overflow: visible;
+    clear: left;
+    display: flex;
+}
+
+.Diff-row-different {
+    width: calc(100%);
+    overflow: visible;
+    clear: left;
+    display: flex;
+    background-color: lightpink;
+}
+
+.Diff-row-use-local {
+    width: calc(100%);
+    overflow: visible;
+    clear: left;
+    display: flex;
+    background-color: lightblue;
+}
+
+.Diff-row-use-remote {
+    width: calc(100%);
+    overflow: visible;
+    clear: left;
+    display: flex;
+    background-color: lightcyan;
+}
+
+.Diff-remote {
+    float: left;
+    width: calc(50% - 50px);
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.Diff-local {
+    float: right;
+    width: calc(50% - 50px);
+    padding: 5px;
+    box-sizing: border-box;
+}

@@ -1,4 +1,4 @@
-// Copyright (C) 2017, Stefan Kloppenborg
+// Copyright (C) 2017-2025, Stefan Kloppenborg
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -19,13 +19,16 @@ import visibilityFilter from './visibilityFilter'
 import library from './library'
 import citation from './citation'
 import editReferenceScreen from './editReferenceScreen'
+import diffScreen from './diffScreen'
+
 
 const referenceApp = combineReducers({
   library,
   references,
   visibilityFilter,
   citation,
-  editReferenceScreen
+  editReferenceScreen,
+  diffScreen
 });
 
 export default referenceApp

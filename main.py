@@ -29,6 +29,8 @@ app = application = bottle.default_app()
 
 HOST = "127.0.0.1"
 PORT = 5032
+LOCAL_FOLDER = "library"
+LOCAL_LIBRARY = "MyLibrary.json"
 REMOTE_FOLDER = "library"
 REMOTE_LIBRARY = "remote.json"
 
@@ -94,7 +96,7 @@ def get_library() -> str:
     Gets the JSON object representing the library stored on disk
     :return: A JSON-formatted string
     """
-    return get_file_contents("library", "MyLibrary.json")
+    return get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
 
 
 def update_library_item_pure(old_id: str, updated_ref: dict, cur_library: list) -> list:
@@ -129,7 +131,7 @@ def update_library_item(old_id: str):
     cur_lib = json.loads(cur_lib_str)
     updated_ref = json.loads(str(request.body.read(), "UTF-8"))
     updated_lib = update_library_item_pure(old_id, updated_ref, cur_lib)
-    with open(os.path.join("library", "MyLibrary.json"), "w", encoding="UTF8") as f:
+    with open(os.path.join(LOCAL_FOLDER, LOCAL_LIBRARY), "w", encoding="UTF8") as f:
         f.write(json.dumps(updated_lib, indent=2, ensure_ascii=False))
 
 
@@ -141,7 +143,7 @@ def get_filepath() -> str:
     """
     return f"http://{HOST}:{PORT}/library"
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    dir_path = os.path.join(dir_path, "library")
+    dir_path = os.path.join(dir_path, LOCAL_FOLDER)
     return pathlib.Path(dir_path).as_uri()
 
 
@@ -320,7 +322,7 @@ def is_diff_different(diff):
 
 @get("/api/diff")
 def get_diff():
-    local_str = get_file_contents("library", "MyLibrary.json")
+    local_str = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
     remote_str = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
     local = json.loads(local_str)
     remote = json.loads(remote_str)
@@ -336,6 +338,56 @@ def get_diff():
         if len(local_item.keys()) == 0:
             diff.append(diff_items(local_item, remote_item))
     return json.dumps(diff)
+
+
+def update_field(library, id, field, value):
+    updated_library = list(library)
+    if sum([1 for r in updated_library if r["id"] == id]) > 0:
+        #  found the id, so update
+        for i, item in enumerate(updated_library):
+            if item["id"] == id:
+                updated_library[i][field] = value
+    else:
+        # didn't find the id, so insert
+        updated_library.append({
+            "id": id,
+            field: value
+        })
+    return updated_library
+
+
+@put("/api/save-diff")
+def save_diff():
+    diff = json.loads(str(request.body.read(), "UTF-8"))
+
+    local_library = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
+    local_library = json.loads(str(local_library))
+    remote_library = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    remote_library = json.loads(str(remote_library))
+
+    for diff_item in diff:
+        cur_id = diff_item["id"]["local"] if diff_item["id"]["remote"] == "" \
+            else diff_item["id"]["remote"]
+        for k, v in diff_item.items():
+            if k != "id":
+                if v["use"] == "local":
+                    remote_library = update_field(
+                        remote_library,
+                        cur_id,
+                        k,
+                        v["local"])
+                if v["use"] == "remote":
+                    local_library = update_field(
+                        local_library,
+                        cur_id,
+                        k,
+                        v["remote"]
+                    )
+    
+    with open(os.path.join(LOCAL_FOLDER, LOCAL_LIBRARY), "w", encoding="UTF8") as f:
+        f.write(json.dumps(local_library, indent=2, ensure_ascii=False))
+    with open(os.path.join(REMOTE_FOLDER, REMOTE_LIBRARY), "w", encoding="UTF8") as f:
+        f.write(json.dumps(remote_library, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

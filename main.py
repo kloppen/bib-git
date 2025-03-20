@@ -18,21 +18,25 @@ monkey.patch_all()
 import bottle
 from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
+import datetime
 import fnmatch
 import json
 import os
 import os.path
 import pathlib
 import mimetypes
+import zipfile
 
 app = application = bottle.default_app()
 
 HOST = "127.0.0.1"
 PORT = 5032
-LOCAL_FOLDER = "library"
+LOCAL_FOLDER = "./library"
 LOCAL_LIBRARY = "MyLibrary.json"
-REMOTE_FOLDER = "library"
+LOCAL_ARCHIVE = "./library/archive"
+REMOTE_FOLDER = "./library"
 REMOTE_LIBRARY = "remote.json"
+REMOTE_ARCHIVE = "./library/remote_archive"
 
 
 @app.hook('after_request')
@@ -356,6 +360,16 @@ def update_field(library, id, field, value):
     return updated_library
 
 
+def save_diff_to_disk(library, folder, library_file, archive):
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    lib_path = os.path.join(folder, library_file)
+    with zipfile.ZipFile(os.path.join(archive, f"archive{timestamp}.zip"),
+                         "w", zipfile.ZIP_DEFLATED) as zip:
+        zip.write(lib_path)
+    with open(lib_path, "w", encoding="UTF8") as f:
+        f.write(json.dumps(library, indent=2, ensure_ascii=False))
+
+
 @put("/api/save-diff")
 def save_diff():
     diff = json.loads(str(request.body.read(), "UTF-8"))
@@ -364,6 +378,8 @@ def save_diff():
     local_library = json.loads(str(local_library))
     remote_library = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
     remote_library = json.loads(str(remote_library))
+    local_modified = False
+    remote_modified = False
 
     for diff_item in diff:
         cur_id = diff_item["id"]["local"] if diff_item["id"]["remote"] == "" \
@@ -376,6 +392,7 @@ def save_diff():
                         cur_id,
                         k,
                         v["local"])
+                    remote_modified = True
                 if v["use"] == "remote":
                     local_library = update_field(
                         local_library,
@@ -383,11 +400,13 @@ def save_diff():
                         k,
                         v["remote"]
                     )
+                    local_modified = True
     
-    with open(os.path.join(LOCAL_FOLDER, LOCAL_LIBRARY), "w", encoding="UTF8") as f:
-        f.write(json.dumps(local_library, indent=2, ensure_ascii=False))
-    with open(os.path.join(REMOTE_FOLDER, REMOTE_LIBRARY), "w", encoding="UTF8") as f:
-        f.write(json.dumps(remote_library, indent=2, ensure_ascii=False))
+    if local_modified:
+        save_diff_to_disk(local_library, LOCAL_FOLDER, LOCAL_LIBRARY, LOCAL_ARCHIVE)
+
+    if remote_modified:
+        save_diff_to_disk(remote_library, REMOTE_FOLDER, REMOTE_LIBRARY, REMOTE_ARCHIVE)
 
 
 if __name__ == "__main__":

@@ -119,6 +119,13 @@ If some of you attached files have the extension `PDF` or `Pdf` or are different
 When you update your library, use the normal commit/push workflow that you 
 would with any other git repo.
 
+# Merging Changes
+To merge changes from a remote library file, use the "Diff with Remote"
+feature, choose the fields to update, then press "Save."
+
+When saving the merged librarie(s), a copy is made prior to saving and stored
+in the specified archive folder as a compressed ZIP file.
+
 # Ignoring Dead Links
 In some cases, it may be useful to ignore certain dead links on some computers.
 For example, if certain files are not synced to all computers, but you don't

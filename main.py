@@ -18,17 +18,25 @@ monkey.patch_all()
 import bottle
 from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
+import datetime
 import fnmatch
 import json
 import os
 import os.path
 import pathlib
 import mimetypes
+import zipfile
 
 app = application = bottle.default_app()
 
 HOST = "127.0.0.1"
 PORT = 5032
+LOCAL_FOLDER = "./library"
+LOCAL_LIBRARY = "MyLibrary.json"
+LOCAL_ARCHIVE = "./library/archive"
+REMOTE_FOLDER = "./library"
+REMOTE_LIBRARY = "remote.json"
+REMOTE_ARCHIVE = "./library/remote_archive"
 
 
 @app.hook('after_request')
@@ -92,7 +100,7 @@ def get_library() -> str:
     Gets the JSON object representing the library stored on disk
     :return: A JSON-formatted string
     """
-    return get_file_contents("library", "MyLibrary.json")
+    return get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
 
 
 def update_library_item_pure(old_id: str, updated_ref: dict, cur_library: list) -> list:
@@ -127,7 +135,7 @@ def update_library_item(old_id: str):
     cur_lib = json.loads(cur_lib_str)
     updated_ref = json.loads(str(request.body.read(), "UTF-8"))
     updated_lib = update_library_item_pure(old_id, updated_ref, cur_lib)
-    with open(os.path.join("library", "MyLibrary.json"), "w", encoding="UTF8") as f:
+    with open(os.path.join(LOCAL_FOLDER, LOCAL_LIBRARY), "w", encoding="UTF8") as f:
         f.write(json.dumps(updated_lib, indent=2, ensure_ascii=False))
 
 
@@ -139,7 +147,7 @@ def get_filepath() -> str:
     """
     return f"http://{HOST}:{PORT}/library"
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    dir_path = os.path.join(dir_path, "library")
+    dir_path = os.path.join(dir_path, LOCAL_FOLDER)
     return pathlib.Path(dir_path).as_uri()
 
 
@@ -276,7 +284,130 @@ def get_dead_links():
                   ]
 
     return json.dumps(list(dead_links))
+
+
+def find_item(library, id):
+    for li in library:
+        if id == li["id"]:
+            return li
+    return {}
+
+
+def diff_items(local, remote):
+    diff = {}
+    for kl, vl in local.items():
+        if kl in remote:
+            remote_val = remote[kl]
+        else:
+            remote_val = None if kl != "id" else vl
+        is_different = vl != remote_val
+        diff[kl] = {
+            "local": vl,
+            "remote": remote_val,
+            "is_different": is_different,
+            "use": ""
+        }
+    for kr, vr in remote.items():
+        if kr not in diff:
+            local_val = None if kr != "id" else vr
+            is_different = vr != local_val
+            diff[kr] = {
+                "local": local_val,
+                "remote": vr,
+                "is_different": is_different,
+                "use": ""
+            }
+    return diff
+
+
+def is_diff_different(diff):
+    return any([diff[v]["is_different"] for v in diff])
+
+
+@get("/api/diff")
+def get_diff():
+    local_str = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
+    remote_str = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    local = json.loads(local_str)
+    remote = json.loads(remote_str)
+
+    diff = []
+    for local_item in local:
+        remote_item = find_item(remote, local_item["id"])
+        curr_diff = diff_items(local_item, remote_item)
+        if is_diff_different(curr_diff):
+            diff.append(curr_diff)
+    for remote_item in remote:
+        local_item = find_item(local, remote_item["id"])
+        if len(local_item.keys()) == 0:
+            diff.append(diff_items(local_item, remote_item))
+    return json.dumps(diff)
+
+
+def update_field(library, id, field, value):
+    updated_library = list(library)
+    if sum([1 for r in updated_library if r["id"] == id]) > 0:
+        #  found the id, so update
+        for i, item in enumerate(updated_library):
+            if item["id"] == id:
+                updated_library[i][field] = value
+    else:
+        # didn't find the id, so insert
+        updated_library.append({
+            "id": id,
+            field: value
+        })
+    return updated_library
+
+
+def save_diff_to_disk(library, folder, library_file, archive):
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    lib_path = os.path.join(folder, library_file)
+    with zipfile.ZipFile(os.path.join(archive, f"archive{timestamp}.zip"),
+                         "w", zipfile.ZIP_DEFLATED) as zip:
+        zip.write(lib_path)
+    with open(lib_path, "w", encoding="UTF8") as f:
+        f.write(json.dumps(library, indent=2, ensure_ascii=False))
+
+
+@put("/api/save-diff")
+def save_diff():
+    diff = json.loads(str(request.body.read(), "UTF-8"))
+
+    local_library = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
+    local_library = json.loads(str(local_library))
+    remote_library = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    remote_library = json.loads(str(remote_library))
+    local_modified = False
+    remote_modified = False
+
+    for diff_item in diff:
+        cur_id = diff_item["id"]["local"] if diff_item["id"]["remote"] == "" \
+            else diff_item["id"]["remote"]
+        for k, v in diff_item.items():
+            if k != "id":
+                if v["use"] == "local":
+                    remote_library = update_field(
+                        remote_library,
+                        cur_id,
+                        k,
+                        v["local"])
+                    remote_modified = True
+                if v["use"] == "remote":
+                    local_library = update_field(
+                        local_library,
+                        cur_id,
+                        k,
+                        v["remote"]
+                    )
+                    local_modified = True
     
+    if local_modified:
+        save_diff_to_disk(local_library, LOCAL_FOLDER, LOCAL_LIBRARY, LOCAL_ARCHIVE)
+
+    if remote_modified:
+        save_diff_to_disk(remote_library, REMOTE_FOLDER, REMOTE_LIBRARY, REMOTE_ARCHIVE)
+
 
 if __name__ == "__main__":
     bottle.run(app, host=HOST, port=PORT, server='gevent')

@@ -18,9 +18,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import CitationModal from "./CitationModal"
 import EditReferenceModal from "./EditReferenceScreen"
+import DiffScreen from './DiffScreen'
 import MainScreen from "./MainScreen"
 
-let App = ({editReferenceScreen}) => {
+let App = ({editReferenceScreen, diffScreen}) => {
   return (
     <div className="App">
       <div className="App-header">
@@ -29,7 +30,9 @@ let App = ({editReferenceScreen}) => {
       <CitationModal/>
       {editReferenceScreen.isVisible ?
         (<EditReferenceModal/>) :
-        (<MainScreen/>)
+        diffScreen.isVisible ?
+          (<DiffScreen/>) :
+          (<MainScreen/>)
       }
     </div>
   );
@@ -38,7 +41,8 @@ let App = ({editReferenceScreen}) => {
 const mapStateToProps = state => {
 
   return {
-    editReferenceScreen: state.editReferenceScreen
+    editReferenceScreen: state.editReferenceScreen,
+    diffScreen: state.diffScreen
   }
 };
 
@@ -48,6 +52,9 @@ App = connect(
 
 App.propTypes = {
   editReferenceScreen: PropTypes.shape({
+    isVisible: PropTypes.bool.isRequired
+  }),
+  diffScreen: PropTypes.shape({
     isVisible: PropTypes.bool.isRequired
   })
 };

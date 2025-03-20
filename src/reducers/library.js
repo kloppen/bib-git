@@ -20,6 +20,7 @@ const library = (
     hasFailedCitationStyleList: false,
     hasFailedCitationLocale: false,
     hasFailedDeadLinks: false,
+    hasFailedDiff: false,
     hrefRoot: ""
   },
   action
@@ -61,6 +62,10 @@ const library = (
     case "DISMISS_DEAD_LINKS":
       return Object.assign({}, state, {
         hasReceivedDeadLinks: false
+      });
+    case "FAIL_DIFF":
+      return Object.assign({}, state, {
+        hasFailedDiff: true
       });
     default:
       return state

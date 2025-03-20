@@ -46,6 +46,19 @@ export const setFilterText = filter => {
   }
 };
 
+export function showDiffScreen(diff) {
+  return {
+    type: "SHOW_DIFF_SCREEN",
+    diff: diff
+  }
+}
+
+export function dismissDiffScreen() {
+  return {
+    type: "DISMISS_DIFF_SCREEN"
+  }
+}
+
 export function showEditScreen(id) {
   return (dispatch, getState) => {
     return fetch(`${apiServer}/api/files?unlinked`)
@@ -98,6 +111,69 @@ export function IDErrorEditScreen(showError) {
   return {
     type: "ID_ERROR_EDIT_SCREEN",
     showError
+  }
+}
+
+
+export function saveDiffScreen() {
+  return (dispatch, getState) => {
+    const { diffScreen } = getState();
+
+    if(diffScreen.isModified) {
+      dispatch(mergeDiff(diffScreen.diff));
+    } else {
+      // not modified. Just exit.
+      dispatch(dismissDiffScreen());
+    }
+  };
+};
+
+export function mergeDiff(diff) {
+  return(dispatch) => {
+    return fetch(
+      `${apiServer}/api/save-diff`,
+      {
+        method: "PUT",
+        body: JSON.stringify(diff)
+      }
+    )
+      .then(
+        response => {
+          dispatch(dismissDiffScreen());
+        },
+        error => dispatch(failSaveDiff())
+      )
+  };
+
+}
+
+export function diffUseLocal(id, field) {
+  return {
+    type: "DIFF_USE_LOCAL",
+    id: id,
+    field: field
+  }
+}
+
+export function diffUseRemote(id, field) {
+  return {
+    type: "DIFF_USE_REMOTE",
+    id: id,
+    field: field
+  }
+}
+
+export function diffUseReset(id, field) {
+  return {
+    type: "DIFF_USE_RESET",
+    id: id,
+    field: field
+  }
+}
+
+export function failSaveDiff() {
+  return {
+    type: "FAIL_SAVE_DIFF"
   }
 }
 
@@ -275,6 +351,18 @@ export const dismissDead = () => {
   };
 };
 
+export const requestDiff = () => {
+  return {
+    type: "REQUEST_DIFF"
+  }
+};
+
+export const failDiff = () => {
+  return {
+    type: "FAIL_DIFF"
+  }
+};
+
 
 /*
 The citation.js implementation
@@ -419,6 +507,31 @@ export const checkDead = () => {
         error => {
           console.log("Error receiving dead links", error);
           dispatch(failDeadLinks())
+        }
+      )
+  };
+};
+
+export const startDiff = () => {
+  return (dispatch) => {
+    dispatch(requestDiff());
+    return fetch(`${apiServer}/api/diff`)
+      .then(
+        response => response.json(),
+        error => {
+          throw new Error("Failed to get diff" + error)
+        }
+      )
+      .then(
+        json => dispatch(showDiffScreen(json)),
+        error => {
+          throw new Error("Failed to receive diff" + error)
+        }
+      )
+      .catch(
+        error => {
+          console.log("Error receiving diff", error);
+          dispatch(failDiff())
         }
       )
   };

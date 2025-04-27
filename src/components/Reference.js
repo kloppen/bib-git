@@ -56,7 +56,9 @@ class Reference extends React.Component {
             .map( (rf) => field_contents(
               rf, this.props.reference[rf.field],
               getFieldFilterRE(filter_list, rf.field),
-              this.props.hrefRoot) )
+              this.props.hrefRoot,
+              this.props.hrefLocalFileRoot
+            ) )
         }
         <div className="Ref-list-item-expand-all">
           <button type="button" onClick={() => { this.doEditModal() }}>Edit</button>
@@ -138,7 +140,7 @@ class Reference extends React.Component {
     const field_filters = generateFieldFilterRE(this.props.visibilityFilter);
 
     if(this.state.isExpanded) {
-      return(this.render_expanded(field_filters)) // TODO: Update
+      return(this.render_expanded(field_filters))
     } else {
       return(this.render_collapsed(field_filters))
     }
@@ -150,7 +152,8 @@ Reference.propTypes = {
     id: PropTypes.string.isRequired
   }).isRequired,
   visibilityFilter: PropTypes.array,
-  hrefRoot: PropTypes.string.isRequired
+  hrefRoot: PropTypes.string.isRequired,
+  hrefLocalFileRoot: PropTypes.string.isRequired
 };
 
 export default connect()(Reference)

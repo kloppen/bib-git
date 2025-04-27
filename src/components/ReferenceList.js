@@ -56,7 +56,7 @@ const ReferenceList = ({references, library, visibilityFilter}) => (
     </span>
     <span>
       {
-        library.isFetching // TODO: Probably need to update this for hilighting missing files
+        library.isFetching
           ? (<div>Retrieving Library...</div>)
           : (
             <div>
@@ -65,6 +65,7 @@ const ReferenceList = ({references, library, visibilityFilter}) => (
                   key={reference.id}
                   reference={reference}
                   hrefRoot={library.hrefRoot}
+                  hrefLocalFileRoot={library.hrefLocalFileRoot}
                   visibilityFilter={visibilityFilter}
                 />
               ))}

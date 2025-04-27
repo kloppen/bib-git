@@ -282,6 +282,30 @@ export const addFile = (field, file) => {
   }
 };
 
+export const editLocalFileField = (field, index, value) => {
+  return {
+    type: "EDIT_LOCAL_FILE_FIELD",
+    field,
+    index,
+    value
+  }
+};
+
+export const removeLocalFile = (field, index) => {
+  return {
+    type: 'REMOVE_LOCAL_FILE',
+    field,
+    index
+  }
+};
+
+export const addLocalFile = (field) => {
+  return {
+    type: "ADD_LOCAL_FILE",
+    field
+  }
+};
+
 export const editNameField = (field, index, key, value) => {
   return {
     type: "EDIT_NAME_FIELD",
@@ -812,6 +836,25 @@ export const getFilePathRoot = () => {
 export const receiveFilePathRoot = (path) => {
   return {
     type: "RECEIVE_FILE_PATH_ROOT",
+    path
+  }
+};
+
+export const getLocalFilePathRoot = () => {
+  return function(dispatch) {
+    return fetch(`${apiServer}/api/local-filepath`)
+      .then(
+        response => response.text()
+      )
+      .then(
+        path => dispatch(receiveLocalFilePathRoot(path))
+      )
+  }
+};
+
+export const receiveLocalFilePathRoot = (path) => {
+  return {
+    type: "RECEIVE_LOCAL_FILE_PATH_ROOT",
     path
   }
 };

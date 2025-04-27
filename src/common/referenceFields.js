@@ -305,6 +305,12 @@ export const referenceFields = [
     hint: "Uniform Resource Locator (e.g. “http://aem.asm.org/cgi/content/full/74/9/2766”)"
   },
   {
+    field: "local-file",
+    type: "LOCAL",
+    includeYAML: false,
+    hint: "a local or network file or files"
+  },
+  {
     field: "file",
     type: "FILE",
     includeYAML: false,

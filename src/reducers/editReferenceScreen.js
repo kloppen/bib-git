@@ -80,6 +80,25 @@ const editReferenceScreen = (state = {
           !state.referenceEditing[action.field] ||
           state.referenceEditing[action.field] !== newFileValue
       });
+      case "EDIT_LOCAL_FILE_FIELD":
+        if (!state.referenceEditing) {
+          return state;
+        }
+  
+        const newLocalFileValue = state.referenceEditing[action.field].split(";").map((f, index) =>
+          index === action.index
+            ? action.value
+            : f
+        ).join(";");
+  
+        return Object.assign({}, state, {
+          referenceEditing: Object.assign({}, state.referenceEditing, {
+            [action.field]: newLocalFileValue
+          }),
+          isModified: state.isModified ||
+            !state.referenceEditing[action.field] ||
+            state.referenceEditing[action.field] !== newLocalFileValue
+        });
     case "EDIT_NAME_FIELD":
       if (!state.referenceEditing) {
         return state;
@@ -121,6 +140,17 @@ const editReferenceScreen = (state = {
         }),
         isModified: true
       });
+    case "ADD_LOCAL_FILE":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      const localFilesField = !!state.referenceEditing[action.field] ? state.referenceEditing[action.field].split(";") : [];
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: [...localFilesField, ""].join(";")
+        }),
+        isModified: true
+      });
     case "REMOVE_NAME":
       if (!state.referenceEditing) {
         return state;
@@ -144,6 +174,19 @@ const editReferenceScreen = (state = {
       return Object.assign({}, state, {
         referenceEditing: Object.assign({}, state.referenceEditing, {
           [action.field]: newFileRemove
+        }),
+        isModified: true
+      });
+    case "REMOVE_LOCAL_FILE":
+      if (!state.referenceEditing) {
+        return state;
+      }
+      const newLocalFileRemove = state.referenceEditing[action.field].split(";").filter((a, index) =>
+        index !== action.index
+      ).join(";");
+      return Object.assign({}, state, {
+        referenceEditing: Object.assign({}, state.referenceEditing, {
+          [action.field]: newLocalFileRemove
         }),
         isModified: true
       });

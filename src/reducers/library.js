@@ -21,7 +21,8 @@ const library = (
     hasFailedCitationLocale: false,
     hasFailedDeadLinks: false,
     hasFailedDiff: false,
-    hrefRoot: ""
+    hrefRoot: "",
+    hrefLocalFileRoot: ""
   },
   action
 ) => {
@@ -42,6 +43,10 @@ const library = (
     case "RECEIVE_FILE_PATH_ROOT":
       return Object.assign({}, state, {
         hrefRoot: action.path
+      });
+    case "RECEIVE_LOCAL_FILE_PATH_ROOT":
+      return Object.assign({}, state, {
+        hrefLocalFileRoot: action.path
       });
     case "FAIL_RECEIVE_CITATION_STYLE_LIST":
       return Object.assign({}, state, {

@@ -94,6 +94,11 @@ def get_file_contents(directory: str, file: str) -> str:
         return ""
 
 
+@route("/local-files<filename:path>")
+def send_local_file(filename):
+    return static_file(filename, root="/")
+
+
 @get("/api/library")
 def get_library() -> str:
     """
@@ -142,13 +147,22 @@ def update_library_item(old_id: str):
 @get("/api/filepath")
 def get_filepath() -> str:
     """
-    Gets the path to prepend on links to reference attachments. Includes file:/// at the beginning and no trailing slash
+    Gets the path to prepend on links to reference attachments. Includes http:/// at the beginning and no trailing slash
     :return: A string representing the path
     """
     return f"http://{HOST}:{PORT}/library"
     dir_path = os.path.dirname(os.path.realpath(__file__))
     dir_path = os.path.join(dir_path, LOCAL_FOLDER)
     return pathlib.Path(dir_path).as_uri()
+
+
+@get("/api/local-filepath")
+def get_localfilepath() -> str:
+    """
+    Gets the path to prepend on links to reference local files. Includes http:/// at the beginning and no trailing slash
+    :return: A string representing the path
+    """
+    return f"http://{HOST}:{PORT}/local-files"
 
 
 def get_directory_listing(directory: str, ext: str) -> str:

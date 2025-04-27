@@ -79,7 +79,7 @@ export const highlighted_text = (text, filterRE) => {
     )
 };
 
-export const field_contents = (field, reference_contents, filterRE, hrefRoot) => {
+export const field_contents = (field, reference_contents, filterRE, hrefRoot, hrefLocalFileRoot) => {
     switch (field.type) {
       case "NAME":
         return (
@@ -142,6 +142,33 @@ export const field_contents = (field, reference_contents, filterRE, hrefRoot) =>
             </div>
           </div>
         );
+        case "LOCAL":
+          return (
+            <div key={field.field} className="Ref-list-item-expand-row">
+              <div className="Ref-list-item-expand-left">{field.field}</div>
+              <div className="Ref-list-item-expand-right">
+                {
+                  reference_contents.split(";").map((fileText, index) => {
+                    let fileTitle = "";
+                    let fileHREF = "";
+                    fileTitle = fileText;
+                    fileHREF = hrefLocalFileRoot + "/" + fileText;
+                    return (
+                      <a key={index} href={fileHREF} target="_blank" rel="noopener noreferrer">
+                        {
+                          filterRE !== null && filterRE.test(fileHREF) ?
+                          (<span className="Highlighted" key={index}>{fileTitle}</span>)
+                            :
+                            fileTitle
+                        }
+                        <br/>
+                      </a>
+                    );
+                  })
+                }
+              </div>
+            </div>
+          );
       default:
         return (
           <div key={field.field} className="Ref-list-item-expand-row">

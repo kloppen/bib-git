@@ -26,7 +26,10 @@ import {
   IDErrorEditScreen,
   editFileField,
   removeFile,
-  addFile
+  addFile,
+  editLocalFileField,
+  removeLocalFile,
+  addLocalFile
 } from "../actions/index";
 import ReactConfirmAlert, { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
@@ -35,6 +38,7 @@ import Editable from "./Editable"
 import DateEdit from "./DateEdit"
 import EditableNameList from "./EditableNameList"
 import FileList from "./FileList"
+import LocalFileList from './LocalFileList';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import ReactTooltip from 'react-tooltip'
@@ -146,6 +150,22 @@ const fieldContents = (editReferenceScreen, reference, library, field, dispatch)
           }}
           allowableFileList={editReferenceScreen.fileList}
           hrefRoot={library.hrefRoot}
+        />
+      );
+    case "LOCAL":
+      return (
+        <LocalFileList
+          files={reference[field.field]}
+          onEditFileField={(index, value) => {
+            dispatch(editLocalFileField(field.field, index, value))
+          }}
+          onDeleteFile={(index) => {
+            dispatch(removeLocalFile(field.field, index))
+          }}
+          onAddFile={() => {
+            dispatch(addLocalFile(field.field))
+          }}
+          hrefLocalFileRoot={library.hrefLocalFileRoot}
         />
       );
     case "DATE":

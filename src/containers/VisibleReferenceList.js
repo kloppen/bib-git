@@ -43,6 +43,7 @@ const checkReferenceForFilter = (cur_ref, cur_filter) => {
         case "DATE":
           return correctCase(cur_ref[field.field]["date-parts"].toString(), cur_filter).includes(flt_val);
         case "FILE":
+        case "LOCAL":
           if(cur_filter.field === "") {
             return false;
           } else {

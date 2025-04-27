@@ -53,7 +53,7 @@ const getFieldDisplayContents = (diff_item, rf, anti_use) => {
     diff_item[rf.field][anti_use === "local" ? "remote" : "local"];
   return !value ?
     blankContents() :
-    field_contents(rf, value, /*RE=*/null, /*hrefRoot=*/"")
+    field_contents(rf, value, /*RE=*/null, /*hrefRoot=*/"", /*field_contents=*/"")
 };
 
 const singleDiffContents = (diff_item, dispatch) => {

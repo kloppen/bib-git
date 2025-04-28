@@ -27,3 +27,5 @@ deadlinkignore.local
 
 .eslintcache
 
+config.ini
+

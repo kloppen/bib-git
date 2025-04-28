@@ -36,6 +36,22 @@ source activate bib-git
 pip install -r requirements.txt
 ```
 
+# Config File
+The file paths can be changed by using a configuraiton file. Create a text file with the
+filename `config.ini` with the following contents. Change the filenames/file pahts
+as appropriate.
+
+```
+[DEFAULT]
+LOCAL_LIBRARY_FILES = "./library/files"
+LOCAL_JSON = "./library/MyLibrary.json"
+LOCAL_ARCHIVE = "./library/archive"
+REMOTE_JSON = "./remote/remote.json"
+REMOTE_ARCHIVE = "./remote/remote_archive"
+```
+
+# Launch Script
+
 You may want to write a launch script. Create a file in your directory of choice with the following content. Modify paths as required.
 
 ```

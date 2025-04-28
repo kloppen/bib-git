@@ -33,11 +33,10 @@ app = application = bottle.default_app()
 
 HOST = "127.0.0.1"
 PORT = 5032
-LOCAL_FOLDER = "./library"
-LOCAL_LIBRARY = "MyLibrary.json"
+LOCAL_LIBRARY_FILES = "./library/files"
+LOCAL_JSON = "./library/MyLibrary.json"
 LOCAL_ARCHIVE = "./library/archive"
-REMOTE_FOLDER = "./remote"
-REMOTE_LIBRARY = "remote.json"
+REMOTE_JSON = "./remote/remote.json"
 REMOTE_ARCHIVE = "./remote/remote_archive"
 
 
@@ -77,17 +76,15 @@ def send_static_static(filename):
 
 @route("/library/files<filename:path>")
 def send_file(filename):
-    return static_file(filename, root="./library/files") # TODO: Change!
+    return static_file(filename, root=LOCAL_LIBRARY_FILES)
 
 
-def get_file_contents(directory: str, file: str) -> str:
+def get_file_contents(path: str) -> str:
     """
     Gets the contents of a file on disk
-    :param directory: The directory in which the file is
-    :param file: The name of the file, including the extension
+    :param path: The path to the file, including the extension
     :return: A string with the file contents
     """
-    path = os.path.join(directory, file)
     try:
         with open(path, "r", encoding="utf8") as fc:
             return fc.read()
@@ -107,7 +104,7 @@ def get_library() -> str:
     Gets the JSON object representing the library stored on disk
     :return: A JSON-formatted string
     """
-    return get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
+    return get_file_contents(LOCAL_JSON)
 
 
 def update_library_item_pure(old_id: str, updated_ref: dict, cur_library: list) -> list:
@@ -142,7 +139,7 @@ def update_library_item(old_id: str):
     cur_lib = json.loads(cur_lib_str)
     updated_ref = json.loads(str(request.body.read(), "UTF-8"))
     updated_lib = update_library_item_pure(old_id, updated_ref, cur_lib)
-    with open(os.path.join(LOCAL_FOLDER, LOCAL_LIBRARY), "w", encoding="UTF8") as f:
+    with open(LOCAL_JSON, "w", encoding="UTF8") as f:
         f.write(json.dumps(updated_lib, indent=2, ensure_ascii=False))
 
 
@@ -193,7 +190,7 @@ def get_csl_style(name) -> str:
     :param name: the name of the CSL style to retrieve. Does not include .csl extension
     :return: An XML object
     """
-    return get_file_contents("csl-styles", "{}.csl".format(name))
+    return get_file_contents(os.path.join("csl-styles", "{}.csl".format(name)))
 
 
 @get("/api/csl-locales")
@@ -212,10 +209,10 @@ def get_csl_locale(name) -> str:
     :param name: the name of the CSL locale to retrieve. Does not include .xml extension
     :return: An XML object
     """
-    return get_file_contents("csl-locales", "{}.xml".format(name))
+    return get_file_contents(os.path.join("csl-locales", "{}.xml".format(name)))
 
 
-def get_library_referenced_files() -> list:
+def get_library_referenced_files():
     """
     Returns a list of all files referenced in the library
 
@@ -339,8 +336,8 @@ def is_diff_different(diff):
 
 @get("/api/diff")
 def get_diff():
-    local_str = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
-    remote_str = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    local_str = get_file_contents(LOCAL_JSON)
+    remote_str = get_file_contents(REMOTE_JSON)
     local = json.loads(local_str)
     remote = json.loads(remote_str)
 
@@ -373,13 +370,12 @@ def update_field(library, id, field, value):
     return updated_library
 
 
-def save_diff_to_disk(library, folder, library_file, archive):
+def save_diff_to_disk(library, library_json_path, archive):
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    lib_path = os.path.join(folder, library_file)
     with zipfile.ZipFile(os.path.join(archive, f"archive{timestamp}.zip"),
                          "w", zipfile.ZIP_DEFLATED) as zip:
-        zip.write(lib_path)
-    with open(lib_path, "w", encoding="UTF8") as f:
+        zip.write(library_json_path)
+    with open(library_json_path, "w", encoding="UTF8") as f:
         f.write(json.dumps(library, indent=2, ensure_ascii=False))
 
 
@@ -387,9 +383,9 @@ def save_diff_to_disk(library, folder, library_file, archive):
 def save_diff():
     diff = json.loads(str(request.body.read(), "UTF-8"))
 
-    local_library = get_file_contents(LOCAL_FOLDER, LOCAL_LIBRARY)
+    local_library = get_file_contents(LOCAL_JSON)
     local_library = json.loads(str(local_library))
-    remote_library = get_file_contents(REMOTE_FOLDER, REMOTE_LIBRARY)
+    remote_library = get_file_contents(REMOTE_JSON)
     remote_library = json.loads(str(remote_library))
     local_modified = False
     remote_modified = False
@@ -416,16 +412,16 @@ def save_diff():
                     local_modified = True
     
     if local_modified:
-        save_diff_to_disk(local_library, LOCAL_FOLDER, LOCAL_LIBRARY, LOCAL_ARCHIVE)
+        save_diff_to_disk(local_library, LOCAL_JSON, LOCAL_ARCHIVE)
 
     if remote_modified:
-        save_diff_to_disk(remote_library, REMOTE_FOLDER, REMOTE_LIBRARY, REMOTE_ARCHIVE)
+        save_diff_to_disk(remote_library, REMOTE_JSON, REMOTE_ARCHIVE)
 
 
 if __name__ == "__main__":
     try:
-        allowed_vars = ["LOCAL_FOLDER", "LOCAL_LIBRARY", "LOCAL_ARCHIVE", "REMOTE_FOLDER",
-                        "REMOTE_LIBRARY", "REMOTE_ARCHIVE"]
+        allowed_vars = ["LOCAL_LIBRARY_FILES", "LOCAL_JSON", "LOCAL_ARCHIVE",
+                        "REMOTE_JSON", "REMOTE_ARCHIVE"]
         config = configparser.ConfigParser()
         if os.path.isfile("config.ini"):
             config.read("config.ini")

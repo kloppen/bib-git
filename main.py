@@ -1,4 +1,4 @@
-# Copyright (C) 2017, Stefan Kloppenborg
+# Copyright (C) 2017-2025, Stefan Kloppenborg
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,7 @@ monkey.patch_all()
 import bottle
 from bottle import request, response, route, static_file
 from bottle import post, get, put, delete
+import configparser
 import datetime
 import fnmatch
 import json
@@ -26,6 +27,7 @@ import os.path
 import pathlib
 import mimetypes
 import zipfile
+import sys
 
 app = application = bottle.default_app()
 
@@ -34,9 +36,9 @@ PORT = 5032
 LOCAL_FOLDER = "./library"
 LOCAL_LIBRARY = "MyLibrary.json"
 LOCAL_ARCHIVE = "./library/archive"
-REMOTE_FOLDER = "./library"
+REMOTE_FOLDER = "./remote"
 REMOTE_LIBRARY = "remote.json"
-REMOTE_ARCHIVE = "./library/remote_archive"
+REMOTE_ARCHIVE = "./remote/remote_archive"
 
 
 @app.hook('after_request')
@@ -75,7 +77,7 @@ def send_static_static(filename):
 
 @route("/library/files<filename:path>")
 def send_file(filename):
-    return static_file(filename, root="./library/files")
+    return static_file(filename, root="./library/files") # TODO: Change!
 
 
 def get_file_contents(directory: str, file: str) -> str:
@@ -151,9 +153,6 @@ def get_filepath() -> str:
     :return: A string representing the path
     """
     return f"http://{HOST}:{PORT}/library"
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    dir_path = os.path.join(dir_path, LOCAL_FOLDER)
-    return pathlib.Path(dir_path).as_uri()
 
 
 @get("/api/local-filepath")
@@ -424,4 +423,17 @@ def save_diff():
 
 
 if __name__ == "__main__":
+    try:
+        allowed_vars = ["LOCAL_FOLDER", "LOCAL_LIBRARY", "LOCAL_ARCHIVE", "REMOTE_FOLDER",
+                        "REMOTE_LIBRARY", "REMOTE_ARCHIVE"]
+        config = configparser.ConfigParser()
+        if os.path.isfile("config.ini"):
+            config.read("config.ini")
+            module = sys.modules[__name__]
+            for setting in config["DEFAULT"]:
+                if hasattr(module, setting.upper()) and setting.upper() in allowed_vars:
+                    setattr(module, setting.upper(), config["DEFAULT"][setting])
+
+    except:
+        print("An error occured when reading `config.ini`")
     bottle.run(app, host=HOST, port=PORT, server='gevent')

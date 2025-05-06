@@ -43,7 +43,7 @@ rclone config
 # quit config
 ```
 
-rclone bisync --interactive  ./ test1-crypt:/
+rclone bisync --interactive  ./ library-crypt:/
 
 Encrypt the configuration file (optional)
 

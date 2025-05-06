@@ -15,7 +15,7 @@
 
 const visibilityFilter = (
   state = [
-    {"id": "search", "field": "", "value": "", "tokenize": true, "caseSensitive": false}
+    {"id": "search", "field": "", "value": "", "tokenize": true, "caseSensitive": false, "combine": "and"}
   ],
   action) => {
 
@@ -26,15 +26,14 @@ const visibilityFilter = (
     case "RECEIVE_DEAD_LINKS":
       const files = action.json;
       return state.filter(f => f.id !== "deadlink")
-        .concat(files.map(f => {
-          return {
+        .concat({
             "id": "deadlink",
             "field": "file",
-            "value": f,
+            "value": files,
             "tokenize": false,
-            "caseSensitive": false
-          };
-        }));
+            "caseSensitive": false,
+            "combine": "or"
+          });
     case "DISMISS_DEAD_LINKS":
       return state.filter(f => f.id !== "deadlink");
     default:

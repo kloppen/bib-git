@@ -21,13 +21,17 @@ export const correctCase = (value, cur_filter) => {
     if(cur_filter["caseSensitive"]) {
         return value;
     } else {
-        return value.toUpperCase();
+        if (Array.isArray(value)) {
+            return value.map(f => f.toUpperCase());
+        } else {
+            return value.toUpperCase();
+        }
     }
 };
 
 export const filterToStringList = (filter) => {
   let value = correctCase(filter["value"], filter);
-  value = !filter["tokenize"] ? [value] : (value.match(/\S+/g) || []);
+  value = !filter["tokenize"] ? (Array.isArray(value) ? value : [value]) : (value.match(/\S+/g) || []);
   return value;
 };
 

@@ -22,7 +22,7 @@ const refFields = referenceFields;
 
 const checkReferenceForFilter = (cur_ref, cur_filter) => {
   // cur_filer should have the following strucutre
-  // {"field": "", "value": "", "tokenize": true, "caseSensitive": false}
+  // {"field": "", "value": "", "tokenize": true, "caseSensitive": false, "combine": "and"}
   let value = filterToStringList(cur_filter);
 
   return value.map(flt_val => {
@@ -53,7 +53,9 @@ const checkReferenceForFilter = (cur_ref, cur_filter) => {
           return correctCase(cur_ref[field.field].toString(), cur_filter).includes(flt_val);
       }
     }).reduce((prevVal, elm) => prevVal || elm, false) // any field (that matches criteria)
-  }).reduce((prevVal, elm) => prevVal && elm, true) // all flt_val's need to be present
+  }).reduce((prevVal, elm) =>
+    cur_filter.combine === "or" ? prevVal || elm : prevVal && elm, // and/or the flt_val's as needed
+    cur_filter.combine === "or" ? false : true) // it we're combining with "or" starting value needs to be false; if "and" needs to start with true
 };
 
 const getVisibleReferences = (references, filters) => {

@@ -39,7 +39,7 @@ export const generateFieldFilterRE = (filter_list) => {
     const fieldRE = referenceFields.map(cur_field => {
         const matching_filters = filter_list.filter(flt => (flt.field === "" || flt.field === cur_field.field))
         const filter_string_lists = matching_filters.map(flt => {
-            return filterToStringList(flt).join("|");
+            return filterToStringList(flt).map(s => RegExp.escape(s)).join("|");
         });
         const non_empty_list = filter_string_lists.filter(
             s => s.length > 0 && s[0] !== ""

@@ -39,6 +39,8 @@ LOCAL_ARCHIVE = "./library/archive"
 REMOTE_JSON = "./remote/remote.json"
 REMOTE_ARCHIVE = "./remote/remote_archive"
 
+referenceFields = []  ## Will be read-in in __main__ function
+
 
 @app.hook('after_request')
 def enable_cors():
@@ -305,12 +307,16 @@ def find_item(library, id):
 
 def diff_items(local, remote):
     diff = {}
+    referenceFieldNames = list([item["field"] for item in referenceFields])
     for kl, vl in local.items():
         if kl in remote:
             remote_val = remote[kl]
         else:
             remote_val = None if kl != "id" else vl
-        is_different = vl != remote_val
+        is_different = (vl != remote_val) and (kl in referenceFieldNames)
+        # ^^ Sometimes, especially if a reference has been imported, there is an unrecognized field.
+        #    If that field is included in the diff, the "different" reference will show up, but no
+        #    fields will show as different. This is very confusing to the user.
         diff[kl] = {
             "local": vl,
             "remote": remote_val,
@@ -320,7 +326,7 @@ def diff_items(local, remote):
     for kr, vr in remote.items():
         if kr not in diff:
             local_val = None if kr != "id" else vr
-            is_different = vr != local_val
+            is_different = vr != local_val and (kl in referenceFieldNames)
             diff[kr] = {
                 "local": local_val,
                 "remote": vr,
@@ -432,4 +438,6 @@ if __name__ == "__main__":
 
     except:
         print("An error occured when reading `config.ini`")
+    with open("src/referenceFields.json", "r") as file:
+        referenceFields = json.load(file)
     bottle.run(app, host=HOST, port=PORT, server='gevent')

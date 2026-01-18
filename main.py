@@ -326,7 +326,7 @@ def diff_items(local, remote):
     for kr, vr in remote.items():
         if kr not in diff:
             local_val = None if kr != "id" else vr
-            is_different = vr != local_val and (kl in referenceFieldNames)
+            is_different = vr != local_val and (kr in referenceFieldNames)
             diff[kr] = {
                 "local": local_val,
                 "remote": vr,

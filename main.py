@@ -88,7 +88,7 @@ def get_file_contents(path: str) -> str:
     :return: A string with the file contents
     """
     try:
-        with open(path, "r", encoding="utf8") as fc:
+        with open(path, "r", encoding="UTF-8") as fc:
             return fc.read()
     except IOError:
         response.status = 400
@@ -141,7 +141,7 @@ def update_library_item(old_id: str):
     cur_lib = json.loads(cur_lib_str)
     updated_ref = json.loads(str(request.body.read(), "UTF-8"))
     updated_lib = update_library_item_pure(old_id, updated_ref, cur_lib)
-    with open(LOCAL_JSON, "w", encoding="UTF8") as f:
+    with open(LOCAL_JSON, "w", encoding="UTF-8") as f:
         f.write(json.dumps(updated_lib, indent=2, ensure_ascii=False))
 
 
@@ -279,7 +279,7 @@ def get_file_list_handler():
 @get("/api/dead-links")
 def get_dead_links():
     if pathlib.Path("deadlinkignore.local").is_file():
-        with open("deadlinkignore.local") as file:
+        with open("deadlinkignore.local", "r", encoding="UTF-8") as file:
             ignore = [line.rstrip() for line in file]
     else:
         ignore = []
@@ -381,7 +381,7 @@ def save_diff_to_disk(library, library_json_path, archive):
     with zipfile.ZipFile(os.path.join(archive, f"archive{timestamp}.zip"),
                          "w", zipfile.ZIP_DEFLATED) as zip:
         zip.write(library_json_path)
-    with open(library_json_path, "w", encoding="UTF8") as f:
+    with open(library_json_path, "w", encoding="UTF-8") as f:
         f.write(json.dumps(library, indent=2, ensure_ascii=False))
 
 
@@ -438,6 +438,6 @@ if __name__ == "__main__":
 
     except:
         print("An error occured when reading `config.ini`")
-    with open("src/referenceFields.json", "r") as file:
+    with open("src/referenceFields.json", "r", encoding='UTF-8') as file:
         referenceFields = json.load(file)
     bottle.run(app, host=HOST, port=PORT, server='gevent')

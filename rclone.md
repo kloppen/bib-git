@@ -24,7 +24,7 @@ rclone config
 ```
 
 Create a second remote for encryption. Note that the passwords
-supplied below are obfuscated and stored in the `rsync.config`
+supplied below are obfuscated and stored in the rclone config
 file. You shouldn't choose re-used passwords and if the config
 file could be exposed, you should ecrypt the configuration itself.
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2017-2025, Stefan Kloppenborg
+# Copyright (C) 2017-2026, Stefan Kloppenborg
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,7 @@ import pathlib
 import mimetypes
 import zipfile
 import sys
+import warnings
 
 app = application = bottle.default_app()
 
@@ -435,6 +436,9 @@ if __name__ == "__main__":
             for setting in config["DEFAULT"]:
                 if hasattr(module, setting.upper()) and setting.upper() in allowed_vars:
                     setattr(module, setting.upper(), config["DEFAULT"][setting])
+        else:
+            warnings.warn("No `config.ini` file found. Using default settings.")
+            print("\033[31mNo `config.ini` file found. Using default settings. This is probably not what you want.\033[0m")
 
     except:
         print("An error occured when reading `config.ini`")

@@ -1,11 +1,15 @@
-bib-git is a bibliography management system. It stores references, optionally with attachments (such as the article itself) and allows you to access your list of references in your web browser. All data is storred locally on your computer. 
-It's expected that you would store the reference database (which is just a JSON file) and any attached files in a git repository (likly using git-lfs for the binary files) to allow syncing between your various devices. bib-git has been tested on Windows, Linux (Ubuntu) and Android.
+`bib-git` is a bibliography management system. It stores references, optionally with attachments (such as the article itself) and allows you to access your list of references in your web browser. All data is storred locally on your computer. 
+It's expected that you would store the reference database (which is just a JSON file) and any attached files in a git repository (likly using git-lfs for the binary files) to allow syncing between your various devices. bib-git has been tested on Windows, Linux (Ubuntu) and Android (though not recently -- Android may no longer work).
+
+While the name contains `git`, this project no longer uses `git` in its functionality. It may be renamed in the future.
 
 # Motivation
-Tools like Zotero are great, but are currently (late 2017) lacking in terms of good Android clients that work offline. I personally like the idea of minimizing the number of services that I rely upon. I already have a paid GitHub account, so I can keep private repositories; for only a few extra dollars per month (on a service I already pay for), I was able to add a data pack, that allows me to add many GB of storage. To me, using this existing service (and increasing the price of this service slightly) was more attractive than signing up for another service.
+Tools like Zotero are great, but are currently (late 2017) lacking in terms of good Android clients that work offline. I personally like the idea of minimizing the number of services that I rely upon. I already have cloud
+storage services and I'd rather use one of those, rather than add yet another service.
 
 # Technology Stack
-bib-git is made up of a front-end, written with react. The backend is a bottle application that would normally be served using WSGI. While not part of this application, per se, it is expected that you'll use git and git-lfs for the bibliography files themselves. When running on Android, it is expected that you will use Termux to run git and also to run the python/bottle backend.
+bib-git is made up of a front-end, written with react. The backend is a bottle application that would normally be served using `bottle`. While not part of this application, per se, it is expected that you'll use a cloud
+service and `rclone` for the files themselves. When running on Android, it is expected that you will use Termux to run git and also to run the python/bottle backend (note this may no longer work).
 
 
 # Setup
@@ -26,9 +30,13 @@ echo "[]" >> library/MyLibrary.json
 
 You'll probably want to set up a git repository in the `library` folder. The `library` folder is ignored by the git repository for the application, so the two will be separate.
 
-The following assumes that you're using a conda environment. You'll need to modify the following instructions slightly if you're using a different python distribution (and want to use a virtual env) or wish to simply instal the requirements to you system's python. The back-end has only been tested with Python 3.6.
+You'll want to set up a cloud share (OneDrive, Dropbox, etc.) for a "remote" version of the `MyLibrary.json` file to allow you to sync between devices. Note that this "remote" file
+will be a separate file from the "local" file that you just created. See the "Config File" section below for specifying file locations.
 
-Create a conda environment and install the requirements:
+You'll also want to sync the files (PDFs, etc.) to a cloud host, such as Backblaze B2, Amazon S3, or another service of your choosing. There are instructions for doing so in the
+[rclone.md] file.
+
+Next, create a conda environment and install the requirements:
 
 ```
 conda create -n bib-git pip
@@ -83,6 +91,8 @@ CALL "python" "main.py"
 Running the launch script should launch the application. From here, you can import your existing library or create a new one. More on importing an existing library later.
 
 # Android Setup
+**This section was last tested circa 2018 and may not work. Use at your own risk.**
+
 If you wish to run bib-git on android, you'll need to install a few things. First, install termux. Make sure that you give it storage permission.
 
 Install hackers keyboard (optional). I find that this is a fairly good keyboard for using a terminal, vim, etc.
@@ -113,27 +123,6 @@ the file and select "Open with App." Just clicking the link will fail.
 You may choose to add an icon to the homescreen. Open index.html and under
 "..."/Page, select "Add to Home Screen."
 
-# Setting up the Library Repo
-Export your library from you current library reference system as BibLaTeX and includ the attached files (optional, but highly useful). You can import this into `bib-git` by using the "Import BibLaTeX" button. Alternatively, you could manually copy a CSL-JSON file to the location library/MyLibrary.json"
-
-When you initialize a git repository for your library, you'll probably want to enable git-lfs for PDF files (and whatever other type of files you use). Regualar old git doesn't like large binary files very much.
-
-```
-cd library
-git init
-git lfs tack "*.pdf"
-git add .gitattributes
-git add MyLibrary.bib
-git add files # or whatever you called it
-git commit -m "Impored library"
-git remote add origin #... whatever your URL for a new GitHub repo is
-git push -u origin master
-```
-
-If some of you attached files have the extension `PDF` or `Pdf` or are different types of binary files, make sure that you set git-lfs to track those extensions too.
-
-When you update your library, use the normal commit/push workflow that you 
-would with any other git repo.
 
 # Merging Changes
 To merge changes from a remote library file, use the "Diff with Remote"
